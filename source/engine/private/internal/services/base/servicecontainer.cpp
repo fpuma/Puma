@@ -1,0 +1,43 @@
+#include <precompiledengine.h>
+#include <internal/services/base/servicecontainer.h>
+
+#include <internal/services/graphicsservice.h>
+#include <internal/services/inputservice.h>
+#include <internal/services/systemsservice.h>
+#include <internal/services/providersservice.h>
+#include <internal/services/physicsservice.h>
+#include <internal/services/timeservice.h>
+
+namespace puma
+{
+    ServiceContainer::ServiceContainer() {}
+    ServiceContainer::~ServiceContainer() {}
+
+    void ServiceContainer::init()
+    {
+        registerInterface<IProvidersService, ProvidersService>();
+        registerInterface<ITimeService, TimeService>();
+        registerInterface<IInputService, InputService>();
+        registerInterface<ISystemsService, SystemsService>();
+        registerInterface<IGraphicsService, GraphicsService>();
+        registerInterface<IPhysicsService, PhysicsService>();
+
+        add<ProvidersService>();
+        add<TimeService>();
+        add<InputService>();
+        add<SystemsService>();
+        add<GraphicsService>();
+        add<PhysicsService>();
+    }
+
+    void ServiceContainer::uninit()
+    {
+        get<PhysicsService>()->uninit();
+        get<GraphicsService>()->uninit();
+        get<SystemsService>()->uninit();
+        get<InputService>()->uninit();
+        get<TimeService>()->uninit();
+        get<ProvidersService>()->uninit();
+        clear();
+    }
+}
