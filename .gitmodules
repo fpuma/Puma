@@ -1,0 +1,12 @@
+[submodule "extern/utilslibrary"]
+	path = extern/utilslibrary
+	url = https://github.com/fpuma/UtilsLibrary.git
+[submodule "extern/timelibrary"]
+	path = extern/timelibrary
+	url = https://github.com/fpuma/TimeLibrary.git
+[submodule "extern/gfx2dappmodule"]
+	path = extern/gfx2dappmodule
+	url = https://github.com/fpuma/Gfx2dAppModule.git
+[submodule "extern/physics2dmodule"]
+	path = extern/physics2dmodule
+	url = https://github.com/fpuma/Physics2dModule.git
