@@ -21,7 +21,6 @@
 #include <engine/utils/timerprovider.h>
 
 #include <time/timestamp.h>
-#include <time/itimereference.h>
 
 #include <graphics/irenderer.h>
 
@@ -94,15 +93,16 @@ namespace puma
 
     void Engine::update()
     {
-        gTime->update();
+        m_deltaTime.update();
         gInput->update();
         gGraphics->update();
         m_shouldQuit = gGraphics->shouldQuit();
 
-        gInternalSystems->update( (float)gTime->getDeltaTime() );
-        gInternalSystems->prePhysicsUpdate( (float)gTime->getDeltaTime() );
-        gPhysics->update( (float)gTime->getDeltaTime() );
-        gInternalSystems->postPhysicsUpdate( (float)gTime->getDeltaTime() );
+        float currentDeltaTime = (float)m_deltaTime.get();
+        gInternalSystems->update( currentDeltaTime );
+        gInternalSystems->prePhysicsUpdate( currentDeltaTime );
+        gPhysics->update( currentDeltaTime );
+        gInternalSystems->postPhysicsUpdate( currentDeltaTime );
     }
 
     void Engine::render()
@@ -112,7 +112,7 @@ namespace puma
 
         gInternalSystems->get<RenderSystem>()->render();
 
-        renderer->renderText( 0, 0, std::to_string( gTime->getAvgFPS() ).c_str() );
+        renderer->renderText( 0, 0, std::to_string( 1.0f / m_deltaTime.getAverage() ).c_str() );
         //Timestamp ts;
         //ts.setToCurrentLocalTime();
         //renderer.renderText( ts.ToString().c_str() );

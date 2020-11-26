@@ -6,7 +6,6 @@
 #include <internal/services/systemsservice.h>
 #include <internal/services/providersservice.h>
 #include <internal/services/physicsservice.h>
-#include <internal/services/timeservice.h>
 
 namespace puma
 {
@@ -16,14 +15,12 @@ namespace puma
     void ServiceContainer::init()
     {
         registerInterface<IProvidersService, ProvidersService>();
-        registerInterface<ITimeService, TimeService>();
         registerInterface<IInputService, InputService>();
         registerInterface<ISystemsService, SystemsService>();
         registerInterface<IGraphicsService, GraphicsService>();
         registerInterface<IPhysicsService, PhysicsService>();
 
         add<ProvidersService>();
-        add<TimeService>();
         add<InputService>();
         add<SystemsService>();
         add<GraphicsService>();
@@ -36,7 +33,6 @@ namespace puma
         get<GraphicsService>()->uninit();
         get<SystemsService>()->uninit();
         get<InputService>()->uninit();
-        get<TimeService>()->uninit();
         get<ProvidersService>()->uninit();
         clear();
     }

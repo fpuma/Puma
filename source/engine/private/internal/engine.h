@@ -1,6 +1,7 @@
 #pragma once
 
 #include <engine/iengine.h>
+#include <time/deltatime.h>
 
 namespace puma
 {
@@ -22,7 +23,7 @@ namespace puma
     private:
 
         std::unique_ptr<ServiceContainer> m_services = nullptr;
-
+        DeltaTime m_deltaTime;
         bool m_shouldQuit = false;
     };
 }

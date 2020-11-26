@@ -14,7 +14,5 @@
 #include <typeindex>
 #include <vector>
 
-#include <precompiledinput.h>
 #include <precompiledphysics.h>
 #include <precompiledgraphics.h>
-#include <precompiledtime.h>

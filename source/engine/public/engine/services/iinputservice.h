@@ -11,7 +11,7 @@ namespace puma
 
         virtual ~IInputService() {}
 
-        virtual IInput* get() = 0;
+        virtual input::IInput* get() = 0;
     };
 }
 
