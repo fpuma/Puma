@@ -1,35 +1,23 @@
 #pragma once
 
 #include <engine/services/base/iprovider.h>
-#include <engine/services/itimeservice.h>
+#include <time/syncedtimersreference.h>
 
 namespace puma
 {
-    //[fpuma] The TimeProvider shoud use the SyncedTimersReference
-    class TimerProvider : public IProvider
+    class TimerProvider final : public IProvider
     {
     public:
-        TimerProvider() {}
-    //    TimerProvider() 
-    //    { 
-    //        m_timerManager = ITimerManager::create( []() { return (float)gTime->getExecutionTimeInSeconds(); } );
-    //    }
-
+        
         void uninit() override {}
 
-    //    TimerID requestNewTimer() { return m_timerManager->requestNewTimer(); }
-    //    CountdownTimerID requestNewCountdownTimer() { return m_timerManager->requestNewCountdownTimer(); }
+        void update() { m_timersReference.update(); }
 
-    //    void disposeTimer( TimerID _id ) { m_timerManager->disposeTimer( _id ); }
-    //    void disposeCountdownTimer( CountdownTimerID _id ) { m_timerManager->disposeCountdownTimer( _id ); }
-
-    //    ITimer* getTimer( TimerID _id ) { return m_timerManager->getTimer( _id ); }
-    //    ICountdownTimer* getCountdownTimer( CountdownTimerID _id ) { return m_timerManager->getCountdownTimer( _id ); }
-
-    //    void clear() { m_timerManager->clear(); }
+        SyncedTimer getTimer() const { return m_timersReference.getTimer(); }
+        SyncedCountdownTimer getCountdownTimer() const { return m_timersReference.getCountdownTimer(); }
 
     private:
 
-    //    std::unique_ptr<ITimerManager> m_timerManager;
+        SyncedTimersReference m_timersReference;
     };
 }
