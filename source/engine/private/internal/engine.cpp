@@ -6,7 +6,6 @@
 #include <internal/ecs/components/collisioncomponent.h>
 #include <internal/ecs/components/locationcomponent.h>
 #include <internal/ecs/components/rendercomponent.h>
-#include <internal/ecs/components/translationcomponent.h>
 #include <internal/services/base/servicecontainer.h>
 #include <internal/services/inputservice.h>
 #include <internal/services/graphicsservice.h>
@@ -50,8 +49,6 @@ namespace puma
             componentProvider->registerInterface<ICollisionComponent, CollisionComponent>();
             componentProvider->registerInterface<ILocationComponent, LocationComponent>();
             componentProvider->registerInterface<IRenderComponent, RenderComponent>();
-            componentProvider->registerInterface<ITranslationComponent, TranslationComponent>();
-
         }
     }
 

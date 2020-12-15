@@ -13,7 +13,6 @@
 #include <engine/ecs/components/icollisioncomponent.h>
 #include <engine/ecs/components/ilocationcomponent.h>
 #include <engine/ecs/components/irendercomponent.h>
-#include <engine/ecs/components/itranslationcomponent.h>
 
 #include <engine/ecs/systems/irendersystem.h>
 
