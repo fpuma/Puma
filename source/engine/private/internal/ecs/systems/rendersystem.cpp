@@ -124,13 +124,13 @@ namespace puma
                     {
                         assert( _textureCount < kConcurrentTexturePool ); //The concurrent texture pool is not big enough, consider increasing  kConcurrentTexturePool
 
-                       _outTexturesToRender[_textureCount].texture = renderComponent->getTexture();
-                       _outTexturesToRender[_textureCount].uvExtent = renderComponent->getUVExtent();
-                       _outTexturesToRender[_textureCount].screenExtent.xPos = (s32)((entityAABB.lowerBoundary.x - frustum.lowerBoundary.x) / metersPerPixel);
-                       _outTexturesToRender[_textureCount].screenExtent.yPos = (s32)((frustum.upperBoundary.y - entityAABB.upperBoundary.y) / metersPerPixel);
-                       _outTexturesToRender[_textureCount].screenExtent.width = (s32)(renderComponent->getSize().x / metersPerPixel);
-                       _outTexturesToRender[_textureCount].screenExtent.height = (s32)(renderComponent->getSize().y / metersPerPixel);
-                       _outTexturesToRender[_textureCount].rotationDegrees = locationComponent->getDegreesRotation();
+                        _outTexturesToRender[_textureCount].texture = renderComponent->getTexture();
+                        _outTexturesToRender[_textureCount].uvExtent = renderComponent->getUVExtent();
+                        _outTexturesToRender[_textureCount].screenExtent.xPos = (s32)((entityAABB.lowerBoundary.x - frustum.lowerBoundary.x) / metersPerPixel);
+                        _outTexturesToRender[_textureCount].screenExtent.yPos = (s32)((frustum.upperBoundary.y - entityAABB.upperBoundary.y) / metersPerPixel);
+                        _outTexturesToRender[_textureCount].screenExtent.width = (s32)(renderComponent->getSize().x / metersPerPixel);
+                        _outTexturesToRender[_textureCount].screenExtent.height = (s32)(renderComponent->getSize().y / metersPerPixel);
+                        _outTexturesToRender[_textureCount].rotationDegrees = locationComponent->getDegreesRotation();
 
                         ++_textureCount;
                     }
