@@ -11,6 +11,7 @@
 #include <internal/ecs/components/rendercomponent.h>
 #include <internal/ecs/components/locationcomponent.h>
 #include <internal/ecs/components/cameracomponent.h>
+#include <internal/ecs/components/collisioncomponent.h>
 
 #include <physics/geometry/shapes.h>
 #include <physics/geometry/overlapcheck.h>
@@ -91,7 +92,7 @@ namespace puma
 
     void RenderSystem::init()
     {
-        m_properties.updateBitMask = (SystemUpdateBitMask)SystemUpdateFlag::PostPhysicsUpdate;
+        m_properties.updateBitMask = (SystemUpdateBitMask)SystemUpdateFlag::PostPhysicsUpdate | (SystemUpdateBitMask)SystemUpdateFlag::PrePhysicsUpdate;
         m_cameraEntity = buildDefaultCamera();
     }
 
@@ -100,41 +101,58 @@ namespace puma
         destroyDefaultCamera( m_cameraEntity );
     }
 
-    void RenderSystem::postPhysicsUpdate( float _deltaTime )
+    namespace
     {
-        ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
-
-        physics::Rectangle frustum = getCameraFrustum( componentProvider, m_cameraEntity );
-
-        float metersPerPixel = componentProvider->get<CameraComponent>( m_cameraEntity )->getMetersPerPixel();
-
-        m_texturesToRenderCount = 0;
-
-        for ( const Entity& entity : m_entities )
+        void updateTexturesToRender( Entity _cameraEntity, const std::set<Entity>& _entitesToRender, TexturesToRenderContainer& _outTexturesToRender, u32& _textureCount )
         {
-            if ( gProviders->get<EntityProvider>()->isEntityEnabled( entity ) )
+            ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
+
+            physics::Rectangle frustum = getCameraFrustum( componentProvider, _cameraEntity );
+
+            float metersPerPixel = componentProvider->get<CameraComponent>( _cameraEntity )->getMetersPerPixel();
+
+            for ( const Entity& entity : _entitesToRender )
             {
-                const RenderComponent* renderComponent = componentProvider->get<RenderComponent>( entity );
-                const LocationComponent* locationComponent = componentProvider->get<LocationComponent>( entity );
-
-                physics::Rectangle entityAABB = getAABB( locationComponent, renderComponent );
-
-                if ( renderComponent->isEnabled() && areShapesOverLapping( entityAABB, frustum ) )
+                if ( gProviders->get<EntityProvider>()->isEntityEnabled( entity ) )
                 {
-                    assert( m_texturesToRenderCount < kConcurrentTexturePool ); //The concurrent texture pool is not big enough, consider increasing  kConcurrentTexturePool
+                    const RenderComponent* renderComponent = componentProvider->get<RenderComponent>( entity );
+                    const LocationComponent* locationComponent = componentProvider->get<LocationComponent>( entity );
 
-                    m_texturesToRender[m_texturesToRenderCount].texture = renderComponent->getTexture();
-                    m_texturesToRender[m_texturesToRenderCount].uvExtent = renderComponent->getUVExtent();
-                    m_texturesToRender[m_texturesToRenderCount].screenExtent.xPos = (s32)((entityAABB.lowerBoundary.x - frustum.lowerBoundary.x) / metersPerPixel);
-                    m_texturesToRender[m_texturesToRenderCount].screenExtent.yPos = (s32)((frustum.upperBoundary.y - entityAABB.upperBoundary.y) / metersPerPixel);
-                    m_texturesToRender[m_texturesToRenderCount].screenExtent.width = (s32)(renderComponent->getSize().x / metersPerPixel);
-                    m_texturesToRender[m_texturesToRenderCount].screenExtent.height = (s32)(renderComponent->getSize().y / metersPerPixel);
-                    m_texturesToRender[m_texturesToRenderCount].rotationDegrees = locationComponent->getDegreesRotation();
+                    physics::Rectangle entityAABB = getAABB( locationComponent, renderComponent );
 
-                    ++m_texturesToRenderCount;
+                    if ( renderComponent->isEnabled() && areShapesOverLapping( entityAABB, frustum ) )
+                    {
+                        assert( _textureCount < kConcurrentTexturePool ); //The concurrent texture pool is not big enough, consider increasing  kConcurrentTexturePool
+
+                       _outTexturesToRender[_textureCount].texture = renderComponent->getTexture();
+                       _outTexturesToRender[_textureCount].uvExtent = renderComponent->getUVExtent();
+                       _outTexturesToRender[_textureCount].screenExtent.xPos = (s32)((entityAABB.lowerBoundary.x - frustum.lowerBoundary.x) / metersPerPixel);
+                       _outTexturesToRender[_textureCount].screenExtent.yPos = (s32)((frustum.upperBoundary.y - entityAABB.upperBoundary.y) / metersPerPixel);
+                       _outTexturesToRender[_textureCount].screenExtent.width = (s32)(renderComponent->getSize().x / metersPerPixel);
+                       _outTexturesToRender[_textureCount].screenExtent.height = (s32)(renderComponent->getSize().y / metersPerPixel);
+                       _outTexturesToRender[_textureCount].rotationDegrees = locationComponent->getDegreesRotation();
+
+                        ++_textureCount;
+                    }
                 }
             }
         }
+    }
+
+    void RenderSystem::update( float _deltaTime )
+    {
+
+    }
+
+    void RenderSystem::prePhysicsUpdate( float _deltaTime )
+    {
+        m_texturesToRenderCount = 0;
+        updateTexturesToRender( m_cameraEntity, m_nonPhysicalEntities, m_texturesToRender, m_texturesToRenderCount );
+    }
+
+    void RenderSystem::postPhysicsUpdate( float _deltaTime )
+    {
+        updateTexturesToRender( m_cameraEntity, m_physicalEntities, m_texturesToRender, m_texturesToRenderCount );
     }
 
     void RenderSystem::render() const
@@ -165,14 +183,31 @@ namespace puma
     void RenderSystem::registerEntity( Entity _entity )
     {
         assert( entityComponentCheck( _entity ) );
-        assert( m_entities.find( _entity ) == m_entities.end() ); //This entity has already been registered
-        m_entities.emplace( _entity );
+        assert( m_nonPhysicalEntities.find( _entity ) == m_nonPhysicalEntities.end() ); //This entity has already been registered
+    
+        ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
+        
+        if ( componentProvider->exists<CollisionComponent>( _entity ) )
+        {
+            m_physicalEntities.emplace( _entity );
+        }
+        else
+        {
+            m_nonPhysicalEntities.emplace( _entity );
+        }
     }
 
     void RenderSystem::unregisterEntity( Entity _entity )
     {
-        assert( m_entities.find( _entity ) != m_entities.end() ); //This entity is not registered to this system
-        m_entities.erase( _entity );
+        if ( m_nonPhysicalEntities.find( _entity ) != m_nonPhysicalEntities.end() )
+        {
+            m_nonPhysicalEntities.erase( _entity );
+        }
+        else
+        {
+            assert( m_physicalEntities.find( _entity ) != m_physicalEntities.end() ); //This entity is not registered to this system
+            m_physicalEntities.erase( _entity );
+        }
     }
 
 #ifdef _DEBUG

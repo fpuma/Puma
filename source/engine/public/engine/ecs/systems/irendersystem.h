@@ -15,12 +15,10 @@ namespace puma
 
         virtual void init() = 0;
 
-        virtual void render() const = 0;
-
-        virtual void setCameraEntity( Entity _cameraEntity ) = 0;
+        virtual void    setCameraEntity( Entity _cameraEntity ) = 0;
+        virtual Entity  getCameraEntity() const = 0;
 
         virtual void registerEntity( Entity _entity ) = 0;
-
         virtual void unregisterEntity( Entity _entity ) = 0;
     };
 }

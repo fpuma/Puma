@@ -5,6 +5,7 @@
 #include <utils/defaultinstance.h>
 
 #include <algorithm>
+#include <array>
 #include <assert.h>
 #include <functional>
 #include <map>
