@@ -139,11 +139,6 @@ namespace puma
         }
     }
 
-    void RenderSystem::update( float _deltaTime )
-    {
-
-    }
-
     void RenderSystem::prePhysicsUpdate( float _deltaTime )
     {
         m_texturesToRenderCount = 0;

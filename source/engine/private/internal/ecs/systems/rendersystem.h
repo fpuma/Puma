@@ -26,7 +26,7 @@ namespace puma
         void init() override;
         void uninit() override;
 
-        void update             ( float _deltaTime ) override;
+        void update             ( float _deltaTime ) override {};
         void prePhysicsUpdate   ( float _deltaTime ) override;
         void postPhysicsUpdate  ( float _deltaTime ) override;
 
