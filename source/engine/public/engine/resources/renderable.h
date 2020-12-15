@@ -15,10 +15,10 @@ namespace puma
         gfx::Extent getUVExtent() const
         {
             gfx::Extent uvExtent;
-            uvExtent.xPos = (s32)((float)m_texture.getOriginalSize().width * m_textureSample.upperLimit.u);
-            uvExtent.yPos = (s32)((float)m_texture.getOriginalSize().height * m_textureSample.upperLimit.v);
-            uvExtent.width = (s32)((float)m_texture.getOriginalSize().width * m_textureSample.lowerLimit.u);
-            uvExtent.height = (s32)((float)m_texture.getOriginalSize().height * m_textureSample.lowerLimit.v);
+            uvExtent.xPos = (s32)((float)m_texture.getOriginalSize().width * m_textureSample.lowerLimit.u); 
+            uvExtent.yPos = (s32)((float)m_texture.getOriginalSize().height * m_textureSample.lowerLimit.v); 
+            uvExtent.width = (s32)((float)m_texture.getOriginalSize().width * m_textureSample.upperLimit.u);
+            uvExtent.height = (s32)((float)m_texture.getOriginalSize().height * m_textureSample.upperLimit.v);
             return uvExtent;
         }
 
