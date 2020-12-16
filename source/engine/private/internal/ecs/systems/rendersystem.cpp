@@ -27,7 +27,7 @@ namespace puma
 
         assert( (nullptr != locationComponent) && (nullptr != cameraComponent) );
 
-        app::Extent windowExtent = gGraphics->getWindowExtent();
+        app::Extent windowExtent = gApplication->getWindowExtent();
 
         physics::Rectangle result;
 
@@ -152,7 +152,7 @@ namespace puma
 
     void RenderSystem::render() const
     {
-        app::IRenderer* renderer = gGraphics->getRenderer();
+        app::IRenderer* renderer = gApplication->getRenderer();
 
         for ( u32 index = 0; index < m_texturesToRenderCount; ++index )
         {

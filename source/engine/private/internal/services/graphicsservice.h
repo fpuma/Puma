@@ -4,7 +4,7 @@
 
 namespace puma
 {
-    class GraphicsService final : public IGraphicsService
+    class GraphicsService final : public IApplicationService
     {
     public:
         

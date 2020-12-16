@@ -6,10 +6,12 @@
 
 #include <application/commondefinitions.h>
 #include <application/irenderer.h>
+#include <application/iwindow.h>
+#include <texturemanager/itexturemanager.h>
 
 using namespace puma;
 
-Entity spawnFloor();
+Entity spawnFloor( app::WindowHandle _windowHandle, app::ITextureManager* _textureManager );
 void unspawnFloor( Entity _floorEntity );
 
 int main( int argc, char* argv[] )
@@ -19,10 +21,15 @@ int main( int argc, char* argv[] )
     enginePtr->init();
 
     app::Extent windowExtent = { 500,500,100,100 };
-    gGraphics->init( windowExtent, "EngineTest" );
-    //gGraphics->getRenderer()->setDefaultBackgroundColor()
+    
 
-    Entity floorEntity = spawnFloor();
+    app::WindowHandle windowHandle = gApplication->createWindow( windowExtent, "EngineTest" );
+
+    auto textureManagerPtr = app::ITextureManager::create();
+
+    //gApplication->getRenderer()->setDefaultBackgroundColor()
+
+    Entity floorEntity = spawnFloor( windowHandle, textureManagerPtr.get() );
 
     while ( !enginePtr->shouldQuit() )
     {
@@ -50,7 +57,7 @@ int main( int argc, char* argv[] )
 #include <engine/ecs/components/icollisioncomponent.h>
 #include <engine/ecs/systems/irendersystem.h>
 
-Entity spawnFloor()
+Entity spawnFloor( app::WindowHandle _windowHandle, app::ITextureManager* _textureManager )
 {
     Entity result = gProviders->get<IEntityProvider>()->requestEntity();
     IComponentProvider* componentProvider = gProviders->get<IComponentProvider>();
@@ -62,8 +69,10 @@ Entity spawnFloor()
     Position pos = { 0.0f, -5.0f };
     locationComponent->setPosition( pos );
 
+    app::IRenderer* renderer = gApplication->getWindow( _windowHandle )->getRenderer();
+
     //Render
-    app::Texture greenTexture = gGraphics->getTextureManager()->loadTexture( "../assets/green.png" );
+    app::Texture greenTexture = _textureManager->loadTexture( renderer, "../assets/green.png" );
     Renderable renderable;
     renderable.setTexture( greenTexture );
     renderComponent->setRenderable( renderable );

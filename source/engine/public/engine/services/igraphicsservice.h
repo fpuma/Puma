@@ -5,11 +5,11 @@
 
 namespace puma
 {
-    class IGraphicsService : public IService
+    class IApplicationService : public IService
     {
     public:
         
-        virtual ~IGraphicsService() {}
+        virtual ~IApplicationService() {}
 
         virtual app::IApplication* get() = 0;
     };
@@ -17,4 +17,4 @@ namespace puma
 
 #include <engine/services/base/iservicecontainer.h>
 
-#define gGraphics puma::DefaultServices::getInstance()->get<puma::IGraphicsService>()->get()
+#define gApplication puma::DefaultServices::getInstance()->get<puma::IApplicationService>()->get()

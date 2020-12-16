@@ -91,8 +91,8 @@ namespace puma
     {
         m_deltaTime.update();
         gInput->update();
-        gGraphics->update();
-        m_shouldQuit = gGraphics->shouldQuit();
+        gApplication->update();
+        m_shouldQuit = gApplication->shouldQuit();
 
         float currentDeltaTime = (float)m_deltaTime.get();
         gInternalSystems->update( currentDeltaTime );
@@ -103,7 +103,7 @@ namespace puma
 
     void Engine::render()
     {
-        app::IRenderer* renderer = gGraphics->getRenderer();
+        app::IRenderer* renderer = gApplication->getRenderer();
         renderer->beginRender();
 
         gInternalSystems->get<RenderSystem>()->render();
