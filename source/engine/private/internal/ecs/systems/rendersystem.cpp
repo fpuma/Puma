@@ -16,7 +16,7 @@
 #include <physics/geometry/shapes.h>
 #include <physics/geometry/overlapcheck.h>
 
-#include <graphics/irenderer.h>
+#include <application/irenderer.h>
 
 namespace puma
 {
@@ -27,7 +27,7 @@ namespace puma
 
         assert( (nullptr != locationComponent) && (nullptr != cameraComponent) );
 
-        gfx::Extent windowExtent = gGraphics->getWindowExtent();
+        app::Extent windowExtent = gGraphics->getWindowExtent();
 
         physics::Rectangle result;
 
@@ -152,7 +152,7 @@ namespace puma
 
     void RenderSystem::render() const
     {
-        gfx::IRenderer* renderer = gGraphics->getRenderer();
+        app::IRenderer* renderer = gGraphics->getRenderer();
 
         for ( u32 index = 0; index < m_texturesToRenderCount; ++index )
         {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <graphics/texture.h>
+#include <texturemanager/texture.h>
 
 namespace puma
 {
@@ -8,13 +8,13 @@ namespace puma
     {
     public:
 
-        void setTexture( gfx::Texture _texture ) { m_texture = _texture; }
-        void setUVMap( gfx::TextureSample _uvMap ) { m_textureSample = _uvMap; }
+        void setTexture( app::Texture _texture ) { m_texture = _texture; }
+        void setUVMap( app::TextureSample _uvMap ) { m_textureSample = _uvMap; }
 
-        gfx::Texture getTexture() const { return m_texture; }
-        gfx::Extent getUVExtent() const
+        app::Texture getTexture() const { return m_texture; }
+        app::Extent getUVExtent() const
         {
-            gfx::Extent uvExtent;
+            app::Extent uvExtent;
             uvExtent.xPos = (s32)((float)m_texture.getOriginalSize().width * m_textureSample.lowerLimit.u); 
             uvExtent.yPos = (s32)((float)m_texture.getOriginalSize().height * m_textureSample.lowerLimit.v); 
             uvExtent.width = (s32)((float)m_texture.getOriginalSize().width * m_textureSample.upperLimit.u);
@@ -24,7 +24,7 @@ namespace puma
 
     private:
 
-        gfx::TextureSample m_textureSample;
-        gfx::Texture m_texture;
+        app::TextureSample m_textureSample;
+        app::Texture m_texture;
     };
 }

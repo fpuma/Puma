@@ -8,17 +8,17 @@ namespace puma
     {
     public:
         
-        GraphicsService() { m_graphics = gfx::IGraphics::create(); }
+        GraphicsService() { m_graphics = app::IApplication::create(); }
 
         ~GraphicsService() { m_graphics.reset(); }
 
-        gfx::IGraphics* get() override { return m_graphics.get(); }
+        app::IApplication* get() override { return m_graphics.get(); }
 
         void uninit() { m_graphics->uninit(); }
 
     private:
 
-        std::unique_ptr<gfx::IGraphics> m_graphics;
+        std::unique_ptr<app::IApplication> m_graphics;
     };
 
 }

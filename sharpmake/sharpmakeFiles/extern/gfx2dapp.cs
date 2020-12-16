@@ -20,8 +20,8 @@ namespace Puma
             conf.IncludePrivatePaths.Add(@"\private");
             conf.IncludePaths.Add(@"\public");
 
-            conf.PrecompHeader = @"precompiledgraphics.h";
-            conf.PrecompSource = @"precompiledgraphics.cpp";
+            conf.PrecompHeader = @"precompiledapplication.h";
+            conf.PrecompSource = @"precompiledapplication.cpp";
 
             conf.Options.Add(Sharpmake.Options.Vc.General.TreatWarningsAsErrors.Enable);
 

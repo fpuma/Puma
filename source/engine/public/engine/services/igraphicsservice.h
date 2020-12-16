@@ -1,7 +1,7 @@
 #pragma once
 
 #include <engine/services/base/iservice.h>
-#include <graphics/igraphics.h>
+#include <application/iapplication.h>
 
 namespace puma
 {
@@ -11,7 +11,7 @@ namespace puma
         
         virtual ~IGraphicsService() {}
 
-        virtual gfx::IGraphics* get() = 0;
+        virtual app::IApplication* get() = 0;
     };
 }
 

@@ -20,7 +20,7 @@
 
 #include <time/timestamp.h>
 
-#include <graphics/irenderer.h>
+#include <application/irenderer.h>
 
 #include <iostream>
 
@@ -103,7 +103,7 @@ namespace puma
 
     void Engine::render()
     {
-        gfx::IRenderer* renderer = gGraphics->getRenderer();
+        app::IRenderer* renderer = gGraphics->getRenderer();
         renderer->beginRender();
 
         gInternalSystems->get<RenderSystem>()->render();

@@ -4,16 +4,16 @@
 
 #include <engine/ecs/systems/irendersystem.h>
 
-#include <graphics/graphicdefinitions.h>
-#include <graphics/texture.h>
+#include <application/commondefinitions.h>
+#include <texturemanager/texture.h>
 
 namespace puma
 {
     struct TextureToRenderInfo
     {
-        gfx::Texture texture;
-        gfx::Extent uvExtent;
-        gfx::Extent screenExtent;
+        app::Texture texture;
+        app::Extent uvExtent;
+        app::Extent screenExtent;
         float rotationDegrees;
     };
 

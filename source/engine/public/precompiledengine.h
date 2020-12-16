@@ -16,4 +16,4 @@
 #include <vector>
 
 #include <precompiledphysics.h>
-#include <precompiledgraphics.h>
+#include <precompiledapplication.h>

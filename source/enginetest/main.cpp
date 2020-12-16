@@ -4,8 +4,8 @@
 #include <engine/services/igraphicsservice.h>
 #include <engine/ecs/base/entity.h>
 
-#include <graphics/graphicdefinitions.h>
-#include <graphics/irenderer.h>
+#include <application/commondefinitions.h>
+#include <application/irenderer.h>
 
 using namespace puma;
 
@@ -18,7 +18,7 @@ int main( int argc, char* argv[] )
     auto enginePtr = IEngine::create();
     enginePtr->init();
 
-    gfx::Extent windowExtent = { 500,500,100,100 };
+    app::Extent windowExtent = { 500,500,100,100 };
     gGraphics->init( windowExtent, "EngineTest" );
     //gGraphics->getRenderer()->setDefaultBackgroundColor()
 
@@ -43,7 +43,7 @@ int main( int argc, char* argv[] )
 #include <engine/ecs/base/providers/ientityprovider.h>
 #include <engine/ecs/base/providers/icomponentprovider.h>
 
-#include <graphics/itexturemanager.h>
+#include <texturemanager/itexturemanager.h>
 
 #include <engine/ecs/components/irendercomponent.h>
 #include <engine/ecs/components/ilocationcomponent.h>
@@ -63,7 +63,7 @@ Entity spawnFloor()
     locationComponent->setPosition( pos );
 
     //Render
-    gfx::Texture greenTexture = gGraphics->getTextureManager()->loadTexture( "../assets/green.png" );
+    app::Texture greenTexture = gGraphics->getTextureManager()->loadTexture( "../assets/green.png" );
     Renderable renderable;
     renderable.setTexture( greenTexture );
     renderComponent->setRenderable( renderable );
