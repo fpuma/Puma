@@ -1,16 +1,16 @@
 #pragma once
 
-#include <engine/services/igraphicsservice.h>
+#include <engine/services/iapplicationservice.h>
 
 namespace puma
 {
-    class GraphicsService final : public IApplicationService
+    class ApplicationService final : public IApplicationService
     {
     public:
         
-        GraphicsService() { m_graphics = app::IApplication::create(); }
+        ApplicationService() { m_graphics = app::IApplication::create(); }
 
-        ~GraphicsService() { m_graphics.reset(); }
+        ~ApplicationService() { m_graphics.reset(); }
 
         app::IApplication* get() override { return m_graphics.get(); }
 

@@ -1,7 +1,7 @@
 #include <precompiledengine.h>
 
 #include <engine/iengine.h>
-#include <engine/services/igraphicsservice.h>
+#include <engine/services/iapplicationservice.h>
 #include <engine/ecs/base/entity.h>
 
 #include <application/commondefinitions.h>

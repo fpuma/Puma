@@ -8,7 +8,7 @@
 #include <internal/ecs/components/rendercomponent.h>
 #include <internal/services/base/servicecontainer.h>
 #include <internal/services/inputservice.h>
-#include <internal/services/graphicsservice.h>
+#include <engine/services/iapplicationservice.h>
 #include <internal/services/physicsservice.h>
 #include <internal/services/providersservice.h>
 #include <internal/services/systemsservice.h>
@@ -103,7 +103,7 @@ namespace puma
 
     void Engine::render()
     {
-        app::IRenderer* renderer = gApplication->getRenderer();
+        app::IRenderer* renderer = gApplication->getDefaultRenderer();
         renderer->beginRender();
 
         gInternalSystems->get<RenderSystem>()->render();

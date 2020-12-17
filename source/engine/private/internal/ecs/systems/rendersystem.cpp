@@ -5,13 +5,15 @@
 #include <engine/ecs/base/entity.h>
 
 #include <internal/services/providersservice.h>
-#include <internal/services/graphicsservice.h>
+#include <internal/services/applicationservice.h>
 #include <internal/ecs/base/providers/componentprovider.h>
 #include <internal/ecs/base/providers/entityprovider.h>
 #include <internal/ecs/components/rendercomponent.h>
 #include <internal/ecs/components/locationcomponent.h>
 #include <internal/ecs/components/cameracomponent.h>
 #include <internal/ecs/components/collisioncomponent.h>
+
+#include <application/iwindow.h>
 
 #include <physics/geometry/shapes.h>
 #include <physics/geometry/overlapcheck.h>
@@ -27,7 +29,7 @@ namespace puma
 
         assert( (nullptr != locationComponent) && (nullptr != cameraComponent) );
 
-        app::Extent windowExtent = gApplication->getWindowExtent();
+        app::Extent windowExtent = gApplication->getDefaultWindow()->getExtent();
 
         physics::Rectangle result;
 
@@ -152,7 +154,7 @@ namespace puma
 
     void RenderSystem::render() const
     {
-        app::IRenderer* renderer = gApplication->getRenderer();
+        app::IRenderer* renderer = gApplication->getDefaultRenderer();
 
         for ( u32 index = 0; index < m_texturesToRenderCount; ++index )
         {
