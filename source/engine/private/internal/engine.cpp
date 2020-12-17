@@ -8,7 +8,7 @@
 #include <internal/ecs/components/rendercomponent.h>
 #include <internal/services/base/servicecontainer.h>
 #include <internal/services/inputservice.h>
-#include <internal/services/graphicsservice.h>
+#include <engine/services/iapplicationservice.h>
 #include <internal/services/physicsservice.h>
 #include <internal/services/providersservice.h>
 #include <internal/services/systemsservice.h>
@@ -20,7 +20,7 @@
 
 #include <time/timestamp.h>
 
-#include <graphics/irenderer.h>
+#include <application/irenderer.h>
 
 #include <iostream>
 
@@ -91,8 +91,8 @@ namespace puma
     {
         m_deltaTime.update();
         gInput->update();
-        gGraphics->update();
-        m_shouldQuit = gGraphics->shouldQuit();
+        gApplication->update();
+        m_shouldQuit = gApplication->shouldQuit();
 
         float currentDeltaTime = (float)m_deltaTime.get();
         gInternalSystems->update( currentDeltaTime );
@@ -103,7 +103,7 @@ namespace puma
 
     void Engine::render()
     {
-        gfx::IRenderer* renderer = gGraphics->getRenderer();
+        app::IRenderer* renderer = gApplication->getDefaultRenderer();
         renderer->beginRender();
 
         gInternalSystems->get<RenderSystem>()->render();

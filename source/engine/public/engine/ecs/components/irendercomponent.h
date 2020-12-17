@@ -22,8 +22,8 @@ namespace puma
         virtual void setSize( const RenderSize& _size ) = 0;
         virtual RenderSize getSize() const = 0;
 
-        virtual gfx::Texture getTexture() const = 0;
-        virtual gfx::Extent getUVExtent() const = 0;
+        virtual app::Texture getTexture() const = 0;
+        virtual app::Extent getUVExtent() const = 0;
 
         virtual void setRenderable( const Renderable& _renderable ) = 0;
     };
