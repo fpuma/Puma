@@ -54,8 +54,7 @@ namespace puma
 
             LocationComponent* locationComponent = componentProvider->get<LocationComponent>( entity );
 
-            Position pos = gPhysics->getDynamicFrame( collisionComponent->getFrameID() )->getPosition();
-
+            Position pos = gPhysics->getFrame( collisionComponent->getFrameID() )->getPosition();
             locationComponent->setPosition( pos );
         }
     }
