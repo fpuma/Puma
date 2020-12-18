@@ -1,24 +1,25 @@
 #include <precompiledengine.h>
 
-#include <internal/ecs/systems/rendersystem.h>
+#include "rendersystem.h"
+
+#include <application/irenderer.h>
+#include <application/iwindow.h>
 
 #include <engine/ecs/base/entity.h>
 
-#include <internal/services/providersservice.h>
-#include <internal/services/applicationservice.h>
 #include <internal/ecs/base/providers/componentprovider.h>
 #include <internal/ecs/base/providers/entityprovider.h>
-#include <internal/ecs/components/rendercomponent.h>
-#include <internal/ecs/components/locationcomponent.h>
+
 #include <internal/ecs/components/cameracomponent.h>
 #include <internal/ecs/components/collisioncomponent.h>
+#include <internal/ecs/components/locationcomponent.h>
+#include <internal/ecs/components/rendercomponent.h>
 
-#include <application/iwindow.h>
+#include <internal/services/providersservice.h>
+#include <internal/services/applicationservice.h>
 
-#include <physics/geometry/shapes.h>
 #include <physics/geometry/overlapcheck.h>
-
-#include <application/irenderer.h>
+#include <physics/geometry/shapes.h>
 
 namespace puma
 {
@@ -34,14 +35,14 @@ namespace puma
         physics::Rectangle result;
 
         Position cameraPos = locationComponent->getPosition();
-        float screenMetersWidth  = (float)windowExtent.width * cameraComponent->getMetersPerPixel();
+        float screenMetersWidth = (float)windowExtent.width * cameraComponent->getMetersPerPixel();
         float screenMetersHeight = (float)windowExtent.height * cameraComponent->getMetersPerPixel();
 
         float upperX = cameraPos.x + (screenMetersWidth / 2.0f);
         float lowerX = cameraPos.x - (screenMetersWidth / 2.0f);
         float upperY = cameraPos.y + (screenMetersHeight / 2.0f);
         float lowerY = cameraPos.y - (screenMetersHeight / 2.0f);
-        
+
         result.upperBoundary = { upperX, upperY };
         result.lowerBoundary = { lowerX, lowerY };
 
@@ -115,27 +116,29 @@ namespace puma
 
             for ( const Entity& entity : _entitesToRender )
             {
-                if ( gProviders->get<EntityProvider>()->isEntityEnabled( entity ) )
+                if ( !gProviders->get<EntityProvider>()->isEntityEnabled( entity ) ) continue;
+
+                const RenderComponent* renderComponent = componentProvider->get<RenderComponent>( entity );
+
+                if ( !renderComponent->isEnabled() ) continue;
+
+                const LocationComponent* locationComponent = componentProvider->get<LocationComponent>( entity );
+
+                physics::Rectangle entityAABB = getAABB( locationComponent, renderComponent );
+
+                if ( areShapesOverLapping( entityAABB, frustum ) )
                 {
-                    const RenderComponent* renderComponent = componentProvider->get<RenderComponent>( entity );
-                    const LocationComponent* locationComponent = componentProvider->get<LocationComponent>( entity );
+                    assert( _textureCount < kConcurrentTexturePool ); //The concurrent texture pool is not big enough, consider increasing  kConcurrentTexturePool
 
-                    physics::Rectangle entityAABB = getAABB( locationComponent, renderComponent );
+                    _outTexturesToRender[_textureCount].texture = renderComponent->getTexture();
+                    _outTexturesToRender[_textureCount].uvExtent = renderComponent->getUVExtent();
+                    _outTexturesToRender[_textureCount].screenExtent.xPos = (s32)((entityAABB.lowerBoundary.x - frustum.lowerBoundary.x) / metersPerPixel);
+                    _outTexturesToRender[_textureCount].screenExtent.yPos = (s32)((frustum.upperBoundary.y - entityAABB.upperBoundary.y) / metersPerPixel);
+                    _outTexturesToRender[_textureCount].screenExtent.width = (s32)(renderComponent->getSize().x / metersPerPixel);
+                    _outTexturesToRender[_textureCount].screenExtent.height = (s32)(renderComponent->getSize().y / metersPerPixel);
+                    _outTexturesToRender[_textureCount].rotationDegrees = locationComponent->getDegreesRotation();
 
-                    if ( renderComponent->isEnabled() && areShapesOverLapping( entityAABB, frustum ) )
-                    {
-                        assert( _textureCount < kConcurrentTexturePool ); //The concurrent texture pool is not big enough, consider increasing  kConcurrentTexturePool
-
-                        _outTexturesToRender[_textureCount].texture = renderComponent->getTexture();
-                        _outTexturesToRender[_textureCount].uvExtent = renderComponent->getUVExtent();
-                        _outTexturesToRender[_textureCount].screenExtent.xPos = (s32)((entityAABB.lowerBoundary.x - frustum.lowerBoundary.x) / metersPerPixel);
-                        _outTexturesToRender[_textureCount].screenExtent.yPos = (s32)((frustum.upperBoundary.y - entityAABB.upperBoundary.y) / metersPerPixel);
-                        _outTexturesToRender[_textureCount].screenExtent.width = (s32)(renderComponent->getSize().x / metersPerPixel);
-                        _outTexturesToRender[_textureCount].screenExtent.height = (s32)(renderComponent->getSize().y / metersPerPixel);
-                        _outTexturesToRender[_textureCount].rotationDegrees = locationComponent->getDegreesRotation();
-
-                        ++_textureCount;
-                    }
+                    ++_textureCount;
                 }
             }
         }
@@ -158,19 +161,19 @@ namespace puma
 
         for ( u32 index = 0; index < m_texturesToRenderCount; ++index )
         {
-            renderer->renderTexture(    m_texturesToRender[index].texture, 
-                                        m_texturesToRender[index].uvExtent, 
-                                        m_texturesToRender[index].screenExtent, 
-                                        m_texturesToRender[index].rotationDegrees );
+            renderer->renderTexture( m_texturesToRender[index].texture,
+                m_texturesToRender[index].uvExtent,
+                m_texturesToRender[index].screenExtent,
+                m_texturesToRender[index].rotationDegrees );
         }
-        
+
     }
 
     void RenderSystem::setCameraEntity( Entity _cameraEntity )
     {
 #ifdef _DEBUG
         ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
-        CameraComponent* cameraComponent = componentProvider->get<CameraComponent>( _cameraEntity);
+        CameraComponent* cameraComponent = componentProvider->get<CameraComponent>( _cameraEntity );
         LocationComponent* locationComponent = componentProvider->get<LocationComponent>( _cameraEntity );
         assert( (nullptr != cameraComponent) && (nullptr != locationComponent) );
 #endif
@@ -181,9 +184,10 @@ namespace puma
     {
         assert( entityComponentCheck( _entity ) );
         assert( m_nonPhysicalEntities.find( _entity ) == m_nonPhysicalEntities.end() ); //This entity has already been registered
-    
+        assert( m_physicalEntities.find( _entity ) == m_physicalEntities.end() ); //This entity has already been registered
+
         ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
-        
+
         if ( componentProvider->exists<CollisionComponent>( _entity ) )
         {
             m_physicalEntities.emplace( _entity );
