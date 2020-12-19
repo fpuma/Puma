@@ -3,11 +3,10 @@
 #include <engine/ecs/components/icollisioncomponent.h>
 #include <engine/utils/position.h>
 
+#include <internal/ecs/systems/collisionsystem.h>
+
 namespace puma
 {
-
-    using namespace physics;
-
     class CollisionComponent final : public ICollisionComponent
     {
     public:
@@ -15,8 +14,6 @@ namespace puma
         void enable() override { m_enabled = true; };
         void disable() override { m_enabled = false; };
         bool isEnabled() const override { return m_enabled; }
-
-        void init( FrameType _frameType, FrameInfo _frameInfo/*, WorldID _worldId*/ ) override;
 
         FrameType getFrameType() const override { return m_frameType; }
         FrameID getFrameID() const override { return m_frameId; }
@@ -27,6 +24,10 @@ namespace puma
         bool isValid() const override { return (FrameType::Invalid != m_frameType) && (m_frameId.value() != kInvalidPhysicsID); }
 
     private:
+
+        friend void CollisionSystem::registerEntity( Entity _entity, FrameInfo _frameInfo );
+
+        void init( FrameType _frameType, FrameID _frameId );
 
         std::vector<FramePartID> m_bodyIds;
         std::vector<FramePartID> m_triggerIds;

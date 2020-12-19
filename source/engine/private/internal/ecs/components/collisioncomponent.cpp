@@ -9,21 +9,12 @@
 namespace puma
 {
 
-    void CollisionComponent::init( FrameType _frameType, FrameInfo _frameInfo/*, WorldID _worldId*/ )
+    void CollisionComponent::init( FrameType _frameType, FrameID _frameId )
     {
         assert( !isValid() );
 
         m_frameType = _frameType;
-
-        IWorld* world = gPhysics->getDefaultWorld();
-
-        switch ( m_frameType )
-        {
-        case FrameType::Dynamic:    m_frameId = world->addDynamicFrame( _frameInfo ); break;
-        case FrameType::Static:     m_frameId = world->addStaticFrame( _frameInfo ); break;
-        case FrameType::Kinematic:  m_frameId = world->addKinematicFrame( _frameInfo ); break;
-        default: break;
-        }
+        m_frameId = _frameId;
     }
 
     void CollisionComponent::addBody( BodyInfo _bodyInfo )

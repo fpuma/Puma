@@ -8,7 +8,6 @@
 
 namespace puma
 {
-
     using namespace physics;
 
     class ICollisionComponent : public IComponent
@@ -16,8 +15,6 @@ namespace puma
     public:
 
         virtual ~ICollisionComponent(){}
-
-        virtual void init( FrameType _frameType, FrameInfo _frameInfo/*, WorldID _worldId*/ ) = 0;
 
         virtual FrameType getFrameType() const = 0;
         virtual FrameID getFrameID() const = 0;

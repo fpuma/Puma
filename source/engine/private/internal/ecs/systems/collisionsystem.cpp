@@ -10,7 +10,8 @@
 #include <internal/ecs/components/collisioncomponent.h>
 #include <internal/ecs/components/locationcomponent.h>
 
-#include <physics/simulation/frames/idynamicframe.h>
+#include <physics/simulation/frames/iframe.h>
+#include <physics/simulation/world/iworld.h>
 
 namespace puma
 {
@@ -26,9 +27,29 @@ namespace puma
         m_entities.clear();
     }
 
-    void CollisionSystem::registerEntity( Entity _entity )
+    void CollisionSystem::registerEntity( Entity _entity, FrameInfo _frameInfo )
     {
         assert( entityComponentCheck( _entity ) ); //This entity does not have the necessary components to be registered into this system
+
+        ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
+
+        assert( nullptr != componentProvider );
+
+        IWorld* world = gPhysics->getDefaultWorld();
+
+        FrameType frameType = _frameInfo.frameType;
+        FrameID frameId = kInvalidPhysicsID;
+
+        switch ( frameType )
+        {
+        case FrameType::Dynamic:    frameId = world->addDynamicFrame( _frameInfo ); break;
+        case FrameType::Static:     frameId = world->addStaticFrame( _frameInfo ); break;
+        case FrameType::Kinematic:  frameId = world->addKinematicFrame( _frameInfo ); break;
+        default: break;
+        }
+
+        CollisionComponent* collisionComponent = componentProvider->get<CollisionComponent>( _entity );
+        collisionComponent->init( frameType, frameId );
 
         m_entities.emplace( _entity );
     }

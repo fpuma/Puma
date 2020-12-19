@@ -89,9 +89,6 @@ Entity spawnFloor( app::WindowHandle _windowHandle, app::ITextureManager* _textu
     IRenderComponent* renderComponent = componentProvider->add<IRenderComponent>( result );
     ICollisionComponent* collisionComponent = componentProvider->add<ICollisionComponent>( result );
     
-    gSystems->get<IRenderSystem>()->registerEntity( result );
-    gSystems->get<ICollisionSystem>()->registerEntity( result );
-
     Position pos = { 0.0f, -50.0f };
     locationComponent->setPosition( pos );
 
@@ -104,12 +101,16 @@ Entity spawnFloor( app::WindowHandle _windowHandle, app::ITextureManager* _textu
     renderComponent->setRenderable( renderable );
     RenderSize renderSize = { 200.0f, 50.0f };
     renderComponent->setSize( renderSize );
-    
+
+    gSystems->get<IRenderSystem>()->registerEntity( result );
 
     //Physics
     FrameInfo frameInfo;
+    frameInfo.frameType = FrameType::Static;
     frameInfo.position = pos;
-    collisionComponent->init( physics::FrameType::Static, frameInfo);
+    //collisionComponent->init( physics::FrameType::Static, frameInfo);
+
+    gSystems->get<ICollisionSystem>()->registerEntity( result, frameInfo );
 
     physics::Rectangle floorShape;
     floorShape.lowerBoundary = { -100.0f, -25.0f };
@@ -149,8 +150,6 @@ Entity spawnBall( app::WindowHandle _windowHandle, app::ITextureManager* _textur
     IRenderComponent* renderComponent = componentProvider->add<IRenderComponent>( result );
     ICollisionComponent* collisionComponent = componentProvider->add<ICollisionComponent>( result );
 
-    gSystems->get<IRenderSystem>()->registerEntity( result );
-    gSystems->get<ICollisionSystem>()->registerEntity( result );
 
     Position pos = { 0.0f, 50.0f };
     locationComponent->setPosition( pos );
@@ -164,12 +163,15 @@ Entity spawnBall( app::WindowHandle _windowHandle, app::ITextureManager* _textur
     renderComponent->setRenderable( renderable );
     RenderSize renderSize = { 30.0f, 30.0f };
     renderComponent->setSize( renderSize );
+    gSystems->get<IRenderSystem>()->registerEntity( result );
 
 
     //Physics
     FrameInfo frameInfo;
+    frameInfo.frameType = FrameType::Dynamic;
     frameInfo.position = pos;
-    collisionComponent->init( physics::FrameType::Dynamic, frameInfo );
+    //collisionComponent->init( physics::FrameType::Dynamic, frameInfo );
+    gSystems->get<ICollisionSystem>()->registerEntity( result, frameInfo );
 
     physics::Circle ballShape;
     ballShape.radius = 15.0f;
