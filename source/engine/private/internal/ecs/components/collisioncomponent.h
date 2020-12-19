@@ -24,14 +24,14 @@ namespace puma
         void addBody( BodyInfo _bodyInfo ) override;
         void addTrigger( TriggerInfo _triggerInfo ) override;
 
-        bool isValid() const override { return (FrameType::Count != m_frameType) && (m_frameId.value() != kInvalidPhysicsID); }
+        bool isValid() const override { return (FrameType::Invalid != m_frameType) && (m_frameId.value() != kInvalidPhysicsID); }
 
     private:
 
         std::vector<FramePartID> m_bodyIds;
         std::vector<FramePartID> m_triggerIds;
 
-        FrameType m_frameType = FrameType::Count;
+        FrameType m_frameType = FrameType::Invalid;
         FrameID m_frameId;
         bool m_enabled = true;
     };
