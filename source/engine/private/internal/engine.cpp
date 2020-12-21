@@ -8,15 +8,18 @@
 #include <internal/ecs/components/rendercomponent.h>
 #include <internal/services/base/servicecontainer.h>
 #include <internal/services/inputservice.h>
-#include <engine/services/iapplicationservice.h>
+#include <internal/services/applicationservice.h>
 #include <internal/services/physicsservice.h>
 #include <internal/services/providersservice.h>
 #include <internal/services/systemsservice.h>
 
 #include <internal/ecs/base/providers/entityprovider.h>
+#include <internal/ecs/systems/collisionsystem.h>
 #include <internal/ecs/systems/rendersystem.h>
 
 #include <engine/utils/timerprovider.h>
+
+#include <physics/simulation/world/iworld.h>
 
 #include <time/timestamp.h>
 
@@ -39,6 +42,7 @@ namespace puma
             gProviders->registerClass<TimerProvider>( );
 
             gInternalSystems->registerInterface<IRenderSystem, RenderSystem>();
+            gInternalSystems->registerInterface<ICollisionSystem, CollisionSystem>();
         }
 
         void registerComponents()
@@ -79,6 +83,9 @@ namespace puma
         RenderSystem* renderSystem = gInternalSystems->add<RenderSystem>();
         renderSystem->init();
 
+        CollisionSystem* collisionSystem = gInternalSystems->add<CollisionSystem>();
+        collisionSystem->init();
+
         gInternalSystems->updateSystemsProperties();
     }
 
@@ -109,6 +116,11 @@ namespace puma
         gInternalSystems->get<RenderSystem>()->render();
 
         renderer->renderText( 0, 0, std::to_string( 1.0f / m_deltaTime.getAverage() ).c_str() );
+
+#ifdef _DEBUG
+        gPhysics->getDefaultWorld()->debugDraw();
+#endif // _DEBUG
+
         //Timestamp ts;
         //ts.setToCurrentLocalTime();
         //renderer.renderText( ts.ToString().c_str() );
