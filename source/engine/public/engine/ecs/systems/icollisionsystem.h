@@ -7,9 +7,6 @@
 
 namespace puma
 {
-
-    using namespace physics;
-
     class ICollisionSystem : public ISystem
     {
     public:
@@ -18,7 +15,7 @@ namespace puma
 
         virtual void init() = 0;
 
-        virtual void registerEntity( Entity _entity, FrameInfo _frameInfo ) = 0;
+        virtual void registerEntity( Entity _entity, physics::FrameInfo _frameInfo ) = 0;
         virtual void unregisterEntity( Entity _entity ) = 0;
     };
 }

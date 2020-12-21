@@ -9,7 +9,7 @@
 namespace puma
 {
 
-    void CollisionComponent::init( FrameType _frameType, FrameID _frameId )
+    void CollisionComponent::init( physics::FrameType _frameType, physics::FrameID _frameId )
     {
         assert( !isValid() );
 
@@ -17,19 +17,19 @@ namespace puma
         m_frameId = _frameId;
     }
 
-    void CollisionComponent::addBody( BodyInfo _bodyInfo )
+    void CollisionComponent::addBody( physics::BodyInfo _bodyInfo )
     {
         assert( isValid() );
 
-        IFrame* frame = gPhysics->getFrame( m_frameId );
+        physics::IFrame* frame = gPhysics->getFrame( m_frameId );
         m_bodyIds.emplace_back( frame->addBody( _bodyInfo ) );
     }
 
-    void CollisionComponent::addTrigger( TriggerInfo _triggerInfo )
+    void CollisionComponent::addTrigger( physics::TriggerInfo _triggerInfo )
     {
         assert( isValid() );
 
-        IFrame* frame = gPhysics->getFrame( m_frameId );
+        physics::IFrame* frame = gPhysics->getFrame( m_frameId );
         m_bodyIds.emplace_back( frame->addTrigger( _triggerInfo ) );
     }
 }

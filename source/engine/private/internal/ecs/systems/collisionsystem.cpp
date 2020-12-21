@@ -27,7 +27,7 @@ namespace puma
         m_entities.clear();
     }
 
-    void CollisionSystem::registerEntity( Entity _entity, FrameInfo _frameInfo )
+    void CollisionSystem::registerEntity( Entity _entity, physics::FrameInfo _frameInfo )
     {
         assert( entityComponentCheck( _entity ) ); //This entity does not have the necessary components to be registered into this system
 
@@ -35,16 +35,16 @@ namespace puma
 
         assert( nullptr != componentProvider );
 
-        IWorld* world = gPhysics->getDefaultWorld();
+        physics::IWorld* world = gPhysics->getDefaultWorld();
 
-        FrameType frameType = _frameInfo.frameType;
-        FrameID frameId = kInvalidPhysicsID;
+        physics::FrameType frameType = _frameInfo.frameType;
+        physics::FrameID frameId = physics::kInvalidPhysicsID;
 
         switch ( frameType )
         {
-        case FrameType::Dynamic:    frameId = world->addDynamicFrame( _frameInfo ); break;
-        case FrameType::Static:     frameId = world->addStaticFrame( _frameInfo ); break;
-        case FrameType::Kinematic:  frameId = world->addKinematicFrame( _frameInfo ); break;
+        case physics::FrameType::Dynamic:    frameId = world->addDynamicFrame( _frameInfo ); break;
+        case physics::FrameType::Static:     frameId = world->addStaticFrame( _frameInfo ); break;
+        case physics::FrameType::Kinematic:  frameId = world->addKinematicFrame( _frameInfo ); break;
         default: break;
         }
 

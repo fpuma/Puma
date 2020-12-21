@@ -15,25 +15,25 @@ namespace puma
         void disable() override { m_enabled = false; };
         bool isEnabled() const override { return m_enabled; }
 
-        FrameType getFrameType() const override { return m_frameType; }
-        FrameID getFrameID() const override { return m_frameId; }
+        physics::FrameType getFrameType() const override { return m_frameType; }
+        physics::FrameID getFrameID() const override { return m_frameId; }
 
-        void addBody( BodyInfo _bodyInfo ) override;
-        void addTrigger( TriggerInfo _triggerInfo ) override;
+        void addBody( physics::BodyInfo _bodyInfo ) override;
+        void addTrigger( physics::TriggerInfo _triggerInfo ) override;
 
-        bool isValid() const override { return (FrameType::Invalid != m_frameType) && (m_frameId.value() != kInvalidPhysicsID); }
+        bool isValid() const override { return (physics::FrameType::Invalid != m_frameType) && (m_frameId.value() != physics::kInvalidPhysicsID); }
 
     private:
 
-        friend void CollisionSystem::registerEntity( Entity _entity, FrameInfo _frameInfo );
+        friend void CollisionSystem::registerEntity( Entity _entity, physics::FrameInfo _frameInfo );
 
-        void init( FrameType _frameType, FrameID _frameId );
+        void init( physics::FrameType _frameType, physics::FrameID _frameId );
 
-        std::vector<FramePartID> m_bodyIds;
-        std::vector<FramePartID> m_triggerIds;
+        std::vector<physics::FramePartID> m_bodyIds;
+        std::vector<physics::FramePartID> m_triggerIds;
 
-        FrameType m_frameType = FrameType::Invalid;
-        FrameID m_frameId;
+        physics::FrameType m_frameType = physics::FrameType::Invalid;
+        physics::FrameID m_frameId;
         bool m_enabled = true;
     };
 }
