@@ -16,6 +16,7 @@
 #include <engine/ecs/base/providers/icomponentprovider.h>
 #include <engine/ecs/base/providers/ientityprovider.h>
 
+#include <engine/ecs/components/icameracomponent.h>
 #include <engine/ecs/components/icollisioncomponent.h>
 #include <engine/ecs/components/ilocationcomponent.h>
 #include <engine/ecs/components/irendercomponent.h>
@@ -28,6 +29,14 @@
 #include <physics/simulation/world/iworld.h>
 #include <physics/simulation/frames/istaticframe.h>
 #include <physics/simulation/frames/idynamicframe.h>
+
+void setCamera()
+{
+     puma::Entity cameraEntity = gSystems->get<puma::IRenderSystem>()->getCameraEntity();
+     puma::ICameraComponent* cameraComponent = gProviders->get<puma::IComponentProvider>()->get<puma::ICameraComponent>( cameraEntity );
+
+     cameraComponent->setMetersPerPixel( 0.1f );
+}
 
 void initPhysics()
 {
@@ -45,7 +54,7 @@ puma::Entity spawnFloor( puma::app::WindowHandle _windowHandle, puma::app::IText
     puma::IRenderComponent* renderComponent = componentProvider->add<puma::IRenderComponent>( result );
     puma::ICollisionComponent* collisionComponent = componentProvider->add<puma::ICollisionComponent>( result );
 
-    puma::Position pos = { 0.0f, -50.0f };
+    puma::Position pos = { 0.0f, -20.0f };
     locationComponent->setPosition( pos );
 
     puma::app::IRenderer* renderer = gApplication->getWindow( _windowHandle )->getRenderer();
@@ -55,7 +64,7 @@ puma::Entity spawnFloor( puma::app::WindowHandle _windowHandle, puma::app::IText
     puma::Renderable renderable;
     renderable.setTexture( greenTexture );
     renderComponent->setRenderable( renderable );
-    puma::RenderSize renderSize = { 200.0f, 50.0f };
+    puma::RenderSize renderSize = { 40.0f, 8.0f };
     renderComponent->setSize( renderSize );
 
     gSystems->get<puma::IRenderSystem>()->registerEntity( result );
@@ -69,13 +78,13 @@ puma::Entity spawnFloor( puma::app::WindowHandle _windowHandle, puma::app::IText
     gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo );
 
     puma::physics::Rectangle floorShape;
-    floorShape.lowerBoundary = { -100.0f, -25.0f };
-    floorShape.upperBoundary = { 100.0f, 25.0f };
+    floorShape.lowerBoundary = { -20.0f, -4.0f };
+    floorShape.upperBoundary = { 20.0f, 4.0f };
     puma::physics::BodyInfo floorBodyInfo;
     floorBodyInfo.collisionIndex = 0;
     floorBodyInfo.shape.rectangle = floorShape;
     floorBodyInfo.shapeType = puma::physics::ShapeType::Rectangle;
-    floorBodyInfo.restitution = 0.5f;
+    floorBodyInfo.restitution = 0.0f;
 
     puma::physics::IStaticFrame* staticFrame = gPhysics->getStaticFrame( collisionComponent->getFrameID() );
     staticFrame->addBody( floorBodyInfo );
@@ -107,7 +116,7 @@ puma::Entity spawnBall( puma::app::WindowHandle _windowHandle, puma::app::ITextu
     puma::ICollisionComponent* collisionComponent = componentProvider->add<puma::ICollisionComponent>( result );
 
 
-    puma::Position pos = { 0.0f, 50.0f };
+    puma::Position pos = { 0.0f, 20.0f };
     locationComponent->setPosition( pos );
 
     puma::app::IRenderer* renderer = gApplication->getWindow( _windowHandle )->getRenderer();
@@ -117,7 +126,7 @@ puma::Entity spawnBall( puma::app::WindowHandle _windowHandle, puma::app::ITextu
     puma::Renderable renderable;
     renderable.setTexture( tennisTexture );
     renderComponent->setRenderable( renderable );
-    puma::RenderSize renderSize = { 30.0f, 30.0f };
+    puma::RenderSize renderSize = { 5.0f, 5.0f };
     renderComponent->setSize( renderSize );
     gSystems->get<puma::IRenderSystem>()->registerEntity( result );
 
@@ -130,7 +139,7 @@ puma::Entity spawnBall( puma::app::WindowHandle _windowHandle, puma::app::ITextu
     gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo );
 
     puma::physics::Circle ballShape;
-    ballShape.radius = 15.0f;
+    ballShape.radius = 2.5f;
     puma::physics::BodyInfo ballBodyInfo;
     ballBodyInfo.density = 1.0f;
     ballBodyInfo.collisionIndex = 0;

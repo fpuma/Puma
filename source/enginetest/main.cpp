@@ -21,6 +21,9 @@ int main( int argc, char* argv[] )
 
     puma::app::Extent windowExtent = { 500,500,100,100 };
     puma::app::WindowHandle windowHandle = gApplication->createWindow( windowExtent, "EngineTest" );
+
+    setCamera();
+
     auto textureManagerPtr = puma::app::ITextureManager::create();
 
     puma::Entity floorEntity = spawnFloor( windowHandle, textureManagerPtr.get() );
