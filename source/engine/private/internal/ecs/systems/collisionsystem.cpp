@@ -67,16 +67,23 @@ namespace puma
 
         for ( Entity entity : m_entities )
         {
-            if ( !gProviders->get<EntityProvider>()->isEntityEnabled( entity ) ) continue;
-
+            bool shouldUpdate = gProviders->get<EntityProvider>()->isEntityEnabled( entity );
             CollisionComponent* collisionComponent = componentProvider->get<CollisionComponent>( entity );
+            shouldUpdate = shouldUpdate && collisionComponent->isEnabled();
 
-            if ( !collisionComponent->isEnabled() ) continue;
+            physics::IFrame* physicsFrame = gPhysics->getFrame( collisionComponent->getFrameID() );
 
-            LocationComponent* locationComponent = componentProvider->get<LocationComponent>( entity );
+            if ( shouldUpdate )
+            {
+                LocationComponent* locationComponent = componentProvider->get<LocationComponent>( entity );
 
-            Position pos = gPhysics->getFrame( collisionComponent->getFrameID() )->getPosition();
-            locationComponent->setPosition( pos );
+                Position pos = physicsFrame->getPosition();
+                locationComponent->setPosition( pos );
+            }
+            else
+            {
+                physicsFrame->disable();
+            }
         }
     }
 
