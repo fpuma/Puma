@@ -72,6 +72,7 @@ puma::Entity spawnFloor( puma::app::WindowHandle _windowHandle, puma::app::IText
     //Physics
     puma::physics::FrameInfo frameInfo;
     frameInfo.position = pos;
+    frameInfo.angle = 10.0f;
 
     gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::physics::FrameType::Static );
 
@@ -99,6 +100,7 @@ void unspawnFloor( puma::Entity _floorEntity )
 
     componentProvider->remove<puma::ILocationComponent>( _floorEntity );
     componentProvider->remove<puma::IRenderComponent>( _floorEntity );
+    componentProvider->remove<puma::ICollisionComponent>( _floorEntity );
 
     gProviders->get<puma::IEntityProvider>()->disposeEntity( _floorEntity );
 
@@ -114,7 +116,7 @@ puma::Entity spawnBall( puma::app::WindowHandle _windowHandle, puma::app::ITextu
     puma::ICollisionComponent* collisionComponent = componentProvider->add<puma::ICollisionComponent>( result );
 
 
-    puma::Position pos = { 0.0f, 20.0f };
+    puma::Position pos = { 0.0f, -10.0f };
     locationComponent->setPosition( pos );
 
     puma::app::IRenderer* renderer = gApplication->getWindow( _windowHandle )->getRenderer();
@@ -158,6 +160,7 @@ void unspawnBall( puma::Entity _ballEntity )
 
     componentProvider->remove<puma::ILocationComponent>( _ballEntity );
     componentProvider->remove<puma::IRenderComponent>( _ballEntity );
+    componentProvider->remove<puma::ICollisionComponent>( _ballEntity );
 
     gProviders->get<puma::IEntityProvider>()->disposeEntity( _ballEntity );
 }
