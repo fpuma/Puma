@@ -15,7 +15,7 @@ namespace puma
 
         virtual void init() = 0;
 
-        virtual void registerEntity( Entity _entity, physics::FrameInfo _frameInfo ) = 0;
+        virtual void registerEntity( Entity _entity, physics::FrameInfo _frameInfo, physics::FrameType _frameType ) = 0;
         virtual void unregisterEntity( Entity _entity ) = 0;
     };
 }

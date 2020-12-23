@@ -27,7 +27,7 @@ namespace puma
         m_entities.clear();
     }
 
-    void CollisionSystem::registerEntity( Entity _entity, physics::FrameInfo _frameInfo )
+    void CollisionSystem::registerEntity( Entity _entity, physics::FrameInfo _frameInfo, physics::FrameType _frameType )
     {
         assert( entityComponentCheck( _entity ) ); //This entity does not have the necessary components to be registered into this system
 
@@ -37,10 +37,9 @@ namespace puma
 
         physics::IWorld* world = gPhysics->getDefaultWorld();
 
-        physics::FrameType frameType = _frameInfo.frameType;
         physics::FrameID frameId = physics::kInvalidPhysicsID;
 
-        switch ( frameType )
+        switch ( _frameType )
         {
         case physics::FrameType::Dynamic:    frameId = world->addDynamicFrame( _frameInfo ); break;
         case physics::FrameType::Static:     frameId = world->addStaticFrame( _frameInfo ); break;
@@ -49,7 +48,7 @@ namespace puma
         }
 
         CollisionComponent* collisionComponent = componentProvider->get<CollisionComponent>( _entity );
-        collisionComponent->init( frameType, frameId );
+        collisionComponent->init( _frameType, frameId );
 
         m_entities.emplace( _entity );
     }

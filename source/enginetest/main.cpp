@@ -17,11 +17,10 @@ int main( int argc, char* argv[] )
     auto enginePtr = puma::IEngine::create();
     enginePtr->init();
 
-    initPhysics();
-
     puma::app::Extent windowExtent = { 500,500,100,100 };
     puma::app::WindowHandle windowHandle = gApplication->createWindow( windowExtent, "EngineTest" );
 
+    initPhysics();
     setCamera();
 
     auto textureManagerPtr = puma::app::ITextureManager::create();

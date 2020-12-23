@@ -11,7 +11,7 @@ namespace puma
         void init() override;
         void uninit() override;
 
-        void registerEntity( Entity _entity, physics::FrameInfo _frameInfo ) override;
+        void registerEntity( Entity _entity, physics::FrameInfo _frameInfo, physics::FrameType _frameType ) override;
         void unregisterEntity( Entity _entity ) override;
 
         void update( float _deltaTime ) override {}

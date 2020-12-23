@@ -71,11 +71,9 @@ puma::Entity spawnFloor( puma::app::WindowHandle _windowHandle, puma::app::IText
 
     //Physics
     puma::physics::FrameInfo frameInfo;
-    frameInfo.frameType = puma::physics::FrameType::Static;
     frameInfo.position = pos;
-    //collisionComponent->init( physics::FrameType::Static, frameInfo);
 
-    gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo );
+    gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::physics::FrameType::Static );
 
     puma::physics::Rectangle floorShape;
     floorShape.lowerBoundary = { -20.0f, -4.0f };
@@ -133,10 +131,8 @@ puma::Entity spawnBall( puma::app::WindowHandle _windowHandle, puma::app::ITextu
 
     //Physics
     puma::physics::FrameInfo frameInfo;
-    frameInfo.frameType = puma::physics::FrameType::Dynamic;
     frameInfo.position = pos;
-    //collisionComponent->init( physics::FrameType::Dynamic, frameInfo );
-    gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo );
+    gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::physics::FrameType::Dynamic );
 
     puma::physics::Circle ballShape;
     ballShape.radius = 2.5f;
