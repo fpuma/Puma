@@ -1,10 +1,13 @@
 #pragma once
 
-#include <engine/services/iphysicsservice.h>
+//#include <engine/services/iphysicsservice.h>
+
+#include <engine/services/base/iservice.h>
+#include <physics/iphysics.h>
 
 namespace puma
 {
-    class PhysicsService final : public IPhysicsService
+    class PhysicsService final : public IService
     {
     public:
 
@@ -12,7 +15,7 @@ namespace puma
 
         ~PhysicsService() { m_physics.reset(); }
 
-        physics::IPhysics* get() override { return m_physics.get(); }
+        physics::IPhysics* get() { return m_physics.get(); }
 
         void uninit() {}
 
@@ -22,3 +25,7 @@ namespace puma
     };
 
 }
+
+#include <engine/services/base/iservicecontainer.h>
+
+#define gPhysics puma::DefaultServices::getInstance()->get<puma::PhysicsService>()->get()

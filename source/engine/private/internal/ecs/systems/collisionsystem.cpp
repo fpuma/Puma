@@ -15,16 +15,19 @@
 
 namespace puma
 {
-    void CollisionSystem::init()
+    void CollisionSystem::init( physics::Vec2 _gravity )
     {
         m_properties.updateBitMask = (SystemUpdateBitMask)SystemUpdateFlag::PostPhysicsUpdate;
                                    //| (SystemUpdateBitMask)SystemUpdateFlag::PrePhysicsUpdate;
+
+        m_worldId = gPhysics->addWorld( _gravity );
     }
 
     void CollisionSystem::uninit()
     {
         assert( m_entities.empty() ); //Warning not all entities have been unregistered.
         m_entities.clear();
+        gPhysics->removeWorld( m_worldId );
     }
 
     void CollisionSystem::registerEntity( Entity _entity, physics::FrameInfo _frameInfo, physics::FrameType _frameType )
@@ -35,7 +38,7 @@ namespace puma
 
         assert( nullptr != componentProvider );
 
-        physics::IWorld* world = gPhysics->getDefaultWorld();
+        physics::IWorld* world = gPhysics->getWorld( m_worldId );
 
         physics::FrameID frameId = physics::kInvalidPhysicsID;
 
@@ -85,6 +88,21 @@ namespace puma
                 physicsFrame->disable();
             }
         }
+    }
+
+    void CollisionSystem::setGravity( physics::Vec2 _gravity )
+    {
+        gPhysics->getWorld( m_worldId )->setGravity( _gravity );
+    }
+
+    physics::Vec2 CollisionSystem::getGravity()
+    {
+        return gPhysics->getWorld( m_worldId )->getGravity();
+    }
+
+    void CollisionSystem::setCollisionCompatibility( const physics::CollisionCompatibility& _collisionCompatibility )
+    {
+        gPhysics->getWorld( m_worldId )->setCollisionCompatibility( _collisionCompatibility );
     }
 
 #ifdef _DEBUG

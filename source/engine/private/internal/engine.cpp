@@ -77,14 +77,11 @@ namespace puma
 
         registerComponents();
 
-        physics::WorldID worldId = gPhysics->addWorld( physics::Vec2{} );
-        gPhysics->setDefaultWorld( worldId );
-
         RenderSystem* renderSystem = gInternalSystems->add<RenderSystem>();
         renderSystem->init();
 
         CollisionSystem* collisionSystem = gInternalSystems->add<CollisionSystem>();
-        collisionSystem->init();
+        collisionSystem->init( {0.0f, -10.0f} );
 
         gInternalSystems->updateSystemsProperties();
     }
@@ -117,9 +114,9 @@ namespace puma
 
         renderer->renderText( 0, 0, std::to_string( 1.0f / m_deltaTime.getAverage() ).c_str() );
 
-#ifdef _DEBUG
-        gPhysics->getDefaultWorld()->debugDraw();
-#endif // _DEBUG
+//#ifdef _DEBUG
+//        gPhysics->getDefaultWorld()->debugDraw();
+//#endif // _DEBUG
 
         //Timestamp ts;
         //ts.setToCurrentLocalTime();

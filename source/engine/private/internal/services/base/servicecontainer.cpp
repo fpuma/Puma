@@ -18,7 +18,7 @@ namespace puma
         registerInterface<IInputService, InputService>();
         registerInterface<ISystemsService, SystemsService>();
         registerInterface<IApplicationService, ApplicationService>();
-        registerInterface<IPhysicsService, PhysicsService>();
+        registerClass<PhysicsService>();
 
         add<ProvidersService>();
         add<InputService>();

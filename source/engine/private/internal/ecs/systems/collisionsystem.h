@@ -8,7 +8,7 @@ namespace puma
     {
     public:
 
-        void init() override;
+        void init( physics::Vec2 _gravity ) override;
         void uninit() override;
 
         void registerEntity( Entity _entity, physics::FrameInfo _frameInfo, physics::FrameType _frameType ) override;
@@ -21,6 +21,11 @@ namespace puma
         void setProperties( SystemProperties _properties ) override { m_properties = _properties; }
         SystemProperties getProperties() const override { return m_properties; }
 
+        void setGravity( physics::Vec2 _gravity ) override;
+        physics::Vec2 getGravity() override;
+
+        void setCollisionCompatibility( const physics::CollisionCompatibility& _collisionCompatibility ) override;
+
     private:
 
 #ifdef _DEBUG
@@ -28,5 +33,6 @@ namespace puma
 #endif
         std::set<Entity> m_entities;
         SystemProperties m_properties;
+        physics::WorldID m_worldId = physics::kInvalidPhysicsID;
     };
 }

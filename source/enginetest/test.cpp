@@ -9,7 +9,6 @@
 #include <texturemanager/itexturemanager.h>
 
 #include <engine/services/iapplicationservice.h>
-#include <engine/services/iphysicsservice.h>
 #include <engine/services/iprovidersservice.h>
 #include <engine/services/isystemsservice.h>
 
@@ -40,9 +39,9 @@ void setCamera()
 
 void initPhysics()
 {
-    gPhysics->getDefaultWorld()->setDebugDraw( std::move( std::make_unique<PhysicsTestDebugDraw>( gApplication->getDefaultRenderer() ) ) );
-    gPhysics->getDefaultWorld()->setGravity( { 0.0f, -10.0f } );
-    gPhysics->getDefaultWorld()->setCollisionCompatibility( { std::pair<puma::physics::CollisionIndex, puma::physics::CollisionIndex>( 0,0 ) } );
+    auto collisitonSystemPtr = gSystems->get<puma::ICollisionSystem>();
+    collisitonSystemPtr->setGravity( { 0.0f, -10.0f } );
+    collisitonSystemPtr->setCollisionCompatibility( { std::pair<puma::physics::CollisionIndex, puma::physics::CollisionIndex>( 0,0 ) } );
 }
 
 puma::Entity spawnFloor( puma::app::WindowHandle _windowHandle, puma::app::ITextureManager* _textureManager )
@@ -85,8 +84,7 @@ puma::Entity spawnFloor( puma::app::WindowHandle _windowHandle, puma::app::IText
     floorBodyInfo.shapeType = puma::physics::ShapeType::Rectangle;
     floorBodyInfo.restitution = 0.0f;
 
-    puma::physics::IStaticFrame* staticFrame = gPhysics->getStaticFrame( collisionComponent->getFrameID() );
-    staticFrame->addBody( floorBodyInfo );
+    collisionComponent->addBody( floorBodyInfo );
 
     return result;
 }
@@ -116,7 +114,7 @@ puma::Entity spawnBall( puma::app::WindowHandle _windowHandle, puma::app::ITextu
     puma::ICollisionComponent* collisionComponent = componentProvider->add<puma::ICollisionComponent>( result );
 
 
-    puma::Position pos = { 0.0f, -10.0f };
+    puma::Position pos = { 0.0f, 0.0f };
     locationComponent->setPosition( pos );
 
     puma::app::IRenderer* renderer = gApplication->getWindow( _windowHandle )->getRenderer();
@@ -145,8 +143,7 @@ puma::Entity spawnBall( puma::app::WindowHandle _windowHandle, puma::app::ITextu
     ballBodyInfo.shapeType = puma::physics::ShapeType::Circle;
     ballBodyInfo.restitution = 0.5f;
 
-    puma::physics::IDynamicFrame* dynamicFrame = gPhysics->getDynamicFrame( collisionComponent->getFrameID() );
-    dynamicFrame->addBody( ballBodyInfo );
+    collisionComponent->addBody( ballBodyInfo );
 
     return result;
 }
