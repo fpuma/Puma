@@ -4,7 +4,6 @@
 
 #include <engine/ecs/systems/irendersystem.h>
 
-#include <application/commondefinitions.h>
 #include <texturemanager/texture.h>
 
 namespace puma
@@ -17,14 +16,22 @@ namespace puma
         float rotationDegrees;
     };
 
+    namespace app
+    {
+        class IRenderer;
+    }
+
     using TexturesToRenderContainer = std::array<TextureToRenderInfo, kConcurrentTexturePool>;
     
     class RenderSystem final : public IRenderSystem
     {
     public:
 
-        void init() override;
+        void init( app::Extent _windowExtent, const char* _windowName ) override;
         void uninit() override;
+
+        app::IRenderer* getRenderer() override;
+        const app::IRenderer* getRenderer() const override;
 
         void update             ( float _deltaTime ) override {};
         void prePhysicsUpdate   ( float _deltaTime ) override;
@@ -38,7 +45,7 @@ namespace puma
 
         void registerEntity( Entity _entity ) override;
         void unregisterEntity( Entity _entity ) override;
-        
+
         void render() const;
 
     private:
@@ -46,6 +53,7 @@ namespace puma
 #ifdef _DEBUG
         bool entityComponentCheck( Entity _entity );
 #endif
+        void updateTexturesToRender( const std::set<Entity>& _entitesToRender );
 
         SystemProperties m_properties;
 
@@ -55,5 +63,7 @@ namespace puma
 
         TexturesToRenderContainer m_texturesToRender;
         u32 m_texturesToRenderCount = 0;
+
+        app::WindowHandle m_windowHandle = app::kInvalidWindowHandle;
     };
 }

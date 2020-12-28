@@ -1,7 +1,6 @@
 #include <precompiledengine.h>
 
 #include <engine/ecs/base/entity.h>
-#include <engine/services/iapplicationservice.h>
 #include <engine/iengine.h>
 
 #include <application/commondefinitions.h>
@@ -17,16 +16,12 @@ int main( int argc, char* argv[] )
     auto enginePtr = puma::IEngine::create();
     enginePtr->init();
 
-    puma::app::Extent windowExtent = { 500,500,100,100 };
-    puma::app::WindowHandle windowHandle = gApplication->createWindow( windowExtent, "EngineTest" );
-
-    initPhysics();
-    setCamera();
+    initTest();
 
     auto textureManagerPtr = puma::app::ITextureManager::create();
 
-    puma::Entity floorEntity = spawnFloor( windowHandle, textureManagerPtr.get() );
-    puma::Entity ballEntity = spawnBall( windowHandle, textureManagerPtr.get() );
+    puma::Entity floorEntity = spawnFloor( textureManagerPtr.get() );
+    puma::Entity ballEntity = spawnBall( textureManagerPtr.get() );
 
     while ( !enginePtr->shouldQuit() )
     {

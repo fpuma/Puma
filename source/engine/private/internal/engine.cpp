@@ -19,8 +19,6 @@
 
 #include <engine/utils/timerprovider.h>
 
-#include <physics/simulation/world/iworld.h>
-
 #include <time/timestamp.h>
 
 #include <application/irenderer.h>
@@ -77,11 +75,8 @@ namespace puma
 
         registerComponents();
 
-        RenderSystem* renderSystem = gInternalSystems->add<RenderSystem>();
-        renderSystem->init();
-
-        CollisionSystem* collisionSystem = gInternalSystems->add<CollisionSystem>();
-        collisionSystem->init( {0.0f, -10.0f} );
+        gInternalSystems->add<RenderSystem>();
+        gInternalSystems->add<CollisionSystem>();
 
         gInternalSystems->updateSystemsProperties();
     }
@@ -107,7 +102,9 @@ namespace puma
 
     void Engine::render()
     {
-        app::IRenderer* renderer = gApplication->getDefaultRenderer();
+        RenderSystem* renderSystem = gInternalSystems->get<RenderSystem>();
+
+        app::IRenderer* renderer = renderSystem->getRenderer();
         renderer->beginRender();
 
         gInternalSystems->get<RenderSystem>()->render();

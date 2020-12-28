@@ -17,21 +17,21 @@ namespace puma
         registerInterface<IProvidersService, ProvidersService>();
         registerInterface<IInputService, InputService>();
         registerInterface<ISystemsService, SystemsService>();
-        registerInterface<IApplicationService, ApplicationService>();
+        registerClass<ApplicationService>();
         registerClass<PhysicsService>();
 
         add<ProvidersService>();
         add<InputService>();
-        add<SystemsService>();
         add<ApplicationService>();
         add<PhysicsService>();
+        add<SystemsService>();
     }
 
     void ServiceContainer::uninit()
     {
+        get<SystemsService>()->uninit();
         get<PhysicsService>()->uninit();
         get<ApplicationService>()->uninit();
-        get<SystemsService>()->uninit();
         get<InputService>()->uninit();
         get<ProvidersService>()->uninit();
         clear();

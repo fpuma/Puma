@@ -23,78 +23,83 @@
 
 namespace puma
 {
-    physics::Rectangle getCameraFrustum( ComponentProvider* _componentProvider, Entity _cameraEntity )
+    namespace
     {
-        const LocationComponent* locationComponent = _componentProvider->get<LocationComponent>( _cameraEntity );
-        const CameraComponent* cameraComponent = _componentProvider->get<CameraComponent>( _cameraEntity );
 
-        assert( (nullptr != locationComponent) && (nullptr != cameraComponent) );
+        physics::Rectangle getCameraFrustum( ComponentProvider* _componentProvider, Entity _cameraEntity, app::WindowHandle _windowHandle )
+        {
+            const LocationComponent* locationComponent = _componentProvider->get<LocationComponent>( _cameraEntity );
+            const CameraComponent* cameraComponent = _componentProvider->get<CameraComponent>( _cameraEntity );
 
-        app::Extent windowExtent = gApplication->getDefaultWindow()->getExtent();
+            assert( (nullptr != locationComponent) && (nullptr != cameraComponent) );
 
-        physics::Rectangle result;
+            app::Extent windowExtent = gApplication->getWindow( _windowHandle )->getExtent();
 
-        Position cameraPos = locationComponent->getPosition();
-        float screenMetersWidth = (float)windowExtent.width * cameraComponent->getMetersPerPixel();
-        float screenMetersHeight = (float)windowExtent.height * cameraComponent->getMetersPerPixel();
+            physics::Rectangle result;
 
-        float upperX = cameraPos.x + (screenMetersWidth / 2.0f);
-        float lowerX = cameraPos.x - (screenMetersWidth / 2.0f);
-        float upperY = cameraPos.y + (screenMetersHeight / 2.0f);
-        float lowerY = cameraPos.y - (screenMetersHeight / 2.0f);
+            Position cameraPos = locationComponent->getPosition();
+            float screenMetersWidth = (float)windowExtent.width * cameraComponent->getMetersPerPixel();
+            float screenMetersHeight = (float)windowExtent.height * cameraComponent->getMetersPerPixel();
 
-        result.upperBoundary = { upperX, upperY };
-        result.lowerBoundary = { lowerX, lowerY };
+            float upperX = cameraPos.x + (screenMetersWidth / 2.0f);
+            float lowerX = cameraPos.x - (screenMetersWidth / 2.0f);
+            float upperY = cameraPos.y + (screenMetersHeight / 2.0f);
+            float lowerY = cameraPos.y - (screenMetersHeight / 2.0f);
 
-        return result;
+            result.upperBoundary = { upperX, upperY };
+            result.lowerBoundary = { lowerX, lowerY };
+
+            return result;
+        }
+
+        Entity buildDefaultCamera()
+        {
+            EntityProvider* entityProvider = gProviders->get<EntityProvider>();
+            ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
+
+            Entity result = entityProvider->requestEntity();
+            componentProvider->add<LocationComponent>( result );
+            CameraComponent* cameraComponent = componentProvider->add<CameraComponent>( result );
+
+            cameraComponent->setMetersPerPixel( 1.0f );
+
+            return result;
+        }
+
+        void destroyDefaultCamera( Entity _entity )
+        {
+            EntityProvider* entityProvider = gProviders->get<EntityProvider>();
+            ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
+
+            componentProvider->remove<CameraComponent>( _entity );
+            componentProvider->remove<LocationComponent>( _entity );
+
+            entityProvider->disposeEntity( _entity );
+        }
+
+        physics::Rectangle getAABB( const LocationComponent* _locationComponent, const RenderComponent* _renderComponent )
+        {
+            assert( (nullptr != _locationComponent) && (nullptr != _renderComponent) );
+
+            Position position = _locationComponent->getPosition();
+            RenderSize renderSize = _renderComponent->getSize();
+
+            float upperX = position.x + (renderSize.x / 2.0f);
+            float lowerX = position.x - (renderSize.x / 2.0f);
+            float upperY = position.y + (renderSize.y / 2.0f);
+            float lowerY = position.y - (renderSize.y / 2.0f);
+
+            physics::Rectangle result;
+            result.upperBoundary = { upperX, upperY };
+            result.lowerBoundary = { lowerX, lowerY };
+
+            return result;
+        }
     }
 
-    Entity buildDefaultCamera()
+    void RenderSystem::init( app::Extent _windowExtent, const char* _windowName )
     {
-        EntityProvider* entityProvider = gProviders->get<EntityProvider>();
-        ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
-
-        Entity result = entityProvider->requestEntity();
-        componentProvider->add<LocationComponent>( result );
-        CameraComponent* cameraComponent = componentProvider->add<CameraComponent>( result );
-
-        cameraComponent->setMetersPerPixel( 1.0f );
-
-        return result;
-    }
-
-    void destroyDefaultCamera( Entity _entity )
-    {
-        EntityProvider* entityProvider = gProviders->get<EntityProvider>();
-        ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
-
-        componentProvider->remove<CameraComponent>( _entity );
-        componentProvider->remove<LocationComponent>( _entity );
-
-        entityProvider->disposeEntity( _entity );
-    }
-
-    physics::Rectangle getAABB( const LocationComponent* _locationComponent, const RenderComponent* _renderComponent )
-    {
-        assert( (nullptr != _locationComponent) && (nullptr != _renderComponent) );
-
-        Position position = _locationComponent->getPosition();
-        RenderSize renderSize = _renderComponent->getSize();
-
-        float upperX = position.x + (renderSize.x / 2.0f);
-        float lowerX = position.x - (renderSize.x / 2.0f);
-        float upperY = position.y + (renderSize.y / 2.0f);
-        float lowerY = position.y - (renderSize.y / 2.0f);
-
-        physics::Rectangle result;
-        result.upperBoundary = { upperX, upperY };
-        result.lowerBoundary = { lowerX, lowerY };
-
-        return result;
-    }
-
-    void RenderSystem::init()
-    {
+        m_windowHandle = gApplication->createWindow( _windowExtent, _windowName );
         m_properties.updateBitMask = (SystemUpdateBitMask)SystemUpdateFlag::PostPhysicsUpdate | (SystemUpdateBitMask)SystemUpdateFlag::PrePhysicsUpdate;
         m_cameraEntity = buildDefaultCamera();
     }
@@ -102,62 +107,33 @@ namespace puma
     void RenderSystem::uninit()
     {
         destroyDefaultCamera( m_cameraEntity );
+        gApplication->removeWindow( m_windowHandle );
     }
 
-    namespace
+    app::IRenderer* RenderSystem::getRenderer()
     {
-        void updateTexturesToRender( Entity _cameraEntity, const std::set<Entity>& _entitesToRender, TexturesToRenderContainer& _outTexturesToRender, u32& _textureCount )
-        {
-            ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
+        return gApplication->getWindow( m_windowHandle )->getRenderer();
+    }
 
-            physics::Rectangle frustum = getCameraFrustum( componentProvider, _cameraEntity );
-
-            float metersPerPixel = componentProvider->get<CameraComponent>( _cameraEntity )->getMetersPerPixel();
-
-            for ( const Entity& entity : _entitesToRender )
-            {
-                if ( !gProviders->get<EntityProvider>()->isEntityEnabled( entity ) ) continue;
-
-                const RenderComponent* renderComponent = componentProvider->get<RenderComponent>( entity );
-
-                if ( !renderComponent->isEnabled() ) continue;
-
-                const LocationComponent* locationComponent = componentProvider->get<LocationComponent>( entity );
-
-                physics::Rectangle entityAABB = getAABB( locationComponent, renderComponent );
-
-                if ( areShapesOverLapping( entityAABB, frustum ) )
-                {
-                    assert( _textureCount < kConcurrentTexturePool ); //The concurrent texture pool is not big enough, consider increasing  kConcurrentTexturePool
-
-                    _outTexturesToRender[_textureCount].texture = renderComponent->getTexture();
-                    _outTexturesToRender[_textureCount].uvExtent = renderComponent->getUVExtent();
-                    _outTexturesToRender[_textureCount].screenExtent.xPos = (s32)((entityAABB.lowerBoundary.x - frustum.lowerBoundary.x) / metersPerPixel);
-                    _outTexturesToRender[_textureCount].screenExtent.yPos = (s32)((frustum.upperBoundary.y - entityAABB.upperBoundary.y) / metersPerPixel);
-                    _outTexturesToRender[_textureCount].screenExtent.width = (s32)(renderComponent->getSize().x / metersPerPixel);
-                    _outTexturesToRender[_textureCount].screenExtent.height = (s32)(renderComponent->getSize().y / metersPerPixel);
-                    _outTexturesToRender[_textureCount].rotationDegrees = locationComponent->getDegreesRotation();
-
-                    ++_textureCount;
-                }
-            }
-        }
+    const app::IRenderer* RenderSystem::getRenderer() const
+    {
+        return gApplication->getWindow( m_windowHandle )->getRenderer();
     }
 
     void RenderSystem::prePhysicsUpdate( float _deltaTime )
     {
         m_texturesToRenderCount = 0;
-        updateTexturesToRender( m_cameraEntity, m_nonPhysicalEntities, m_texturesToRender, m_texturesToRenderCount );
+        updateTexturesToRender( m_nonPhysicalEntities );
     }
 
     void RenderSystem::postPhysicsUpdate( float _deltaTime )
     {
-        updateTexturesToRender( m_cameraEntity, m_physicalEntities, m_texturesToRender, m_texturesToRenderCount );
+        updateTexturesToRender( m_physicalEntities );
     }
 
     void RenderSystem::render() const
     {
-        app::IRenderer* renderer = gApplication->getDefaultRenderer();
+        app::IRenderer* renderer = gApplication->getWindow(m_windowHandle)->getRenderer();
 
         for ( u32 index = 0; index < m_texturesToRenderCount; ++index )
         {
@@ -210,6 +186,43 @@ namespace puma
             m_physicalEntities.erase( _entity );
         }
     }
+
+    void RenderSystem::updateTexturesToRender( const std::set<Entity>& _entitesToRender )
+    {
+        ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
+
+        physics::Rectangle frustum = getCameraFrustum( componentProvider, m_cameraEntity, m_windowHandle );
+
+        float metersPerPixel = componentProvider->get<CameraComponent>( m_cameraEntity )->getMetersPerPixel();
+
+        for ( const Entity& entity : _entitesToRender )
+        {
+            if ( !gProviders->get<EntityProvider>()->isEntityEnabled( entity ) ) continue;
+
+            const RenderComponent* renderComponent = componentProvider->get<RenderComponent>( entity );
+
+            if ( !renderComponent->isEnabled() ) continue;
+
+            const LocationComponent* locationComponent = componentProvider->get<LocationComponent>( entity );
+
+            physics::Rectangle entityAABB = getAABB( locationComponent, renderComponent );
+
+            if ( areShapesOverLapping( entityAABB, frustum ) )
+            {
+                assert( m_texturesToRenderCount < kConcurrentTexturePool ); //The concurrent texture pool is not big enough, consider increasing  kConcurrentTexturePool
+
+                m_texturesToRender[m_texturesToRenderCount].texture = renderComponent->getTexture();
+                m_texturesToRender[m_texturesToRenderCount].uvExtent = renderComponent->getUVExtent();
+                m_texturesToRender[m_texturesToRenderCount].screenExtent.xPos = (s32)((entityAABB.lowerBoundary.x - frustum.lowerBoundary.x) / metersPerPixel);
+                m_texturesToRender[m_texturesToRenderCount].screenExtent.yPos = (s32)((frustum.upperBoundary.y - entityAABB.upperBoundary.y) / metersPerPixel);
+                m_texturesToRender[m_texturesToRenderCount].screenExtent.width = (s32)(renderComponent->getSize().x / metersPerPixel);
+                m_texturesToRender[m_texturesToRenderCount].screenExtent.height = (s32)(renderComponent->getSize().y / metersPerPixel);
+                m_texturesToRender[m_texturesToRenderCount].rotationDegrees = locationComponent->getDegreesRotation();
+
+                ++m_texturesToRenderCount;
+            }
+        }
+        }
 
 #ifdef _DEBUG
     bool RenderSystem::entityComponentCheck( Entity _entity )

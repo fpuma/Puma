@@ -9,11 +9,14 @@ namespace puma::app
     class ITextureManager;
 }
 
+void initTest();
+
 void setCamera();
+void initWindow();
 void initPhysics();
 
-puma::Entity spawnFloor( puma::app::WindowHandle _windowHandle, puma::app::ITextureManager* _textureManager );
+puma::Entity spawnFloor( puma::app::ITextureManager* _textureManager );
 void unspawnFloor( puma::Entity _floorEntity );
 
-puma::Entity spawnBall( puma::app::WindowHandle _windowHandle, puma::app::ITextureManager* _textureManager );
+puma::Entity spawnBall( puma::app::ITextureManager* _textureManager );
 void unspawnBall( puma::Entity _floorEntity );

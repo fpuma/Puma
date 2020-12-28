@@ -8,7 +8,6 @@
 #include <application/iwindow.h>
 #include <texturemanager/itexturemanager.h>
 
-#include <engine/services/iapplicationservice.h>
 #include <engine/services/iprovidersservice.h>
 #include <engine/services/isystemsservice.h>
 
@@ -37,14 +36,30 @@ void setCamera()
      cameraComponent->setMetersPerPixel( 0.1f );
 }
 
+void initTest()
+{
+    initWindow();
+    initPhysics();
+    setCamera();
+
+    gSystems->updateSystemsProperties();
+}
+
+void initWindow()
+{
+    puma::app::Extent windowExtent = { 500,500,100,100 };
+    auto renderSystemPtr = gSystems->get<puma::IRenderSystem>();
+    renderSystemPtr->init( windowExtent, "EngineTest" );
+}
+
 void initPhysics()
 {
     auto collisitonSystemPtr = gSystems->get<puma::ICollisionSystem>();
-    collisitonSystemPtr->setGravity( { 0.0f, -10.0f } );
+    collisitonSystemPtr->init( { 0.0f, -10.0f } );
     collisitonSystemPtr->setCollisionCompatibility( { std::pair<puma::physics::CollisionIndex, puma::physics::CollisionIndex>( 0,0 ) } );
 }
 
-puma::Entity spawnFloor( puma::app::WindowHandle _windowHandle, puma::app::ITextureManager* _textureManager )
+puma::Entity spawnFloor( puma::app::ITextureManager* _textureManager )
 {
     puma::Entity result = gProviders->get<puma::IEntityProvider>()->requestEntity();
     puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
@@ -53,10 +68,12 @@ puma::Entity spawnFloor( puma::app::WindowHandle _windowHandle, puma::app::IText
     puma::IRenderComponent* renderComponent = componentProvider->add<puma::IRenderComponent>( result );
     puma::ICollisionComponent* collisionComponent = componentProvider->add<puma::ICollisionComponent>( result );
 
+    puma::IRenderSystem* renderSystem = gSystems->get<puma::IRenderSystem>();
+
     puma::Position pos = { 0.0f, -20.0f };
     locationComponent->setPosition( pos );
 
-    puma::app::IRenderer* renderer = gApplication->getWindow( _windowHandle )->getRenderer();
+    puma::app::IRenderer* renderer = renderSystem->getRenderer();
 
     //Render
     puma::app::Texture greenTexture = _textureManager->loadTexture( renderer, "../assets/green.png" );
@@ -104,7 +121,7 @@ void unspawnFloor( puma::Entity _floorEntity )
 
 }
 
-puma::Entity spawnBall( puma::app::WindowHandle _windowHandle, puma::app::ITextureManager* _textureManager )
+puma::Entity spawnBall( puma::app::ITextureManager* _textureManager )
 {
     puma::Entity result = gProviders->get<puma::IEntityProvider>()->requestEntity();
     puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
@@ -113,11 +130,12 @@ puma::Entity spawnBall( puma::app::WindowHandle _windowHandle, puma::app::ITextu
     puma::IRenderComponent* renderComponent = componentProvider->add<puma::IRenderComponent>( result );
     puma::ICollisionComponent* collisionComponent = componentProvider->add<puma::ICollisionComponent>( result );
 
+    puma::IRenderSystem* renderSystem = gSystems->get<puma::IRenderSystem>();
 
     puma::Position pos = { 0.0f, 0.0f };
     locationComponent->setPosition( pos );
 
-    puma::app::IRenderer* renderer = gApplication->getWindow( _windowHandle )->getRenderer();
+    puma::app::IRenderer* renderer = renderSystem->getRenderer();
 
     //Render
     puma::app::Texture tennisTexture = _textureManager->loadTexture( renderer, "../assets/tennisball.png" );
@@ -126,7 +144,7 @@ puma::Entity spawnBall( puma::app::WindowHandle _windowHandle, puma::app::ITextu
     renderComponent->setRenderable( renderable );
     puma::RenderSize renderSize = { 5.0f, 5.0f };
     renderComponent->setSize( renderSize );
-    gSystems->get<puma::IRenderSystem>()->registerEntity( result );
+    renderSystem->registerEntity( result );
 
 
     //Physics
