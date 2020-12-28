@@ -60,6 +60,17 @@ namespace puma
     {
         assert( m_entities.find( _entity ) != m_entities.end() ); //This entity is not registered to this system
 
+        physics::IWorld* world = gPhysics->getWorld( m_worldId );
+        ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
+        CollisionComponent* collisionComponent = componentProvider->get<CollisionComponent>( _entity );
+
+        physics::FrameID frameToRemove = collisionComponent->getFrameID();
+
+        assert( nullptr != collisionComponent );
+
+        collisionComponent->uninit();
+        world->removeFrame( frameToRemove );
+
         m_entities.erase( _entity );
     }
 

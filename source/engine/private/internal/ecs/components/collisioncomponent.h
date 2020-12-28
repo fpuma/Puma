@@ -26,8 +26,10 @@ namespace puma
     private:
 
         friend void CollisionSystem::registerEntity( Entity _entity, physics::FrameInfo _frameInfo, physics::FrameType _frameType );
+        friend void CollisionSystem::unregisterEntity( Entity _entity );
 
         void init( physics::FrameType _frameType, physics::FrameID _frameId );
+        void uninit();
 
         std::vector<physics::FramePartID> m_bodyIds;
         std::vector<physics::FramePartID> m_triggerIds;

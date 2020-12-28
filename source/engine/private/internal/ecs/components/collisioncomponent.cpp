@@ -17,6 +17,23 @@ namespace puma
         m_frameId = _frameId;
     }
 
+    void CollisionComponent::uninit()
+    { 
+        physics::IFrame* frame = gPhysics->getFrame( m_frameId );
+        for ( const physics::FramePartID& framePartId : m_bodyIds )
+        {
+            frame->removeFramePart( framePartId );
+        }
+
+        for ( const physics::FramePartID framePartId : m_triggerIds )
+        {
+            frame->removeFramePart( framePartId );
+        }
+
+        m_frameId = physics::kInvalidPhysicsID; 
+        m_frameType = physics::FrameType::Invalid; 
+    }
+
     void CollisionComponent::addBody( physics::BodyInfo _bodyInfo )
     {
         assert( isValid() );
