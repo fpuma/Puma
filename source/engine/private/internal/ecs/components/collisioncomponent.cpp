@@ -30,6 +30,9 @@ namespace puma
             frame->removeFramePart( framePartId );
         }
 
+        m_bodyIds.clear();
+        m_triggerIds.clear();
+
         m_frameId = physics::kInvalidPhysicsID; 
         m_frameType = physics::FrameType::Invalid; 
     }
