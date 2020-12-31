@@ -16,7 +16,7 @@ namespace puma
         RenderSize getSize() const override { return m_size; }
         
         app::Texture getTexture() const override { return m_renderable.getTexture(); }
-        app::Extent getUVExtent() const override { return m_renderable.getUVExtent(); }
+        Extent getUVExtent() const override { return m_renderable.getUVExtent(); }
 
         void setRenderable( const Renderable& _renderable ) override { m_renderable = _renderable; }
 

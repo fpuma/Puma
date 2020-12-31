@@ -1,6 +1,8 @@
 #pragma once
 
 #include <texturemanager/texture.h>
+#include <texturemanager/texturedefinitions.h>
+#include <utils/graphics/dimensions.h>
 
 namespace puma
 {
@@ -12,9 +14,9 @@ namespace puma
         void setUVMap( app::TextureSample _uvMap ) { m_textureSample = _uvMap; }
 
         app::Texture getTexture() const { return m_texture; }
-        app::Extent getUVExtent() const
+        Extent getUVExtent() const
         {
-            app::Extent uvExtent;
+            Extent uvExtent;
             uvExtent.xPos = (s32)((float)m_texture.getOriginalSize().width * m_textureSample.lowerLimit.u); 
             uvExtent.yPos = (s32)((float)m_texture.getOriginalSize().height * m_textureSample.lowerLimit.v); 
             uvExtent.width = (s32)((float)m_texture.getOriginalSize().width * m_textureSample.upperLimit.u);

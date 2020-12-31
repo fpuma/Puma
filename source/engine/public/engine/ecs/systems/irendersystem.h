@@ -1,9 +1,9 @@
 #pragma once
 
-#include <application/commondefinitions.h>
-
 #include <engine/ecs/base/entity.h>
 #include <engine/ecs/base/isystem.h>
+
+#include <utils/graphics/dimensions.h>
 
 namespace puma
 {
@@ -20,7 +20,7 @@ namespace puma
 
         virtual ~IRenderSystem() {}
 
-        virtual void init( app::Extent _windowExtent, const char* _windowName ) = 0;
+        virtual void init( Extent _windowExtent, const char* _windowName ) = 0;
 
         virtual app::IRenderer* getRenderer() = 0;
         virtual const app::IRenderer* getRenderer() const = 0;

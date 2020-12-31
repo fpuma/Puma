@@ -3,7 +3,6 @@
 #include <engine/ecs/base/entity.h>
 #include <engine/iengine.h>
 
-#include <application/commondefinitions.h>
 #include <texturemanager/itexturemanager.h>
 
 #include <physics/simulation/world/iworld.h>

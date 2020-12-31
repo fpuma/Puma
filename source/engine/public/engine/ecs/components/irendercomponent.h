@@ -4,7 +4,6 @@
 
 namespace puma
 {
-
     class Renderable;
 
     struct RenderSize
@@ -23,7 +22,7 @@ namespace puma
         virtual RenderSize getSize() const = 0;
 
         virtual app::Texture getTexture() const = 0;
-        virtual app::Extent getUVExtent() const = 0;
+        virtual Extent getUVExtent() const = 0;
 
         virtual void setRenderable( const Renderable& _renderable ) = 0;
     };

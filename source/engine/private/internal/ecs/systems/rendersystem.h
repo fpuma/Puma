@@ -11,8 +11,8 @@ namespace puma
     struct TextureToRenderInfo
     {
         app::Texture texture;
-        app::Extent uvExtent;
-        app::Extent screenExtent;
+        Extent uvExtent;
+        Extent screenExtent;
         float rotationDegrees;
     };
 
@@ -27,7 +27,7 @@ namespace puma
     {
     public:
 
-        void init( app::Extent _windowExtent, const char* _windowName ) override;
+        void init( Extent _windowExtent, const char* _windowName ) override;
         void uninit() override;
 
         app::IRenderer* getRenderer() override;

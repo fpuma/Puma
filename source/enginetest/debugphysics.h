@@ -2,12 +2,12 @@
 
 #include <physics/debug/debugdraw.h>
 #include <application/irenderer.h>
-#include <application/commondefinitions.h>
+#include <utils/graphics/color.h>
 
 using Vec2 = puma::physics::Vec2;
 using RGBA = puma::physics::RGBA;
 
-puma::app::Color colorTransform( const RGBA& color )
+puma::Color colorTransform( const RGBA& color )
 {
     return { (unsigned char)(color.r * 255.0f), (unsigned char)(color.g * 255.0f), (unsigned char)(color.b * 255.0f), (unsigned char)(color.a * 255.0f) };
 }

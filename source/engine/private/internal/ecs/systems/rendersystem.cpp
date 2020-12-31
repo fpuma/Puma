@@ -33,7 +33,7 @@ namespace puma
 
             assert( (nullptr != locationComponent) && (nullptr != cameraComponent) );
 
-            app::Extent windowExtent = gApplication->getWindow( _windowHandle )->getExtent();
+            Extent windowExtent = gApplication->getWindow( _windowHandle )->getExtent();
 
             physics::Rectangle result;
 
@@ -97,7 +97,7 @@ namespace puma
         }
     }
 
-    void RenderSystem::init( app::Extent _windowExtent, const char* _windowName )
+    void RenderSystem::init( Extent _windowExtent, const char* _windowName )
     {
         m_windowHandle = gApplication->createWindow( _windowExtent, _windowName );
         m_properties.updateBitMask = (SystemUpdateBitMask)SystemUpdateFlag::PostPhysicsUpdate | (SystemUpdateBitMask)SystemUpdateFlag::PrePhysicsUpdate;

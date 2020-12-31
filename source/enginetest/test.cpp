@@ -28,6 +28,8 @@
 #include <physics/simulation/frames/istaticframe.h>
 #include <physics/simulation/frames/idynamicframe.h>
 
+#include <utils/graphics/dimensions.h>
+
 void setCamera()
 {
      puma::Entity cameraEntity = gSystems->get<puma::IRenderSystem>()->getCameraEntity();
@@ -47,7 +49,7 @@ void initTest()
 
 void initWindow()
 {
-    puma::app::Extent windowExtent = { 500,500,100,100 };
+    puma::Extent windowExtent = { 500,500,100,100 };
     auto renderSystemPtr = gSystems->get<puma::IRenderSystem>();
     renderSystemPtr->init( windowExtent, "EngineTest" );
 }
