@@ -94,13 +94,13 @@ puma::Entity spawnFloor( puma::app::ITextureManager* _textureManager )
 
     gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::physics::FrameType::Static );
 
-    puma::physics::Rectangle floorShape;
+    puma::Rectangle floorShape;
     floorShape.lowerBoundary = { -20.0f, -4.0f };
     floorShape.upperBoundary = { 20.0f, 4.0f };
     puma::physics::BodyInfo floorBodyInfo;
     floorBodyInfo.collisionIndex = 0;
     floorBodyInfo.shape.rectangle = floorShape;
-    floorBodyInfo.shapeType = puma::physics::ShapeType::Rectangle;
+    floorBodyInfo.shapeType = puma::ShapeType::Rectangle;
     floorBodyInfo.restitution = 0.0f;
 
     collisionComponent->addBody( floorBodyInfo );
@@ -154,13 +154,13 @@ puma::Entity spawnBall( puma::app::ITextureManager* _textureManager )
     frameInfo.position = pos;
     gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::physics::FrameType::Dynamic );
 
-    puma::physics::Circle ballShape;
+    puma::Circle ballShape;
     ballShape.radius = 2.5f;
     puma::physics::BodyInfo ballBodyInfo;
     ballBodyInfo.density = 1.0f;
     ballBodyInfo.collisionIndex = 0;
     ballBodyInfo.shape.circle = ballShape;
-    ballBodyInfo.shapeType = puma::physics::ShapeType::Circle;
+    ballBodyInfo.shapeType = puma::ShapeType::Circle;
     ballBodyInfo.restitution = 0.5f;
 
     collisionComponent->addBody( ballBodyInfo );

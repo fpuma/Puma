@@ -19,14 +19,14 @@
 #include <internal/services/applicationservice.h>
 
 #include <physics/geometry/overlapcheck.h>
-#include <physics/geometry/shapes.h>
+#include <utils/geometry/shapes/shape.h>
 
 namespace puma
 {
     namespace
     {
 
-        physics::Rectangle getCameraFrustum( ComponentProvider* _componentProvider, Entity _cameraEntity, app::WindowHandle _windowHandle )
+        Rectangle getCameraFrustum( ComponentProvider* _componentProvider, Entity _cameraEntity, app::WindowHandle _windowHandle )
         {
             const LocationComponent* locationComponent = _componentProvider->get<LocationComponent>( _cameraEntity );
             const CameraComponent* cameraComponent = _componentProvider->get<CameraComponent>( _cameraEntity );
@@ -35,7 +35,7 @@ namespace puma
 
             Extent windowExtent = gApplication->getWindow( _windowHandle )->getExtent();
 
-            physics::Rectangle result;
+            Rectangle result;
 
             Position cameraPos = locationComponent->getPosition();
             float screenMetersWidth = (float)windowExtent.width * cameraComponent->getMetersPerPixel();
@@ -77,7 +77,7 @@ namespace puma
             entityProvider->disposeEntity( _entity );
         }
 
-        physics::Rectangle getAABB( const LocationComponent* _locationComponent, const RenderComponent* _renderComponent )
+        Rectangle getAABB( const LocationComponent* _locationComponent, const RenderComponent* _renderComponent )
         {
             assert( (nullptr != _locationComponent) && (nullptr != _renderComponent) );
 
@@ -89,7 +89,7 @@ namespace puma
             float upperY = position.y + (renderSize.y / 2.0f);
             float lowerY = position.y - (renderSize.y / 2.0f);
 
-            physics::Rectangle result;
+            Rectangle result;
             result.upperBoundary = { upperX, upperY };
             result.lowerBoundary = { lowerX, lowerY };
 
@@ -191,7 +191,7 @@ namespace puma
     {
         ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
 
-        physics::Rectangle frustum = getCameraFrustum( componentProvider, m_cameraEntity, m_windowHandle );
+        Rectangle frustum = getCameraFrustum( componentProvider, m_cameraEntity, m_windowHandle );
 
         float metersPerPixel = componentProvider->get<CameraComponent>( m_cameraEntity )->getMetersPerPixel();
 
@@ -205,9 +205,9 @@ namespace puma
 
             const LocationComponent* locationComponent = componentProvider->get<LocationComponent>( entity );
 
-            physics::Rectangle entityAABB = getAABB( locationComponent, renderComponent );
+            Rectangle entityAABB = getAABB( locationComponent, renderComponent );
 
-            if ( areShapesOverLapping( entityAABB, frustum ) )
+            if ( physics::areShapesOverLapping( entityAABB, frustum ) )
             {
                 assert( m_texturesToRenderCount < kConcurrentTexturePool ); //The concurrent texture pool is not big enough, consider increasing  kConcurrentTexturePool
 

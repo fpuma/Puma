@@ -4,7 +4,7 @@
 #include <application/irenderer.h>
 #include <utils/graphics/color.h>
 
-using Vec2 = puma::physics::Vec2;
+using Vec2 = puma::Vec2;
 using RGBA = puma::physics::RGBA;
 
 puma::Color colorTransform( const RGBA& color )

@@ -15,7 +15,7 @@
 
 namespace puma
 {
-    void CollisionSystem::init( physics::Vec2 _gravity )
+    void CollisionSystem::init( Vec2 _gravity )
     {
         m_properties.updateBitMask = (SystemUpdateBitMask)SystemUpdateFlag::PostPhysicsUpdate;
                                    //| (SystemUpdateBitMask)SystemUpdateFlag::PrePhysicsUpdate;
@@ -101,12 +101,12 @@ namespace puma
         }
     }
 
-    void CollisionSystem::setGravity( physics::Vec2 _gravity )
+    void CollisionSystem::setGravity( Vec2 _gravity )
     {
         gPhysics->getWorld( m_worldId )->setGravity( _gravity );
     }
 
-    physics::Vec2 CollisionSystem::getGravity()
+    Vec2 CollisionSystem::getGravity()
     {
         return gPhysics->getWorld( m_worldId )->getGravity();
     }
