@@ -2,9 +2,7 @@
 
 #include <engine/ecs/base/icomponent.h>
 
-#include <physics/simulation/frames/frameinfo.h>
-#include <physics/simulation/frameparts/bodyinfo.h>
-#include <physics/simulation/frameparts/triggerinfo.h>
+#include <engine/physics/physicsdefinitions.h>
 
 namespace puma
 {
@@ -14,11 +12,11 @@ namespace puma
 
         virtual ~ICollisionComponent(){}
 
-        virtual physics::FrameType getFrameType() const = 0;
-        virtual physics::FrameID getFrameID() const = 0;
+        virtual PhysicsFrameType getFrameType() const = 0;
+        virtual PhysicsFrameID getFrameID() const = 0;
 
-        virtual void addBody( physics::BodyInfo _bodyInfo ) = 0;
-        virtual void addTrigger( physics::TriggerInfo _triggerInfo ) = 0;
+        virtual void addBody( PhysicsBodyInfo _bodyInfo ) = 0;
+        virtual void addTrigger( PhysicsTriggerInfo _triggerInfo ) = 0;
 
         virtual bool isValid() const = 0;
 

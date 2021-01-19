@@ -9,7 +9,7 @@
 namespace puma
 {
 
-    void CollisionComponent::init( physics::FrameType _frameType, physics::FrameID _frameId )
+    void CollisionComponent::init( PhysicsFrameType _frameType, PhysicsFrameID _frameId )
     {
         assert( !isValid() );
 
@@ -20,12 +20,12 @@ namespace puma
     void CollisionComponent::uninit()
     { 
         physics::IFrame* frame = gPhysics->getFrame( m_frameId );
-        for ( const physics::FramePartID& framePartId : m_bodyIds )
+        for ( const PhysicsFramePartID& framePartId : m_bodyIds )
         {
             frame->removeFramePart( framePartId );
         }
 
-        for ( const physics::FramePartID framePartId : m_triggerIds )
+        for ( const PhysicsFramePartID framePartId : m_triggerIds )
         {
             frame->removeFramePart( framePartId );
         }
@@ -33,11 +33,11 @@ namespace puma
         m_bodyIds.clear();
         m_triggerIds.clear();
 
-        m_frameId = physics::kInvalidPhysicsID; 
-        m_frameType = physics::FrameType::Invalid; 
+        m_frameId.invalidate(); 
+        m_frameType = PhysicsFrameType::Invalid; 
     }
 
-    void CollisionComponent::addBody( physics::BodyInfo _bodyInfo )
+    void CollisionComponent::addBody( PhysicsBodyInfo _bodyInfo )
     {
         assert( isValid() );
 
@@ -45,7 +45,7 @@ namespace puma
         m_bodyIds.emplace_back( frame->addBody( _bodyInfo ) );
     }
 
-    void CollisionComponent::addTrigger( physics::TriggerInfo _triggerInfo )
+    void CollisionComponent::addTrigger( PhysicsTriggerInfo _triggerInfo )
     {
         assert( isValid() );
 

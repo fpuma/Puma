@@ -22,11 +22,7 @@
 #include <engine/ecs/systems/icollisionsystem.h>
 #include <engine/ecs/systems/irendersystem.h>
 
-#include <physics/collisions/collissiondefinitions.h>
-
-#include <physics/simulation/world/iworld.h>
-#include <physics/simulation/frames/istaticframe.h>
-#include <physics/simulation/frames/idynamicframe.h>
+#include <engine/physics/physicsdefinitions.h>
 
 #include <utils/graphics/dimensions.h>
 
@@ -58,7 +54,7 @@ void initPhysics()
 {
     auto collisitonSystemPtr = gSystems->get<puma::ICollisionSystem>();
     collisitonSystemPtr->init( { 0.0f, -10.0f } );
-    collisitonSystemPtr->setCollisionCompatibility( { std::pair<puma::physics::CollisionIndex, puma::physics::CollisionIndex>( 0,0 ) } );
+    collisitonSystemPtr->setCollisionCompatibility( { std::pair<puma::PhysicsCollisionIndex, puma::PhysicsCollisionIndex>( 0,0 ) } );
 }
 
 puma::Entity spawnFloor( puma::app::ITextureManager* _textureManager )
@@ -88,16 +84,16 @@ puma::Entity spawnFloor( puma::app::ITextureManager* _textureManager )
     gSystems->get<puma::IRenderSystem>()->registerEntity( result );
 
     //Physics
-    puma::physics::FrameInfo frameInfo;
+    puma::PhysicsFrameInfo frameInfo;
     frameInfo.position = pos;
     frameInfo.angle = 10.0f;
 
-    gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::physics::FrameType::Static );
+    gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::PhysicsFrameType::Static );
 
     puma::Rectangle floorShape;
     floorShape.lowerBoundary = { -20.0f, -4.0f };
     floorShape.upperBoundary = { 20.0f, 4.0f };
-    puma::physics::BodyInfo floorBodyInfo;
+    puma::PhysicsBodyInfo floorBodyInfo;
     floorBodyInfo.collisionIndex = 0;
     floorBodyInfo.shape.rectangle = floorShape;
     floorBodyInfo.shapeType = puma::ShapeType::Rectangle;
@@ -150,13 +146,13 @@ puma::Entity spawnBall( puma::app::ITextureManager* _textureManager )
 
 
     //Physics
-    puma::physics::FrameInfo frameInfo;
+    puma::PhysicsFrameInfo frameInfo;
     frameInfo.position = pos;
-    gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::physics::FrameType::Dynamic );
+    gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::PhysicsFrameType::Dynamic );
 
     puma::Circle ballShape;
     ballShape.radius = 2.5f;
-    puma::physics::BodyInfo ballBodyInfo;
+    puma::PhysicsBodyInfo ballBodyInfo;
     ballBodyInfo.density = 1.0f;
     ballBodyInfo.collisionIndex = 0;
     ballBodyInfo.shape.circle = ballShape;

@@ -16,6 +16,8 @@
 
 #include <engine/ecs/systems/irendersystem.h>
 
+#include <engine/physics/physicsdefinitions.h>
+
 #include <engine/services/base/iprovider.h>
 #include <engine/services/base/iprovidercontainer.h>
 #include <engine/services/base/iservice.h>

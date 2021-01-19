@@ -5,9 +5,6 @@
 
 #include <texturemanager/itexturemanager.h>
 
-#include <physics/simulation/world/iworld.h>
-#include <physics/collisions/collissiondefinitions.h>
-
 #include "test.h"
 
 int main( int argc, char* argv[] )
