@@ -6,15 +6,23 @@
 
 namespace puma
 {
+    struct RenderSize
+    {
+        float x = 0.0f;
+        float y = 0.0f;
+    };
+
     class Renderable
     {
     public:
 
         void setTexture( app::Texture _texture ) { m_texture = _texture; }
-        void setUVMap( app::TextureSample _uvMap ) { m_textureSample = _uvMap; }
+        void setTextureSample( app::TextureSample _textureSample ) { m_textureSample = _textureSample; }
+        void setRenderSize( RenderSize _renderSize ) { m_renderSize = _renderSize; }
 
         app::Texture getTexture() const { return m_texture; }
-        Extent getUVExtent() const
+        RenderSize getRenderSize() const { return m_renderSize; }
+        Extent getSampledExtent() const
         {
             Extent uvExtent;
             uvExtent.xPos = (s32)((float)m_texture.getOriginalSize().width * m_textureSample.lowerLimit.u); 
@@ -26,7 +34,8 @@ namespace puma
 
     private:
 
-        app::TextureSample m_textureSample;
         app::Texture m_texture;
+        app::TextureSample m_textureSample;
+        RenderSize m_renderSize;
     };
 }

@@ -6,12 +6,6 @@ namespace puma
 {
     class Renderable;
 
-    struct RenderSize
-    {
-        float x = 0.0f;
-        float y = 0.0f;
-    };
-
     class IRenderComponent : public IComponent
     {
     public:
@@ -22,7 +16,7 @@ namespace puma
         virtual RenderSize getSize() const = 0;
 
         virtual app::Texture getTexture() const = 0;
-        virtual Extent getUVExtent() const = 0;
+        virtual Extent getSampledExtent() const = 0;
 
         virtual void setRenderable( const Renderable& _renderable ) = 0;
     };

@@ -212,7 +212,7 @@ namespace puma
                 assert( m_texturesToRenderCount < kConcurrentTexturePool ); //The concurrent texture pool is not big enough, consider increasing  kConcurrentTexturePool
 
                 m_texturesToRender[m_texturesToRenderCount].texture = renderComponent->getTexture();
-                m_texturesToRender[m_texturesToRenderCount].uvExtent = renderComponent->getUVExtent();
+                m_texturesToRender[m_texturesToRenderCount].uvExtent = renderComponent->getSampledExtent();
                 m_texturesToRender[m_texturesToRenderCount].screenExtent.xPos = (s32)((entityAABB.lowerBoundary.x - frustum.lowerBoundary.x) / metersPerPixel);
                 m_texturesToRender[m_texturesToRenderCount].screenExtent.yPos = (s32)((frustum.upperBoundary.y - entityAABB.upperBoundary.y) / metersPerPixel);
                 m_texturesToRender[m_texturesToRenderCount].screenExtent.width = (s32)(renderComponent->getSize().x / metersPerPixel);

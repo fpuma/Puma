@@ -12,17 +12,16 @@ namespace puma
         void disable() override { m_enabled = false; };
         bool isEnabled() const override { return m_enabled; }
 
-        void setSize( const RenderSize& _size ) override { m_size = _size; }
-        RenderSize getSize() const override { return m_size; }
+        void setSize( const RenderSize& _size ) override { m_renderable.setRenderSize( _size ); }
+        RenderSize getSize() const override { return m_renderable.getRenderSize(); }
         
         app::Texture getTexture() const override { return m_renderable.getTexture(); }
-        Extent getUVExtent() const override { return m_renderable.getUVExtent(); }
+        Extent getSampledExtent() const override { return m_renderable.getSampledExtent(); }
 
         void setRenderable( const Renderable& _renderable ) override { m_renderable = _renderable; }
 
     private:
 
-        RenderSize m_size;
         Renderable  m_renderable;
         bool m_enabled = true;
     };
