@@ -90,7 +90,7 @@ namespace puma
             {
                 LocationComponent* locationComponent = componentProvider->get<LocationComponent>( entity );
 
-                Position pos = physicsFrame->getPosition();
+                Position pos = { physicsFrame->getPosition().x, physicsFrame->getPosition().y, 0.0f };
                 locationComponent->setPosition( pos );
                 locationComponent->setDegreesRotation( -physicsFrame->getAngle() );
             }

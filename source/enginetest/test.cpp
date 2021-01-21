@@ -68,7 +68,7 @@ puma::Entity spawnFloor( puma::app::ITextureManager* _textureManager )
 
     puma::IRenderSystem* renderSystem = gSystems->get<puma::IRenderSystem>();
 
-    puma::Position pos = { 0.0f, -20.0f };
+    puma::Position pos = { 0.0f, -20.0f, 0.0f };
     locationComponent->setPosition( pos );
 
     puma::app::IRenderer* renderer = renderSystem->getRenderer();
@@ -85,7 +85,7 @@ puma::Entity spawnFloor( puma::app::ITextureManager* _textureManager )
 
     //Physics
     puma::PhysicsFrameInfo frameInfo;
-    frameInfo.position = pos;
+    frameInfo.position = { pos.x, pos.y };
     frameInfo.angle = 10.0f;
 
     gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::PhysicsFrameType::Static );
@@ -130,7 +130,7 @@ puma::Entity spawnBall( puma::app::ITextureManager* _textureManager )
 
     puma::IRenderSystem* renderSystem = gSystems->get<puma::IRenderSystem>();
 
-    puma::Position pos = { 0.0f, 0.0f };
+    puma::Position pos = { 0.0f, 0.0f, 0.0f };
     locationComponent->setPosition( pos );
 
     puma::app::IRenderer* renderer = renderSystem->getRenderer();
@@ -147,7 +147,7 @@ puma::Entity spawnBall( puma::app::ITextureManager* _textureManager )
 
     //Physics
     puma::PhysicsFrameInfo frameInfo;
-    frameInfo.position = pos;
+    frameInfo.position = { pos.x, pos.y };
     gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::PhysicsFrameType::Dynamic );
 
     puma::Circle ballShape;
