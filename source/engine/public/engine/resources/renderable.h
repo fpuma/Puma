@@ -16,26 +16,25 @@ namespace puma
     {
     public:
 
-        void setTexture( app::Texture _texture ) { m_texture = _texture; }
-        void setTextureSample( app::TextureSample _textureSample ) { m_textureSample = _textureSample; }
+        void setTexture( app::Texture _texture, app::TextureSample _textureSample = {} )
+        { 
+            m_texture = _texture; 
+
+            m_sampledExtent.xPos =   (s32)((float)m_texture.getOriginalSize().width  * _textureSample.lowerLimit.u);
+            m_sampledExtent.yPos =   (s32)((float)m_texture.getOriginalSize().height * _textureSample.lowerLimit.v);
+            m_sampledExtent.width =  (s32)((float)m_texture.getOriginalSize().width  * _textureSample.upperLimit.u);
+            m_sampledExtent.height = (s32)((float)m_texture.getOriginalSize().height * _textureSample.upperLimit.v);
+        }
         void setRenderSize( RenderSize _renderSize ) { m_renderSize = _renderSize; }
 
         app::Texture getTexture() const { return m_texture; }
         RenderSize getRenderSize() const { return m_renderSize; }
-        Extent getSampledExtent() const
-        {
-            Extent uvExtent;
-            uvExtent.xPos = (s32)((float)m_texture.getOriginalSize().width * m_textureSample.lowerLimit.u); 
-            uvExtent.yPos = (s32)((float)m_texture.getOriginalSize().height * m_textureSample.lowerLimit.v); 
-            uvExtent.width = (s32)((float)m_texture.getOriginalSize().width * m_textureSample.upperLimit.u);
-            uvExtent.height = (s32)((float)m_texture.getOriginalSize().height * m_textureSample.upperLimit.v);
-            return uvExtent;
-        }
+        Extent getSampledExtent() const { return m_sampledExtent; }
 
     private:
 
         app::Texture m_texture;
-        app::TextureSample m_textureSample;
+        Extent m_sampledExtent;
         RenderSize m_renderSize;
     };
 }
