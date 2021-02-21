@@ -9,6 +9,7 @@
 #include <internal/services/base/servicecontainer.h>
 #include <internal/services/inputservice.h>
 #include <internal/services/applicationservice.h>
+#include <internal/services/engineapplicationservice.h>
 #include <internal/services/physicsservice.h>
 #include <internal/services/providersservice.h>
 #include <internal/services/systemsservice.h>
@@ -89,9 +90,9 @@ namespace puma
     void Engine::update()
     {
         m_deltaTime.update();
-        gInput->update();
-        gApplication->update();
-        m_shouldQuit = gApplication->shouldQuit();
+        gInternalEngineApplication->getInput()->update();
+        gInternalEngineApplication->update();
+        m_shouldQuit = gInternalEngineApplication->shouldQuit();
 
         float currentDeltaTime = (float)m_deltaTime.get();
         gInternalSystems->update( currentDeltaTime );
@@ -103,7 +104,6 @@ namespace puma
     void Engine::render()
     {
         RenderSystem* renderSystem = gInternalSystems->get<RenderSystem>();
-
         app::IRenderer* renderer = renderSystem->getRenderer();
         renderer->beginRender();
 

@@ -30,8 +30,10 @@ void setCamera()
 {
      puma::Entity cameraEntity = gSystems->get<puma::IRenderSystem>()->getCameraEntity();
      puma::ICameraComponent* cameraComponent = gProviders->get<puma::IComponentProvider>()->get<puma::ICameraComponent>( cameraEntity );
+     puma::ILocationComponent* locationComponent = gProviders->get<puma::IComponentProvider>()->get<puma::ILocationComponent>( cameraEntity );
 
-     cameraComponent->setMetersPerPixel( 0.1f );
+     locationComponent->setPosition( { -45.0f, 0.0f } );
+     cameraComponent->setMetersPerPixel( 0.2f );
 }
 
 void initTest()
@@ -86,7 +88,7 @@ puma::Entity spawnFloor( puma::app::ITextureManager* _textureManager )
     //Physics
     puma::PhysicsFrameInfo frameInfo;
     frameInfo.position = { pos.x, pos.y };
-    frameInfo.angle = 10.0f;
+    frameInfo.angle = 45.0f;
 
     gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::PhysicsFrameType::Static );
 
@@ -97,7 +99,7 @@ puma::Entity spawnFloor( puma::app::ITextureManager* _textureManager )
     floorBodyInfo.collisionIndex = 0;
     floorBodyInfo.shape.rectangle = floorShape;
     floorBodyInfo.shapeType = puma::ShapeType::Rectangle;
-    floorBodyInfo.restitution = 0.0f;
+    floorBodyInfo.restitution = 0.7f;
 
     collisionComponent->addBody( floorBodyInfo );
 
@@ -130,7 +132,7 @@ puma::Entity spawnBall( puma::app::ITextureManager* _textureManager )
 
     puma::IRenderSystem* renderSystem = gSystems->get<puma::IRenderSystem>();
 
-    puma::Position pos = { 0.0f, 0.0f, 0.0f };
+    puma::Position pos = { 0.0f, 20.0f, 0.0f };
     locationComponent->setPosition( pos );
 
     puma::app::IRenderer* renderer = renderSystem->getRenderer();
@@ -157,7 +159,7 @@ puma::Entity spawnBall( puma::app::ITextureManager* _textureManager )
     ballBodyInfo.collisionIndex = 0;
     ballBodyInfo.shape.circle = ballShape;
     ballBodyInfo.shapeType = puma::ShapeType::Circle;
-    ballBodyInfo.restitution = 0.5f;
+    ballBodyInfo.restitution = 0.6f;
 
     collisionComponent->addBody( ballBodyInfo );
 

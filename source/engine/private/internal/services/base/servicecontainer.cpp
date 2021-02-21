@@ -15,13 +15,13 @@ namespace puma
     void ServiceContainer::init()
     {
         registerInterface<IProvidersService, ProvidersService>();
-        registerInterface<IInputService, InputService>();
+        //registerInterface<IInputService, InputService>();
         registerInterface<ISystemsService, SystemsService>();
         registerClass<ApplicationService>();
         registerClass<PhysicsService>();
 
         add<ProvidersService>();
-        add<InputService>();
+        //add<InputService>();
         add<ApplicationService>();
         add<PhysicsService>();
         add<SystemsService>();
@@ -32,7 +32,7 @@ namespace puma
         get<SystemsService>()->uninit();
         get<PhysicsService>()->uninit();
         get<ApplicationService>()->uninit();
-        get<InputService>()->uninit();
+        //get<InputService>()->uninit();
         get<ProvidersService>()->uninit();
         clear();
     }

@@ -20,7 +20,7 @@ namespace puma
 
         virtual ~IRenderSystem() {}
 
-        virtual void init( Extent _windowExtent, const char* _windowName ) = 0;
+        virtual void init() = 0;
 
         virtual app::IRenderer* getRenderer() = 0;
         virtual const app::IRenderer* getRenderer() const = 0;

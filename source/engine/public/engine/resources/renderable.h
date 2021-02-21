@@ -1,5 +1,6 @@
 #pragma once
 
+#include <engine/utils/position.h>
 #include <texturemanager/texture.h>
 #include <texturemanager/texturedefinitions.h>
 #include <utils/graphics/dimensions.h>
@@ -26,15 +27,18 @@ namespace puma
             m_sampledExtent.height = (s32)((float)m_texture.getOriginalSize().height * _textureSample.upperLimit.v);
         }
         void setRenderSize( RenderSize _renderSize ) { m_renderSize = _renderSize; }
+        void setPosition( Position _pos ) { m_position = _pos; }
 
         app::Texture getTexture() const { return m_texture; }
         RenderSize getRenderSize() const { return m_renderSize; }
         Extent getSampledExtent() const { return m_sampledExtent; }
+        Position getPosition() const { return m_position; }
 
     private:
 
         app::Texture m_texture;
         Extent m_sampledExtent;
         RenderSize m_renderSize;
+        Position m_position;
     };
 }

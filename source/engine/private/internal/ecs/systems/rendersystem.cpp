@@ -97,9 +97,8 @@ namespace puma
         }
     }
 
-    void RenderSystem::init( Extent _windowExtent, const char* _windowName )
+    void RenderSystem::init()
     {
-        m_windowHandle = gApplication->createWindow( _windowExtent, _windowName );
         m_properties.updateBitMask = (SystemUpdateBitMask)SystemUpdateFlag::PostPhysicsUpdate | (SystemUpdateBitMask)SystemUpdateFlag::PrePhysicsUpdate;
         m_cameraEntity = buildDefaultCamera();
     }
@@ -108,16 +107,6 @@ namespace puma
     {
         destroyDefaultCamera( m_cameraEntity );
         gApplication->removeWindow( m_windowHandle );
-    }
-
-    app::IRenderer* RenderSystem::getRenderer()
-    {
-        return gApplication->getWindow( m_windowHandle )->getRenderer();
-    }
-
-    const app::IRenderer* RenderSystem::getRenderer() const
-    {
-        return gApplication->getWindow( m_windowHandle )->getRenderer();
     }
 
     void RenderSystem::prePhysicsUpdate( float _deltaTime )

@@ -33,6 +33,16 @@ namespace puma
                 m_systemsToUpdatePostPhysics.push_back( _system );
                 std::sort( m_systemsToUpdatePostPhysics.begin(), m_systemsToUpdatePostPhysics.end(), sortCallback );
             }
+
+            if ( properties.updateBitMask & (SystemUpdateBitMask)SystemUpdateFlag::QueueRenderables )
+            {
+                m_systemsToQueueRenderables.push_back( _system );
+            }
+
+            if ( properties.updateBitMask & (SystemUpdateBitMask)SystemUpdateFlag::QueueDebugRenderables )
+            {
+                m_systemsToQueueDebugRenderables.push_back( _system );
+            }
         } );
 
         setOnRemovedCallback( [&]( Key _key, ISystem* _system )
@@ -79,11 +89,29 @@ namespace puma
         }
     }
 
+    void SystemContainer::queueRenderables( RenderablesBackInserter _renderablesBackInserter )
+    {
+        for ( ISystem* systemPtr : m_systemsToQueueRenderables )
+        {
+            systemPtr->queueRenderables( _renderablesBackInserter );
+        }
+    }
+    
+    void SystemContainer::queueDebugRenderables( RenderablesBackInserter _renderablesBackInserter )
+    {
+        for ( ISystem* systemPtr : m_systemsToQueueDebugRenderables )
+        {
+            systemPtr->queueRenderables( _renderablesBackInserter );
+        }
+    }
+
     void SystemContainer::updateSystemsProperties()
     {
         m_systemsToUpdate.clear();
         m_systemsToUpdatePrePhysics.clear();
         m_systemsToUpdatePostPhysics.clear();
+        m_systemsToQueueRenderables.clear();
+        m_systemsToQueueDebugRenderables.clear();
 
         traverse( [&]( ISystem* _system )
         {
@@ -103,6 +131,17 @@ namespace puma
             {
                 m_systemsToUpdatePostPhysics.push_back( _system );
             }
+
+            if ( properties.updateBitMask & (SystemUpdateBitMask)SystemUpdateFlag::QueueRenderables )
+            {
+                m_systemsToQueueRenderables.push_back( _system );
+            }
+
+            if ( properties.updateBitMask & (SystemUpdateBitMask)SystemUpdateFlag::QueueDebugRenderables )
+            {
+                m_systemsToQueueDebugRenderables.push_back( _system );
+            }
+            
         } );
 
         auto sortCallback = []( const ISystem* _sys1, const ISystem* _sys2 )

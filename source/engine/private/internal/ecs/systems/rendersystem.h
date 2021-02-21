@@ -27,11 +27,8 @@ namespace puma
     {
     public:
 
-        void init( Extent _windowExtent, const char* _windowName ) override;
+        void init() override;
         void uninit() override;
-
-        app::IRenderer* getRenderer() override;
-        const app::IRenderer* getRenderer() const override;
 
         void update             ( float _deltaTime ) override {};
         void prePhysicsUpdate   ( float _deltaTime ) override;
@@ -63,7 +60,5 @@ namespace puma
 
         TexturesToRenderContainer m_texturesToRender;
         u32 m_texturesToRenderCount = 0;
-
-        app::WindowHandle m_windowHandle = app::kInvalidWindowHandle;
     };
 }
