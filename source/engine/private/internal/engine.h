@@ -2,6 +2,7 @@
 
 #include <engine/iengine.h>
 #include <time/deltatime.h>
+#include <internal/renderer/enginerenderer.h>
 
 namespace puma
 {
@@ -23,6 +24,7 @@ namespace puma
     private:
 
         std::unique_ptr<ServiceContainer> m_services = nullptr;
+        EngineRenderer m_engineRenderer;
         DeltaTime m_deltaTime;
         bool m_shouldQuit = false;
     };

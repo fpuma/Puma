@@ -34,8 +34,8 @@ namespace puma
         virtual void prePhysicsUpdate( float _deltaTime ) = 0;
         virtual void postPhysicsUpdate( float _deltaTime ) = 0;
 
-        virtual void queueRenderables( RenderablesBackInserter _backInserter ) = 0;
-        virtual void queueDebugRenderables( RenderablesBackInserter _backInserter ) = 0;
+        virtual void queueRenderables( QueueRenderableCallback _queueRenderableCallback ) = 0;
+        virtual void queueDebugRenderables( QueueRenderableCallback _queueRenderableCallback ) = 0;
 
         virtual void setProperties( SystemProperties _properties ) = 0;
         virtual SystemProperties getProperties() const = 0;

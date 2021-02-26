@@ -2,9 +2,15 @@
 
 #include "engineapplication.h"
 
-#include <internal/services/applicationservice.h>
 #include <application/iwindow.h>
 #include <application/irenderer.h>
+
+#ifdef _DEBUG
+#include <engine/services/iprovidersservice.h>
+#include <internal/ecs/base/providers/componentprovider.h>
+#include <internal/ecs/components/cameracomponent.h>
+#include <internal/ecs/components/locationcomponent.h>
+#endif
 
 namespace puma
 {
@@ -16,7 +22,7 @@ namespace puma
 
     EngineApplication::EngineApplication()
     {
-        m_application = std::make_unique<app::IApplication>();
+        m_application = app::IApplication::create();
     }
 
     void EngineApplication::init( Extent _windowExtent, const char* _windowName )
@@ -45,4 +51,14 @@ namespace puma
         }
     }
   
+    void EngineApplication::setCameraEntity( Entity _cameraEntity )
+    {
+#ifdef _DEBUG
+        ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
+        CameraComponent* cameraComponent = componentProvider->get<CameraComponent>( _cameraEntity );
+        LocationComponent* locationComponent = componentProvider->get<LocationComponent>( _cameraEntity );
+        assert( (nullptr != cameraComponent) && (nullptr != locationComponent) );
+#endif
+        m_cameraEntity = _cameraEntity;
+    }
 }

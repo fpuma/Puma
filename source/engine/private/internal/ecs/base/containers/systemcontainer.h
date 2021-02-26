@@ -2,6 +2,7 @@
 
 #include <engine/ecs/base/containers/isystemcontainer.h>
 #include <engine/resources/resourcedefs.h>
+#include <utils/geometry/shapes/rectangle.h>
 
 namespace puma
 {
@@ -15,8 +16,8 @@ namespace puma
         void update( float _deltaTime );
         void postPhysicsUpdate( float _deltaTime );
 
-        void queueRenderables( RenderablesBackInserter _renderablesBackInserter );
-        void queueDebugRenderables( RenderablesBackInserter _renderablesBackInserter );
+        void queueRenderables( QueueRenderableCallback _queueRenderableCallback );
+        void queueDebugRenderables( QueueRenderableCallback _queueRenderableCallback );
 
         void updateSystemsProperties() override;
 

@@ -1,9 +1,13 @@
 #pragma once
 
+#include <engine/application/applicationdefinitions.h>
 #include <engine/resources/renderable.h>
+
+#include <engine/utils/position.h>
 
 namespace puma
 {
     using Renderables = std::vector<Renderable>;
-    using RenderablesBackInserter = std::back_insert_iterator<Renderables>;
+
+    using QueueRenderableCallback = std::function<void( AppTexture, AppTextureSample, RenderSize, Position, float )>;
 }

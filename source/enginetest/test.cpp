@@ -10,6 +10,7 @@
 
 #include <engine/services/iprovidersservice.h>
 #include <engine/services/isystemsservice.h>
+#include <engine/services/iengineapplicationservice.h>
 
 #include <engine/ecs/base/providers/icomponentprovider.h>
 #include <engine/ecs/base/providers/ientityprovider.h>
@@ -26,14 +27,45 @@
 
 #include <utils/graphics/dimensions.h>
 
+
+namespace
+{
+
+    puma::Entity MyDefaultCamera = puma::kInvalidEntity;
+
+    puma::Entity buildDefaultCamera()
+    {
+        puma::IEntityProvider* entityProvider = gProviders->get<puma::IEntityProvider>();
+        puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
+
+        puma::Entity result = entityProvider->requestEntity();
+        puma::ILocationComponent* locationComponent = componentProvider->add<puma::ILocationComponent>( result );
+        puma::ICameraComponent* cameraComponent = componentProvider->add<puma::ICameraComponent>( result );
+
+        locationComponent->setPosition( { 0.0f, 0.0f } );
+        cameraComponent->setMetersPerPixel( 0.1f );
+
+        return result;
+    }
+
+    void destroyDefaultCamera( puma::Entity _entity )
+    {
+        puma::IEntityProvider* entityProvider = gProviders->get<puma::IEntityProvider>();
+        puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
+
+        componentProvider->remove<puma::ICameraComponent>( _entity );
+        componentProvider->remove<puma::ILocationComponent>( _entity );
+
+        entityProvider->disposeEntity( _entity );
+    }
+
+}
+
+
 void setCamera()
 {
-     puma::Entity cameraEntity = gSystems->get<puma::IRenderSystem>()->getCameraEntity();
-     puma::ICameraComponent* cameraComponent = gProviders->get<puma::IComponentProvider>()->get<puma::ICameraComponent>( cameraEntity );
-     puma::ILocationComponent* locationComponent = gProviders->get<puma::IComponentProvider>()->get<puma::ILocationComponent>( cameraEntity );
-
-     locationComponent->setPosition( { -45.0f, 0.0f } );
-     cameraComponent->setMetersPerPixel( 0.2f );
+    MyDefaultCamera = buildDefaultCamera();
+    gEngineApplication->setCameraEntity( MyDefaultCamera );
 }
 
 void initTest()
@@ -45,11 +77,15 @@ void initTest()
     gSystems->updateSystemsProperties();
 }
 
+void uninitTest()
+{
+    destroyDefaultCamera( MyDefaultCamera );
+}
+
 void initWindow()
 {
     puma::Extent windowExtent = { 500,500,100,100 };
-    auto renderSystemPtr = gSystems->get<puma::IRenderSystem>();
-    renderSystemPtr->init( windowExtent, "EngineTest" );
+    gEngineApplication->init( windowExtent, "EngineTest" );
 }
 
 void initPhysics()
@@ -68,20 +104,16 @@ puma::Entity spawnFloor( puma::app::ITextureManager* _textureManager )
     puma::IRenderComponent* renderComponent = componentProvider->add<puma::IRenderComponent>( result );
     puma::ICollisionComponent* collisionComponent = componentProvider->add<puma::ICollisionComponent>( result );
 
-    puma::IRenderSystem* renderSystem = gSystems->get<puma::IRenderSystem>();
-
     puma::Position pos = { 0.0f, -20.0f, 0.0f };
     locationComponent->setPosition( pos );
 
-    puma::app::IRenderer* renderer = renderSystem->getRenderer();
-
     //Render
-    puma::app::Texture greenTexture = _textureManager->loadTexture( renderer, "../assets/green.png" );
-    puma::Renderable renderable;
-    renderable.setTexture( greenTexture );
-    renderComponent->setRenderable( renderable );
-    puma::RenderSize renderSize = { 40.0f, 8.0f };
-    renderComponent->setSize( renderSize );
+    puma::app::Texture greenTexture = _textureManager->loadTexture( "../assets/green.png" );
+    puma::TextureInfo textureInfo;
+    textureInfo.texture = greenTexture;
+    textureInfo.renderSize = { 40.0f, 8.0f };
+    
+    renderComponent->addTextureInfo( textureInfo );
 
     gSystems->get<puma::IRenderSystem>()->registerEntity( result );
 
@@ -135,15 +167,13 @@ puma::Entity spawnBall( puma::app::ITextureManager* _textureManager )
     puma::Position pos = { 0.0f, 20.0f, 0.0f };
     locationComponent->setPosition( pos );
 
-    puma::app::IRenderer* renderer = renderSystem->getRenderer();
-
     //Render
-    puma::app::Texture tennisTexture = _textureManager->loadTexture( renderer, "../assets/tennisball.png" );
-    puma::Renderable renderable;
-    renderable.setTexture( tennisTexture );
-    renderComponent->setRenderable( renderable );
-    puma::RenderSize renderSize = { 5.0f, 5.0f };
-    renderComponent->setSize( renderSize );
+    puma::app::Texture tennisTexture = _textureManager->loadTexture( "../assets/tennisball.png" );
+    puma::TextureInfo textureInfo;
+    textureInfo.texture = tennisTexture;
+    textureInfo.renderSize = { 5.0f, 5.0f };
+    
+    renderComponent->addTextureInfo( textureInfo );
     renderSystem->registerEntity( result );
 
 

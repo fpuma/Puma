@@ -13,6 +13,8 @@ namespace puma
 
         ~EngineApplicationService() { m_engineApplication.reset(); }
 
+        void uninit() override { m_engineApplication->uninit(); };
+
         EngineApplication* get() override { return m_engineApplication.get(); }
 
     private:

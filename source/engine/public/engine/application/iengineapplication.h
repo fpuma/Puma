@@ -1,6 +1,7 @@
 #pragma once
 
 #include <engine/application/applicationdefinitions.h>
+#include <engine/ecs/base/entity.h>
 
 namespace puma
 {
@@ -18,5 +19,7 @@ namespace puma
         virtual AppWindow* getWindow() const = 0;
         virtual AppTextureManager* getTextureManager() const = 0;
         virtual AppInput* getInput() const = 0;
+
+        virtual void setCameraEntity( Entity _cameraEntity ) = 0;
     };
 }

@@ -18,16 +18,20 @@ namespace puma
         AppTextureManager* getTextureManager() const override { return m_textureManager; }
         AppInput* getInput() const override { return m_input.get(); }
 
+        void setCameraEntity( Entity _cameraEntity ) override;
+        Entity getCameraEntity() const { return m_cameraEntity; }
+
         bool shouldQuit() const { return m_application->shouldQuit(); }
         app::IRenderer* getRenderer() const { return m_renderer; }
 
     private:
 
-        std::unique_ptr<app::IApplication> m_application;
+        std::unique_ptr<app::IApplication> m_application = nullptr;
         std::unique_ptr<input::IInput> m_input = nullptr;
 
         app::IWindow* m_window = nullptr;
         app::ITextureManager* m_textureManager = nullptr;
         app::IRenderer* m_renderer = nullptr;
+        Entity m_cameraEntity = kInvalidEntity;
     };
 }
