@@ -111,7 +111,7 @@ namespace puma
         getCameraInfo(frustum, metersPerPixel);
 
         Renderable renderable;
-        renderable.setTexture( _texture );
+        renderable.setTexture( _texture, _textureSample );
         renderable.setRotationDegrees( _rotation );
 
         Extent screenExtent;
