@@ -4,6 +4,7 @@
 #include <engine/iengine.h>
 
 #include <texturemanager/itexturemanager.h>
+#include <engine/services/iengineapplicationservice.h>
 
 #include "test.h"
 
@@ -14,10 +15,10 @@ int main( int argc, char* argv[] )
 
     initTest();
 
-    auto textureManagerPtr = puma::app::ITextureManager::create();
+    auto textureManagerPtr = gEngineApplication->getTextureManager();
 
-    puma::Entity floorEntity = spawnFloor( textureManagerPtr.get() );
-    puma::Entity ballEntity = spawnBall( textureManagerPtr.get() );
+    puma::Entity floorEntity = spawnFloor( textureManagerPtr );
+    puma::Entity ballEntity = spawnBall( textureManagerPtr );
 
     while ( !enginePtr->shouldQuit() )
     {
@@ -27,6 +28,8 @@ int main( int argc, char* argv[] )
 
     unspawnFloor( floorEntity );
     unspawnBall( ballEntity );
+
+    uninitTest();
 
     enginePtr->uninit();
 

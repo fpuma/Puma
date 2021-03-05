@@ -1,10 +1,18 @@
 #pragma once
 #include <engine/ecs/base/icomponent.h>
-#include <engine/resources/renderable.h>
 
 namespace puma
 {
-    class Renderable;
+    
+    struct TextureInfo
+    {
+        AppTexture texture;
+        AppTextureSample textureSample;
+        Position offset;
+        RenderSize renderSize;
+    };
+
+    using TextureInfoContainer = std::vector<TextureInfo>;
 
     class IRenderComponent : public IComponent
     {
@@ -12,12 +20,8 @@ namespace puma
 
         virtual ~IRenderComponent(){}
 
-        virtual void setSize( const RenderSize& _size ) = 0;
-        virtual RenderSize getSize() const = 0;
+        virtual void addTextureInfo( TextureInfo _textureInfo ) = 0;
 
-        virtual app::Texture getTexture() const = 0;
-        virtual Extent getSampledExtent() const = 0;
-
-        virtual void setRenderable( const Renderable& _renderable ) = 0;
+        virtual const TextureInfoContainer& getTextureInfoContainer() const = 0;
     };
 }

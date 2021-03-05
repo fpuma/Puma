@@ -8,6 +8,7 @@ namespace puma::app
 }
 
 void initTest();
+void uninitTest();
 
 void setCamera();
 void initWindow();

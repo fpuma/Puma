@@ -7,8 +7,7 @@
 #include <internal/ecs/components/locationcomponent.h>
 #include <internal/ecs/components/rendercomponent.h>
 #include <internal/services/base/servicecontainer.h>
-#include <internal/services/inputservice.h>
-#include <internal/services/applicationservice.h>
+#include <internal/services/engineapplicationservice.h>
 #include <internal/services/physicsservice.h>
 #include <internal/services/providersservice.h>
 #include <internal/services/systemsservice.h>
@@ -89,9 +88,9 @@ namespace puma
     void Engine::update()
     {
         m_deltaTime.update();
-        gInput->update();
-        gApplication->update();
-        m_shouldQuit = gApplication->shouldQuit();
+        gInternalEngineApplication->getInput()->update();
+        gInternalEngineApplication->update();
+        m_shouldQuit = gInternalEngineApplication->shouldQuit();
 
         float currentDeltaTime = (float)m_deltaTime.get();
         gInternalSystems->update( currentDeltaTime );
@@ -102,14 +101,12 @@ namespace puma
 
     void Engine::render()
     {
-        RenderSystem* renderSystem = gInternalSystems->get<RenderSystem>();
 
-        app::IRenderer* renderer = renderSystem->getRenderer();
-        renderer->beginRender();
+        m_engineRenderer.beginRender();
 
-        gInternalSystems->get<RenderSystem>()->render();
+        m_engineRenderer.render();
 
-        renderer->renderText( 0, 0, std::to_string( 1.0f / m_deltaTime.getAverage() ).c_str() );
+        gInternalEngineApplication->getRenderer()->renderText( 0, 0, std::to_string( 1.0f / m_deltaTime.getAverage() ).c_str() );
 
 //#ifdef _DEBUG
 //        gPhysics->getDefaultWorld()->debugDraw();
@@ -119,7 +116,7 @@ namespace puma
         //ts.setToCurrentLocalTime();
         //renderer.renderText( ts.ToString().c_str() );
 
-        renderer->endRender();
+        m_engineRenderer.endRender();
     }
 
 }

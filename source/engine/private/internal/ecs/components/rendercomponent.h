@@ -1,9 +1,11 @@
 #pragma once
 #include <engine/ecs/components/irendercomponent.h>
 #include <engine/resources/renderable.h>
+#include <engine/application/applicationdefinitions.h>
 
 namespace puma
 {
+
     class RenderComponent final : public IRenderComponent
     {
     public:
@@ -12,17 +14,16 @@ namespace puma
         void disable() override { m_enabled = false; };
         bool isEnabled() const override { return m_enabled; }
 
-        void setSize( const RenderSize& _size ) override { m_renderable.setRenderSize( _size ); }
-        RenderSize getSize() const override { return m_renderable.getRenderSize(); }
-        
-        app::Texture getTexture() const override { return m_renderable.getTexture(); }
-        Extent getSampledExtent() const override { return m_renderable.getSampledExtent(); }
+        void addTextureInfo( TextureInfo _textureInfo ) { m_textures.emplace_back( _textureInfo ); }
 
-        void setRenderable( const Renderable& _renderable ) override { m_renderable = _renderable; }
+        const TextureInfoContainer& getTextureInfoContainer() const { return m_textures; }
 
     private:
 
         Renderable  m_renderable;
+
+        TextureInfoContainer m_textures;
+
         bool m_enabled = true;
     };
 }
