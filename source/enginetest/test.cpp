@@ -172,7 +172,8 @@ puma::Entity spawnBall( puma::app::ITextureManager* _textureManager )
     puma::TextureInfo textureInfo;
     textureInfo.texture = tennisTexture;
     textureInfo.renderSize = { 5.0f, 5.0f };
-    
+    textureInfo.textureSample = { 1.5f,1.5f };
+
     renderComponent->addTextureInfo( textureInfo );
     renderSystem->registerEntity( result );
 

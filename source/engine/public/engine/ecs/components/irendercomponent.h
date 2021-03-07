@@ -1,17 +1,10 @@
 #pragma once
 #include <engine/ecs/base/icomponent.h>
+#include <engine/utils/renderdefinitions.h>
 
 namespace puma
 {
     
-    struct TextureInfo
-    {
-        AppTexture texture;
-        AppTextureSample textureSample;
-        Position offset;
-        RenderSize renderSize;
-    };
-
     using TextureInfoContainer = std::vector<TextureInfo>;
 
     class IRenderComponent : public IComponent

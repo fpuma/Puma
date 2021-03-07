@@ -1,7 +1,7 @@
 #pragma once
-#include <engine/ecs/components/irendercomponent.h>
-#include <engine/resources/renderable.h>
 #include <engine/application/applicationdefinitions.h>
+#include <engine/ecs/components/irendercomponent.h>
+#include <internal/renderer/renderable.h>
 
 namespace puma
 {

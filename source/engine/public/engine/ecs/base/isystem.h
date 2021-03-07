@@ -1,6 +1,7 @@
 #pragma once
 
-#include <engine/resources/resourcedefs.h>
+#include <engine/utils/position.h>
+#include <engine/utils/renderdefinitions.h>
 
 namespace puma
 {

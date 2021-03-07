@@ -1,10 +1,8 @@
 #pragma once
 
 #include <engine/utils/position.h>
-#include <engine/resources/renderable.h>
-
-#include <engine/resources/resourcedefs.h>
-
+#include <engine/utils/renderdefinitions.h>
+#include <internal/renderer/renderable.h>
 #include <utils/geometry/shapes/shape.h>
 
 namespace puma
