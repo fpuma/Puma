@@ -9,7 +9,6 @@ namespace puma
     {
     public:
 
-        void init();
         void uninit();
         void prePhysicsUpdate( float _deltaTime );
         void update( float _deltaTime );
@@ -19,6 +18,11 @@ namespace puma
         void queueDebugRenderables( QueueRenderableCallback _queueRenderableCallback );
 
         void updateSystemsProperties() override;
+
+    protected:
+
+        void onAdded( Key _key, ISystem* _system ) override;
+        void onRemoved( Key _key, ISystem* _system ) override;
 
     private:
 

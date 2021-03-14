@@ -66,7 +66,7 @@ namespace puma
         
         registerServicesClasses();
 
-        gInternalSystems->init();
+        //gInternalSystems->init();
 
         gProviders->add<EntityProvider>();
         gProviders->add<ComponentProvider>();
