@@ -27,7 +27,6 @@ namespace Puma
             base.ConfigureAll(conf, target);
 
             conf.AddProject<Extern.Box2D>(target);
-            conf.AddProject<Extern.SDLgfx>(target);
         }
     }
 }

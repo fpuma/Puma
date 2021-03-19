@@ -1,24 +1,33 @@
-namespace Extern
+namespace Export
 {
-    [Sharpmake.Generate]
-    class SDLgfx : Puma.Common.IExternLib
+    [Sharpmake.Export]
+    class SDLgfx : Puma.Common.IExternBinaries
     {
         public SDLgfx()
             : base("SDLgfx", @"gfx2dappmodule\extern\SDL2_gfx-1.0.1")
         { }
 
-        public override void ConfigureAll(Configuration conf, Sharpmake.Target target)
+        public override void ConfigureIncludes(Configuration conf, Sharpmake.Target target)
         {
-            base.ConfigureAll(conf, target);
-
             conf.IncludePaths.Add(@"\include");
-            conf.AddPrivateDependency<Export.SDL>(target);
+        }
+
+        public override void ConfigureLink(Configuration conf, Sharpmake.Target target)
+        {
+            conf.LibraryPaths.Add(SourceRootPath + @"\lib");
+
+            if (target.Optimization == Sharpmake.Optimization.Debug)
+            {
+                conf.LibraryFiles.Add(@"sdlgfx_d.lib");
+
+            }
+            else
+            {
+                conf.LibraryFiles.Add(@"sdlgfx_r.lib");
+            }
         }
     }
-}
 
-namespace Export
-{
     [Sharpmake.Export]
     class SDL : Puma.Common.IExternBinaries
     {
@@ -96,14 +105,6 @@ namespace Export
 
             conf.IncludePaths.Add(@"\include");
         }
-    }
-
-    [Sharpmake.Export]
-    class SDLgfx : Extern.SDLgfx
-    {
-        public SDLgfx()
-            : base()
-        { }
     }
 }
 
