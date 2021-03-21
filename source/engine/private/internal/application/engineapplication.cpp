@@ -5,6 +5,9 @@
 #include <application/iwindow.h>
 #include <application/irenderer.h>
 
+#include <logger/logger.h>
+#include <logger/output/consolelogoutput.h>
+
 #ifdef _DEBUG
 #include <engine/services/iprovidersservice.h>
 #include <internal/ecs/base/providers/componentprovider.h>
@@ -23,10 +26,12 @@ namespace puma
     EngineApplication::EngineApplication()
     {
         m_application = app::IApplication::create();
+        m_application->getLogger()->addOutput<ConsoleLogOutput>();
     }
 
     void EngineApplication::init( Extent _windowExtent, const char* _windowName )
     {
+        m_application->init();
         app::WindowHandle windowHandle = m_application->createWindow( _windowExtent, _windowName );
         
         assert( windowHandle != app::kInvalidWindowHandle );
@@ -49,6 +54,7 @@ namespace puma
         {
             m_application->removeWindow( m_window->getWindowHandle() );
         }
+        m_application->uninit();
     }
   
     void EngineApplication::setCameraEntity( Entity _cameraEntity )
