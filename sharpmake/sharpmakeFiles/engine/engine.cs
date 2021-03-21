@@ -17,6 +17,7 @@ namespace Puma
             conf.AddPublicDependency<Puma.Physics>(target);
             conf.AddPublicDependency<Puma.Time>(target);
             conf.AddPublicDependency<Puma.Utils>(target);
+            conf.AddPublicDependency<Puma.Logger>(target);
 
             conf.IncludePrivatePaths.Add(@"\private");
             conf.IncludePaths.Add(@"\public");
