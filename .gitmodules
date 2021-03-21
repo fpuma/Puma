@@ -10,3 +10,6 @@
 [submodule "extern/physics2dmodule"]
 	path = extern/physics2dmodule
 	url = https://github.com/fpuma/Physics2dModule.git
+[submodule "extern/logger"]
+	path = extern/logger
+	url = https://github.com/fpuma/Logger.git
