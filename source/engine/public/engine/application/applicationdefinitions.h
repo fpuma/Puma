@@ -7,7 +7,7 @@
 namespace puma
 {
     using AppTextureManager = app::ITextureManager;
-    using AppInput = input::IInput;
+    using AppInput = app::IInput;
     using AppWindow = app::IWindow;
     using AppTexture = app::Texture;
     using AppTextureSample = app::TextureSample;

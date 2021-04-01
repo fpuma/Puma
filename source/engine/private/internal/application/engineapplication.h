@@ -27,7 +27,7 @@ namespace puma
     private:
 
         std::unique_ptr<app::IApplication> m_application = nullptr;
-        std::unique_ptr<input::IInput> m_input = nullptr;
+        std::unique_ptr<app::IInput> m_input = nullptr;
 
         app::IWindow* m_window = nullptr;
         app::ITextureManager* m_textureManager = nullptr;
