@@ -37,7 +37,7 @@ namespace puma
         m_frameType = PhysicsFrameType::Invalid; 
     }
 
-    void CollisionComponent::addBody( PhysicsBodyInfo _bodyInfo )
+    void CollisionComponent::addBody( const PhysicsBodyInfo& _bodyInfo )
     {
         assert( isValid() );
 
@@ -45,7 +45,7 @@ namespace puma
         m_bodyIds.emplace_back( frame->addBody( _bodyInfo ) );
     }
 
-    void CollisionComponent::addTrigger( PhysicsTriggerInfo _triggerInfo )
+    void CollisionComponent::addTrigger( const PhysicsTriggerInfo& _triggerInfo )
     {
         assert( isValid() );
 

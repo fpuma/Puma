@@ -129,8 +129,7 @@ puma::Entity spawnFloor( puma::app::ITextureManager* _textureManager )
     floorShape.upperBoundary = { 20.0f, 4.0f };
     puma::PhysicsBodyInfo floorBodyInfo;
     floorBodyInfo.collisionIndex = 0;
-    floorBodyInfo.shape.rectangle = floorShape;
-    floorBodyInfo.shapeType = puma::ShapeType::Rectangle;
+    floorBodyInfo.shape.setAsRectangle( floorShape);
     floorBodyInfo.restitution = 0.7f;
 
     collisionComponent->addBody( floorBodyInfo );
@@ -188,8 +187,7 @@ puma::Entity spawnBall( puma::app::ITextureManager* _textureManager )
     puma::PhysicsBodyInfo ballBodyInfo;
     ballBodyInfo.density = 1.0f;
     ballBodyInfo.collisionIndex = 0;
-    ballBodyInfo.shape.circle = ballShape;
-    ballBodyInfo.shapeType = puma::ShapeType::Circle;
+    ballBodyInfo.shape.setAsCircle( ballShape );
     ballBodyInfo.restitution = 0.6f;
 
     collisionComponent->addBody( ballBodyInfo );

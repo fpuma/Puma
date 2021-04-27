@@ -18,8 +18,8 @@ namespace puma
         PhysicsFrameType getFrameType() const override { return m_frameType; }
         PhysicsFrameID getFrameID() const override { return m_frameId; }
 
-        void addBody( PhysicsBodyInfo _bodyInfo ) override;
-        void addTrigger( PhysicsTriggerInfo _triggerInfo ) override;
+        void addBody( const PhysicsBodyInfo& _bodyInfo ) override;
+        void addTrigger( const PhysicsTriggerInfo& _triggerInfo ) override;
 
         bool isValid() const override { return (physics::FrameType::Invalid != m_frameType) && (m_frameId.value() != physics::kInvalidPhysicsID); }
 

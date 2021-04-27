@@ -15,8 +15,8 @@ namespace puma
         virtual PhysicsFrameType getFrameType() const = 0;
         virtual PhysicsFrameID getFrameID() const = 0;
 
-        virtual void addBody( PhysicsBodyInfo _bodyInfo ) = 0;
-        virtual void addTrigger( PhysicsTriggerInfo _triggerInfo ) = 0;
+        virtual void addBody( const PhysicsBodyInfo& _bodyInfo ) = 0;
+        virtual void addTrigger( const PhysicsTriggerInfo& _triggerInfo ) = 0;
 
         virtual bool isValid() const = 0;
 
