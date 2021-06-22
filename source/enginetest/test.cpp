@@ -3,7 +3,6 @@
 #include <precompiledengine.h>
 
 #include "test.h"
-#include "debugphysics.h"
 
 #include <application/iwindow.h>
 #include <texturemanager/itexturemanager.h>

@@ -106,7 +106,7 @@ namespace puma
 
         m_engineRenderer.render();
 
-        gInternalEngineApplication->getRenderer()->renderText( 0, 0, std::to_string( 1.0f / m_deltaTime.getAverage() ).c_str() );
+        gInternalEngineApplication->getRenderer()->renderText( ScreenPos{ 0, 0 }, Color{255,0,255,255}, std::to_string( 1.0f / m_deltaTime.getAverage() ).c_str() );
 
 //#ifdef _DEBUG
 //        gPhysics->getDefaultWorld()->debugDraw();
