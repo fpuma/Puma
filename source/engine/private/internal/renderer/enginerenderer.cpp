@@ -73,9 +73,6 @@ namespace puma
     {
         m_renderables.clear();
         queueRenderables();
-#ifdef _DEBUG
-        queueDebugRenderables();
-#endif
 
         for ( const Renderable& renderable : m_renderables )
         {
@@ -89,16 +86,7 @@ namespace puma
 
     void EngineRenderer::queueRenderables()
     {
-        //[fpuma] Pass a callback that receives Texture, TextureSample, Position, RenderSize
         gInternalSystems->queueRenderables( [this]( AppTexture _texture, AppTextureSample _textureSample, RenderSize _renderSize, Position _position, float _rotation )
-        {
-            queueRenderableCallback( _texture, _textureSample, _renderSize, _position, _rotation );
-        } );
-    }
-
-    void EngineRenderer::queueDebugRenderables()
-    {
-        gInternalSystems->queueDebugRenderables( [this]( AppTexture _texture, AppTextureSample _textureSample, RenderSize _renderSize, Position _position, float _rotation )
         {
             queueRenderableCallback( _texture, _textureSample, _renderSize, _position, _rotation );
         } );

@@ -17,7 +17,6 @@ namespace puma
 
     private:
         void queueRenderables();
-        void queueDebugRenderables();
 
         void queueRenderableCallback( AppTexture _texture, AppTextureSample _textureSample, RenderSize _renderSize, Position _position, float _rotation );
 

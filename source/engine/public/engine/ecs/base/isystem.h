@@ -15,7 +15,6 @@ namespace puma
         PrePhysicsUpdate = 0x2,
         PostPhysicsUpdate = 0x4,
         QueueRenderables = 0x08,
-        QueueDebugRenderables = 0x10
     };
 
     struct SystemProperties
@@ -36,7 +35,6 @@ namespace puma
         virtual void postPhysicsUpdate( float _deltaTime ) = 0;
 
         virtual void queueRenderables( QueueRenderableCallback _queueRenderableCallback ) = 0;
-        virtual void queueDebugRenderables( QueueRenderableCallback _queueRenderableCallback ) = 0;
 
         virtual void setProperties( SystemProperties _properties ) = 0;
         virtual SystemProperties getProperties() const = 0;

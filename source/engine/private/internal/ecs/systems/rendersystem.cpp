@@ -41,22 +41,7 @@ namespace puma
     {
         ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
 
-        for ( const Entity& entity : m_nonPhysicalEntities )
-        {
-            RenderComponent* renderComponent = componentProvider->get<RenderComponent>( entity );
-            LocationComponent* locationComponent = componentProvider->get<LocationComponent>( entity );
-
-            for ( const TextureInfo& textureInfo : renderComponent->getTextureInfoContainer() )
-            {
-                _queueRenderableCallback( textureInfo.texture,
-                    textureInfo.textureSample,
-                    textureInfo.renderSize,
-                    locationComponent->getPosition() + textureInfo.offset,
-                    locationComponent->getDegreesRotation() );
-            }
-        }
-
-        for ( const Entity& entity : m_physicalEntities )
+        for ( const Entity& entity : m_entities )
         {
             RenderComponent* renderComponent = componentProvider->get<RenderComponent>( entity );
             LocationComponent* locationComponent = componentProvider->get<LocationComponent>( entity );
@@ -75,31 +60,16 @@ namespace puma
     void RenderSystem::registerEntity( Entity _entity )
     {
         assert( entityComponentCheck( _entity ) );
-        assert( m_nonPhysicalEntities.find( _entity ) == m_nonPhysicalEntities.end() ); //This entity has already been registered
-        assert( m_physicalEntities.find( _entity ) == m_physicalEntities.end() ); //This entity has already been registered
+        assert( m_entities.find( _entity ) == m_entities.end() ); //This entity has already been registered
 
-        ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
-
-        if ( componentProvider->exists<CollisionComponent>( _entity ) )
-        {
-            m_physicalEntities.emplace( _entity );
-        }
-        else
-        {
-            m_nonPhysicalEntities.emplace( _entity );
-        }
+        m_entities.emplace( _entity );
     }
 
     void RenderSystem::unregisterEntity( Entity _entity )
     {
-        if ( m_nonPhysicalEntities.find( _entity ) != m_nonPhysicalEntities.end() )
+        if ( m_entities.find( _entity ) != m_entities.end() )
         {
-            m_nonPhysicalEntities.erase( _entity );
-        }
-        else
-        {
-            assert( m_physicalEntities.find( _entity ) != m_physicalEntities.end() ); //This entity is not registered to this system
-            m_physicalEntities.erase( _entity );
+            m_entities.erase( _entity );
         }
     }
 

@@ -36,11 +36,6 @@ namespace puma
         {
             m_systemsToQueueRenderables.push_back( _system );
         }
-
-        if ( properties.updateBitMask & (SystemUpdateBitMask)SystemUpdateFlag::QueueDebugRenderables )
-        {
-            m_systemsToQueueDebugRenderables.push_back( _system );
-        }
     }
 
     void SystemContainer::onRemoved( Key _key, ISystem* _system )
@@ -133,12 +128,6 @@ namespace puma
             {
                 m_systemsToQueueRenderables.push_back( _system );
             }
-
-            if ( properties.updateBitMask & (SystemUpdateBitMask)SystemUpdateFlag::QueueDebugRenderables )
-            {
-                m_systemsToQueueDebugRenderables.push_back( _system );
-            }
-            
         } );
 
         auto sortCallback = []( const ISystem* _sys1, const ISystem* _sys2 )
