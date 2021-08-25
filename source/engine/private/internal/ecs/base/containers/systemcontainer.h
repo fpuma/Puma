@@ -5,6 +5,9 @@
 
 namespace puma
 {
+
+    class IRenderQueue;
+
     class SystemContainer final : public ISystemContainer
     {
     public:
@@ -14,8 +17,7 @@ namespace puma
         void update( float _deltaTime );
         void postPhysicsUpdate( float _deltaTime );
 
-        void queueRenderables( QueueRenderableCallback _queueRenderableCallback );
-        void queueDebugRenderables( QueueRenderableCallback _queueRenderableCallback );
+        void queueRenderables( IRenderQueue& _renderQueue );
 
         void updateSystemsProperties() override;
 
@@ -30,6 +32,5 @@ namespace puma
         std::vector<ISystem*> m_systemsToUpdatePrePhysics;
         std::vector<ISystem*> m_systemsToUpdatePostPhysics;
         std::vector<ISystem*> m_systemsToQueueRenderables;
-        std::vector<ISystem*> m_systemsToQueueDebugRenderables;
     };
 }

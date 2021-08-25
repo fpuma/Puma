@@ -9,6 +9,8 @@ namespace puma
     using SystemPriority = u32;
     using SystemUpdateBitMask = u32;
 
+    class IRenderQueue;
+
     enum class SystemUpdateFlag
     {
         Update = 0x1,
@@ -34,7 +36,7 @@ namespace puma
         virtual void prePhysicsUpdate( float _deltaTime ) = 0;
         virtual void postPhysicsUpdate( float _deltaTime ) = 0;
 
-        virtual void queueRenderables( QueueRenderableCallback _queueRenderableCallback ) = 0;
+        virtual void queueRenderables( IRenderQueue& _renderQueue ) = 0;
 
         virtual void setProperties( SystemProperties _properties ) = 0;
         virtual SystemProperties getProperties() const = 0;

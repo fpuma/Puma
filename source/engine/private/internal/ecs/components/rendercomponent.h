@@ -1,7 +1,7 @@
 #pragma once
 #include <engine/application/applicationdefinitions.h>
 #include <engine/ecs/components/irendercomponent.h>
-#include <internal/renderer/renderable.h>
+#include <internal/renderer/renderables/irenderable.h>
 
 namespace puma
 {
@@ -19,8 +19,6 @@ namespace puma
         const TextureInfoContainer& getTextureInfoContainer() const { return m_textures; }
 
     private:
-
-        Renderable  m_renderable;
 
         TextureInfoContainer m_textures;
 

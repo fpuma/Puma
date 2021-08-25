@@ -81,29 +81,20 @@ namespace puma
         }
     }
 
-    void SystemContainer::queueRenderables( QueueRenderableCallback _queueRenderableCallback )
+    void SystemContainer::queueRenderables( IRenderQueue& _renderQueue )
     {
         for ( ISystem* systemPtr : m_systemsToQueueRenderables )
         {
-            systemPtr->queueRenderables( _queueRenderableCallback );
+            systemPtr->queueRenderables( _renderQueue );
         }
     }
     
-    void SystemContainer::queueDebugRenderables( QueueRenderableCallback _queueRenderableCallback )
-    {
-        for ( ISystem* systemPtr : m_systemsToQueueDebugRenderables )
-        {
-            systemPtr->queueRenderables( _queueRenderableCallback );
-        }
-    }
-
     void SystemContainer::updateSystemsProperties()
     {
         m_systemsToUpdate.clear();
         m_systemsToUpdatePrePhysics.clear();
         m_systemsToUpdatePostPhysics.clear();
         m_systemsToQueueRenderables.clear();
-        m_systemsToQueueDebugRenderables.clear();
 
         traverse( [&]( ISystem* _system )
         {

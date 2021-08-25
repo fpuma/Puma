@@ -19,6 +19,5 @@ namespace puma
         RenderSize renderSize;
     };
 
-    using QueueRenderableCallback = std::function<void( AppTexture, AppTextureSample, RenderSize, Position, float )>;
-
+    using RotationDegrees = float;
 }

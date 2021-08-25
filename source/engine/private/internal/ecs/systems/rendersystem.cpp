@@ -6,6 +6,7 @@
 #include <application/iwindow.h>
 
 #include <engine/ecs/base/entity.h>
+#include <engine/renderer/irenderqueue.h>
 
 #include <internal/ecs/base/providers/componentprovider.h>
 #include <internal/ecs/base/providers/entityprovider.h>
@@ -37,7 +38,7 @@ namespace puma
     {
     }
 
-    void RenderSystem::queueRenderables( QueueRenderableCallback _queueRenderableCallback )
+    void RenderSystem::queueRenderables( IRenderQueue& _renderQueue )
     {
         ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
 
@@ -48,7 +49,7 @@ namespace puma
 
             for ( const TextureInfo& textureInfo : renderComponent->getTextureInfoContainer() )
             {
-                _queueRenderableCallback( textureInfo.texture,
+                _renderQueue.addRenderableTexture( textureInfo.texture,
                     textureInfo.textureSample,
                     textureInfo.renderSize,
                     locationComponent->getPosition() + textureInfo.offset,
