@@ -1,4 +1,3 @@
-#pragma once
 #include <precompiledengine.h>
 
 #include "renderabletexture.h"

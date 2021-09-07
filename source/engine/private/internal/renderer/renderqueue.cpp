@@ -2,33 +2,72 @@
 
 #include "renderqueue.h"
 #include "enginerendererhelpers.h"
+#include <physics/geometry/overlapcheck.h>
 
 namespace puma
 {
-    void RenderQueue::addRenderableTexture( AppTexture _texture, AppTextureSample _textureSample, RenderSize _renderSize, Position _position, RotationDegrees _rotation )
+    RenderQueue::RenderQueue()
+    {
+        m_renderables.reserve( kMaxRenderablesCount * 3 );
+    }
+
+    void RenderQueue::addRenderableTexture( const AppTexture& _texture, const AppTextureSample& _textureSample, const RenderSize& _renderSize, const Position& _position, const RotationDegrees& _rotation )
     {
         Rectangle frustum;
         float metersPerPixel;
         erh::getCameraInfo( frustum, metersPerPixel );
 
-        RenderableTexture& renderable = m_textures[m_renderableTexturesCount];
-        renderable.setTexture( _texture, _textureSample );
-        renderable.setRotationDegrees( _rotation );
-
-        Extent screenExtent;
-
         Rectangle boundingBox = erh::getAABB( _position, _renderSize );
 
-        screenExtent.xPos = (s32)((boundingBox.lowerBoundary.x - frustum.lowerBoundary.x) / metersPerPixel);
-        screenExtent.yPos = (s32)((frustum.upperBoundary.y - boundingBox.upperBoundary.y) / metersPerPixel);
-        screenExtent.width = (s32)(_renderSize.x / metersPerPixel);
-        screenExtent.height = (s32)(_renderSize.y / metersPerPixel);
+        if ( physics::areShapesOverLapping( boundingBox, frustum ) )
+        {
+            RenderableTexture& renderable = m_textures[m_renderableTexturesCount];
+            renderable.setTexture( _texture, _textureSample );
+            renderable.setRotationDegrees( _rotation );
 
-        renderable.setScreenExtent( std::move( screenExtent ) );
+            Extent screenExtent;
 
-        m_renderables.emplace_back( &renderable );
+            screenExtent.xPos = (s32)((boundingBox.lowerBoundary.x - frustum.lowerBoundary.x) / metersPerPixel);
+            screenExtent.yPos = (s32)((frustum.upperBoundary.y - boundingBox.upperBoundary.y) / metersPerPixel);
+            screenExtent.width = (s32)(_renderSize.x / metersPerPixel);
+            screenExtent.height = (s32)(_renderSize.y / metersPerPixel);
 
-        ++m_renderableTexturesCount;
+            renderable.setScreenExtent( std::move( screenExtent ) );
+
+            m_renderables.emplace_back( &renderable );
+
+            ++m_renderableTexturesCount;
+        }
+    }
+
+    void RenderQueue::addRenderableText( const std::string& _textToRender, const Color& _color, const Position& _position )
+    {
+        Rectangle frustum;
+        float metersPerPixel;
+        erh::getCameraInfo( frustum, metersPerPixel );
+
+        bool isInFrustum =  frustum.upperBoundary.x > _position.x &&
+                            frustum.upperBoundary.y > _position.y &&
+                            frustum.lowerBoundary.x < _position.x &&
+                            frustum.lowerBoundary.y < _position.y;
+
+        if ( isInFrustum )
+        {
+            RenderableText& renderable = m_texts[m_renderableTextsCount];
+            ScreenPos screenPosition;
+            screenPosition.xCoord = (s32)((_position.x - frustum.lowerBoundary.x) / metersPerPixel);
+            screenPosition.yCoord = (s32)((frustum.upperBoundary.y - _position.y ) / metersPerPixel);
+            renderable.setText(_textToRender, screenPosition, _color);
+
+            m_renderables.emplace_back( &renderable );
+
+            ++m_renderableTextsCount;
+        }
+    }
+    
+    void RenderQueue::addRenderableShape( const Shape& _shape, const Color& _color, const Position& _position )
+    {
+    
     }
 
     void RenderQueue::render()

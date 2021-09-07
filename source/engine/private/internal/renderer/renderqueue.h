@@ -14,9 +14,11 @@ namespace puma
     {
     public:
 
-        void addRenderableTexture( AppTexture _texture, AppTextureSample _textureSample, RenderSize _renderSize, Position _position, RotationDegrees _rotation ) override;
-        void addRenderableText() override {}
-        void addRenderableShape() override {}
+        RenderQueue();
+
+        void addRenderableTexture( const AppTexture& _texture, const AppTextureSample& _textureSample, const RenderSize& _renderSize, const Position& _position, const RotationDegrees& _rotation ) override;
+        void addRenderableText( const std::string& _textToRender, const Color& _color, const Position& _position ) override;
+        void addRenderableShape( const Shape& _shape, const Color& _color, const Position& _position ) override;
 
         void render();
 
