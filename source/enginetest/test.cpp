@@ -24,13 +24,22 @@
 
 #include <engine/physics/physicsdefinitions.h>
 
+#include <engine/services/iengineapplicationservice.h>
+
 #include <utils/graphics/dimensions.h>
 
+#include <texturemanager/itexturemanager.h>
 
 namespace
 {
 
     puma::Entity MyDefaultCamera = puma::kInvalidEntity;
+    puma::Entity Floor0 = puma::kInvalidEntity;
+    puma::Entity Floor1 = puma::kInvalidEntity;
+    puma::Entity Floor2 = puma::kInvalidEntity;
+    puma::Entity Floor3 = puma::kInvalidEntity;
+    puma::Entity Ball0 = puma::kInvalidEntity;
+    puma::Entity Ball1 = puma::kInvalidEntity;
 
     puma::Entity buildDefaultCamera()
     {
@@ -42,7 +51,7 @@ namespace
         puma::ICameraComponent* cameraComponent = componentProvider->add<puma::ICameraComponent>( result );
 
         locationComponent->setPosition( { 0.0f, 0.0f } );
-        cameraComponent->setMetersPerPixel( 0.1f );
+        cameraComponent->setMetersPerPixel( 0.2f );
 
         return result;
     }
@@ -60,6 +69,15 @@ namespace
 
 }
 
+void setCamera();
+void initWindow();
+void initPhysics();
+
+puma::Entity spawnFloor( puma::app::ITextureManager* _textureManager, const puma::Position& _pos, float _angle );
+void unspawnFloor( puma::Entity _floorEntity );
+
+puma::Entity spawnBall( puma::app::ITextureManager* _textureManager, const puma::Position& _pos );
+void unspawnBall( puma::Entity _floorEntity );
 
 void setCamera()
 {
@@ -74,11 +92,25 @@ void initTest()
     setCamera();
 
     gSystems->updateSystemsProperties();
+
+    Floor0 = spawnFloor( gEngineApplication->getTextureManager(), { 15.0f, -15.0f, 0.0f }, 45.0f );
+    Floor1 = spawnFloor( gEngineApplication->getTextureManager(), { -15.0f, -15.0f, 0.0f }, -45.0f );
+    Floor2 = spawnFloor( gEngineApplication->getTextureManager(), { 15.0f, 15.0f, 0.0f }, -45.0f );
+    Floor3 = spawnFloor( gEngineApplication->getTextureManager(), { -15.0f, 15.0f, 0.0f }, 45.0f );
+    Ball0 = spawnBall( gEngineApplication->getTextureManager(), { 5.0f, 10.0f, 0.0f } );
+    Ball1 = spawnBall( gEngineApplication->getTextureManager(), { -5.0f, 10.0f, 0.0f } );
 }
 
 void uninitTest()
 {
     destroyDefaultCamera( MyDefaultCamera );
+
+    unspawnFloor( Floor0 );
+    unspawnFloor( Floor1 );
+    unspawnFloor( Floor2 );
+    unspawnFloor( Floor3 );
+    unspawnBall( Ball0 );
+    unspawnBall( Ball1 );
 }
 
 void initWindow()
@@ -94,7 +126,7 @@ void initPhysics()
     collisitonSystemPtr->setCollisionCompatibility( { std::pair<puma::PhysicsCollisionIndex, puma::PhysicsCollisionIndex>( 0,0 ) } );
 }
 
-puma::Entity spawnFloor( puma::app::ITextureManager* _textureManager )
+puma::Entity spawnFloor( puma::app::ITextureManager* _textureManager, const puma::Position& _pos, float _angle )
 {
     puma::Entity result = gProviders->get<puma::IEntityProvider>()->requestEntity();
     puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
@@ -103,8 +135,7 @@ puma::Entity spawnFloor( puma::app::ITextureManager* _textureManager )
     puma::IRenderComponent* renderComponent = componentProvider->add<puma::IRenderComponent>( result );
     puma::ICollisionComponent* collisionComponent = componentProvider->add<puma::ICollisionComponent>( result );
 
-    puma::Position pos = { 0.0f, -20.0f, 0.0f };
-    locationComponent->setPosition( pos );
+    locationComponent->setPosition( _pos );
 
     //Render
     puma::app::Texture greenTexture = _textureManager->loadTexture( "../assets/green.png" );
@@ -118,8 +149,8 @@ puma::Entity spawnFloor( puma::app::ITextureManager* _textureManager )
 
     //Physics
     puma::PhysicsFrameInfo frameInfo;
-    frameInfo.position = { pos.x, pos.y };
-    frameInfo.angle = 45.0f;
+    frameInfo.position = { _pos.x, _pos.y };
+    frameInfo.angle = _angle;
 
     gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::PhysicsFrameType::Static );
 
@@ -129,7 +160,7 @@ puma::Entity spawnFloor( puma::app::ITextureManager* _textureManager )
     puma::PhysicsBodyInfo floorBodyInfo;
     floorBodyInfo.collisionIndex = 0;
     floorBodyInfo.shape.setAsRectangle( floorShape);
-    floorBodyInfo.restitution = 0.7f;
+    floorBodyInfo.restitution = 0.0f;
 
     collisionComponent->addBody( floorBodyInfo );
 
@@ -151,7 +182,7 @@ void unspawnFloor( puma::Entity _floorEntity )
 
 }
 
-puma::Entity spawnBall( puma::app::ITextureManager* _textureManager )
+puma::Entity spawnBall( puma::app::ITextureManager* _textureManager, const puma::Position& _pos )
 {
     puma::Entity result = gProviders->get<puma::IEntityProvider>()->requestEntity();
     puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
@@ -162,8 +193,7 @@ puma::Entity spawnBall( puma::app::ITextureManager* _textureManager )
 
     puma::IRenderSystem* renderSystem = gSystems->get<puma::IRenderSystem>();
 
-    puma::Position pos = { 0.0f, 20.0f, 0.0f };
-    locationComponent->setPosition( pos );
+    locationComponent->setPosition( _pos );
 
     //Render
     puma::app::Texture tennisTexture = _textureManager->loadTexture( "../assets/tennisball.png" );
@@ -178,7 +208,7 @@ puma::Entity spawnBall( puma::app::ITextureManager* _textureManager )
 
     //Physics
     puma::PhysicsFrameInfo frameInfo;
-    frameInfo.position = { pos.x, pos.y };
+    frameInfo.position = { _pos.x, _pos.y };
     gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::PhysicsFrameType::Dynamic );
 
     puma::Circle ballShape;
@@ -187,7 +217,7 @@ puma::Entity spawnBall( puma::app::ITextureManager* _textureManager )
     ballBodyInfo.density = 1.0f;
     ballBodyInfo.collisionIndex = 0;
     ballBodyInfo.shape.setAsCircle( ballShape );
-    ballBodyInfo.restitution = 0.6f;
+    ballBodyInfo.restitution = 1.1f;
 
     collisionComponent->addBody( ballBodyInfo );
 

@@ -54,6 +54,11 @@ namespace puma
                     textureInfo.renderSize,
                     locationComponent->getPosition() + textureInfo.offset,
                     locationComponent->getDegreesRotation() );
+                
+#ifdef _DEBUG
+                std::string posString = formatString( "x: %.3f | y: %.3f", locationComponent->getPosition().x, locationComponent->getPosition().y );
+                _renderQueue.addRenderableText( posString, Color::Red(), locationComponent->getPosition() );
+#endif
             }
         }
     }
