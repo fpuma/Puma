@@ -159,7 +159,7 @@ puma::Entity spawnFloor( puma::app::ITextureManager* _textureManager, const puma
     floorShape.upperBoundary = { 20.0f, 4.0f };
     puma::PhysicsBodyInfo floorBodyInfo;
     floorBodyInfo.collisionIndex = 0;
-    floorBodyInfo.shape.setAsRectangle( floorShape);
+    floorBodyInfo.shape.setAsPolygon( floorShape);
     floorBodyInfo.restitution = 0.0f;
 
     collisionComponent->addBody( floorBodyInfo );

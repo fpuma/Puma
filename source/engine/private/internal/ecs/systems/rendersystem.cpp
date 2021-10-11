@@ -49,15 +49,28 @@ namespace puma
 
             for ( const TextureInfo& textureInfo : renderComponent->getTextureInfoContainer() )
             {
+
+                Position offsetPosition = locationComponent->getPosition() + textureInfo.offset;
+
                 _renderQueue.addRenderableTexture( textureInfo.texture,
                     textureInfo.textureSample,
                     textureInfo.renderSize,
-                    locationComponent->getPosition() + textureInfo.offset,
+                    offsetPosition,
                     locationComponent->getDegreesRotation() );
                 
 #ifdef _DEBUG
                 std::string posString = formatString( "x: %.3f | y: %.3f", locationComponent->getPosition().x, locationComponent->getPosition().y );
                 _renderQueue.addRenderableText( posString, Color::Red(), locationComponent->getPosition() );
+
+                //Rectangle aabb;
+
+                //aabb.lowerBoundary = { -(textureInfo.renderSize.x / 2.0f),  -(textureInfo.renderSize.y / 2.0f) };
+                //aabb.upperBoundary = { (textureInfo.renderSize.x / 2.0f),  (textureInfo.renderSize.y / 2.0f) };
+
+                //Shape shape;
+                //shape.setAsPolygon( aabb );
+
+                //_renderQueue.addRenderableShape( shape, Color::Red(), offsetPosition, 0.0f );
 #endif
             }
         }

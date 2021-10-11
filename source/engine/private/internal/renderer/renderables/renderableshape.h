@@ -2,26 +2,59 @@
 
 #include <internal/renderer/renderables/irenderable.h>
 #include <utils/geometry/shapes/shape.h>
+#include <utils/containers/containedvector.h>
 
 namespace puma
 {
+    
+
+    enum class RenderableShapeType
+    {
+        RenderableChain,
+        RenderableCircle,
+        RenderablePolygon,
+    };
+
+    struct RenderableChain
+    {
+        ShapeScreenPointsList points;
+    };
+
+    struct RenderableCircle
+    {
+        s32 radius;
+        ScreenPos center;
+    };
+
+    struct RenderablePolygon
+    {
+        ShapeScreenPointsList vertices;
+    };
+
+
     class RenderableShape : public IRenderable
     {
     public:
 
-        void setShape( const Shape& _shape, const Position& _position, const Color& _color )
-        {
-            m_shape = _shape;
-            m_position = _position;
-            m_color = _color;
-        }
+        void setAsCircle( s32 _radius, const ScreenPos& _center, const Color& _color );
+        void setAsChain( const ShapeScreenPointsList& _points, const Color& _color );
+        void setAsPolygon( const ShapeScreenPointsList& _vertices, const Color& _color );
 
-        void render() override {}
+        void render() override;
 
     private:
 
-        Shape m_shape;
-        Position m_position;
+        union InternalRenderableShape
+        {
+            InternalRenderableShape() {}
+            ~InternalRenderableShape() {}
+            RenderableCircle circle = {};
+            RenderableChain chain;
+            RenderablePolygon polygon;
+        }m_renderableShape;
+
+        RenderableShapeType m_renderableShapeType = RenderableShapeType::RenderableCircle;
+        ScreenPos m_position;
         Color m_color;
     };
 }

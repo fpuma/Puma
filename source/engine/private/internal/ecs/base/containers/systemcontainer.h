@@ -1,7 +1,6 @@
 #pragma once
 
 #include <engine/ecs/base/containers/isystemcontainer.h>
-#include <utils/geometry/shapes/rectangle.h>
 
 namespace puma
 {

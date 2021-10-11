@@ -18,7 +18,7 @@ namespace puma
 
         void addRenderableTexture( const AppTexture& _texture, const AppTextureSample& _textureSample, const RenderSize& _renderSize, const Position& _position, const RotationDegrees& _rotation ) override;
         void addRenderableText( const std::string& _textToRender, const Color& _color, const Position& _position ) override;
-        void addRenderableShape( const Shape& _shape, const Color& _color, const Position& _position ) override;
+        void addRenderableShape( const Shape& _shape, const Color& _color, const Position& _position, const RotationDegrees& _rotation ) override;
 
         void render();
 

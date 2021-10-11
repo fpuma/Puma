@@ -8,6 +8,7 @@
 #include <array>
 #include <assert.h>
 #include <functional>
+#include <iterator>
 #include <map>
 #include <memory>
 #include <set>

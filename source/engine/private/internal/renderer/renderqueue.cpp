@@ -54,9 +54,7 @@ namespace puma
         if ( isInFrustum )
         {
             RenderableText& renderable = m_texts[m_renderableTextsCount];
-            ScreenPos screenPosition;
-            screenPosition.xCoord = (s32)((_position.x - frustum.lowerBoundary.x) / metersPerPixel);
-            screenPosition.yCoord = (s32)((frustum.upperBoundary.y - _position.y ) / metersPerPixel);
+            ScreenPos screenPosition = erh::worldPointToScreen(_position, frustum, metersPerPixel);
             renderable.setText(_textToRender, screenPosition, _color);
 
             m_renderables.emplace_back( &renderable );
@@ -65,9 +63,66 @@ namespace puma
         }
     }
     
-    void RenderQueue::addRenderableShape( const Shape& _shape, const Color& _color, const Position& _position )
+    void RenderQueue::addRenderableShape( const Shape& _shape, const Color& _color, const Position& _position, const RotationDegrees& _rotation )
     {
-    
+        Rectangle frustum;
+        float metersPerPixel;
+        erh::getCameraInfo( frustum, metersPerPixel );
+        Vec2 flattenedPos = { _position.x, _position.y };
+
+
+        switch ( _shape.getShapeType() )
+        {
+        case ShapeType::Chain:
+        {
+            Chain chain = _shape.getAsChain();
+            RenderableShape& renderable = m_shapes[m_renderableShapesCount];
+            ShapeScreenPointsList screenChain;
+
+            std::transform( chain.points.begin(), chain.points.end(), std::back_inserter( screenChain ), [&]( const Vec2& chainPoint )
+            {
+                return erh::worldPointToScreen( chainPoint + flattenedPos, frustum, metersPerPixel );
+            } );
+
+            renderable.setAsChain( screenChain, _color);
+            m_renderables.emplace_back( &renderable );
+            ++m_renderableShapesCount;
+            break;
+        }
+        case ShapeType::Circle:
+        {
+            Circle circle = _shape.getAsCircle();
+            RenderableShape& renderable = m_shapes[m_renderableShapesCount];
+
+            ScreenPos centerScreenPos = erh::worldPointToScreen( circle.center + flattenedPos, frustum, metersPerPixel );
+            s32 radiusInPixels = (s32)(circle.radius / metersPerPixel);
+
+            renderable.setAsCircle( radiusInPixels, centerScreenPos, _color );
+
+            m_renderables.emplace_back( &renderable );
+            ++m_renderableShapesCount;
+            break;
+        }
+        case ShapeType::Polygon:
+        {
+            Polygon polygon = _shape.getAsPolygon();
+            RenderableShape& renderable = m_shapes[m_renderableShapesCount];
+            ShapeScreenPointsList screenPolygon;
+
+            std::transform( polygon.vertices.begin(), polygon.vertices.end(), std::back_inserter( screenPolygon ), [&]( const Vec2& polygonPoint )
+            {
+                return erh::worldPointToScreen( polygonPoint + flattenedPos, frustum, metersPerPixel );
+            } );
+
+            renderable.setAsPolygon( screenPolygon, _color );
+            m_renderables.emplace_back( &renderable );
+            ++m_renderableShapesCount;
+            break;
+        }
+        default:
+            assert( false ); //Unsupported shape type.
+            break;
+        }
     }
 
     void RenderQueue::render()

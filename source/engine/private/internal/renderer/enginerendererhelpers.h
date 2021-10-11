@@ -5,6 +5,7 @@
 #include <internal/ecs/components/cameracomponent.h>
 #include <internal/ecs/components/locationcomponent.h>
 #include <internal/services/engineapplicationservice.h>
+#include <utils/graphics/dimensions.h>
 
 namespace puma::erh
 {
@@ -48,4 +49,19 @@ namespace puma::erh
 
         return result;
     }
+
+    ScreenPos worldPointToScreen( const Vec2& _position, const Rectangle& _frustum, const float& _metersPerPixel )
+    {
+        ScreenPos screenPosition;
+        screenPosition.xCoord = (s32)((_position.x - _frustum.lowerBoundary.x) / _metersPerPixel);
+        screenPosition.yCoord = (s32)((_frustum.upperBoundary.y - _position.y) / _metersPerPixel);
+
+        return screenPosition;
+    }
+
+    ScreenPos worldPointToScreen( const Position& _position, const Rectangle& _frustum, const float& _metersPerPixel )
+    {
+        return worldPointToScreen( Vec2{_position.x, _position.y}, _frustum, _metersPerPixel );
+    }
+
 }
