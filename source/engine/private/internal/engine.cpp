@@ -2,19 +2,21 @@
 #include <internal/engine.h>
 
 #include <internal/ecs/base/providers/componentprovider.h>
+#include <internal/ecs/base/providers/entityprovider.h>
 #include <internal/ecs/components/cameracomponent.h>
 #include <internal/ecs/components/collisioncomponent.h>
 #include <internal/ecs/components/locationcomponent.h>
 #include <internal/ecs/components/rendercomponent.h>
+#include <internal/ecs/systems/collisionsystem.h>
+#include <internal/ecs/systems/rendersystem.h>
 #include <internal/services/base/servicecontainer.h>
 #include <internal/services/engineapplicationservice.h>
+#include <internal/services/loggerservice.h>
 #include <internal/services/physicsservice.h>
 #include <internal/services/providersservice.h>
 #include <internal/services/systemsservice.h>
 
-#include <internal/ecs/base/providers/entityprovider.h>
-#include <internal/ecs/systems/collisionsystem.h>
-#include <internal/ecs/systems/rendersystem.h>
+#include <logger/output/consolelogoutput.h>
 
 #include <engine/utils/timerprovider.h>
 
@@ -66,8 +68,6 @@ namespace puma
         
         registerServicesClasses();
 
-        //gInternalSystems->init();
-
         gProviders->add<EntityProvider>();
         gProviders->add<ComponentProvider>();
         gProviders->add<TimerProvider>();
@@ -78,10 +78,15 @@ namespace puma
         gInternalSystems->add<CollisionSystem>();
 
         gInternalSystems->updateSystemsProperties();
+
+        gInternalLogger->getLogger()->addOutput<ConsoleLogOutput>();
+
+        gInternalLogger->info( "Puma engine initialized." );
     }
 
     void Engine::uninit()
     {
+        gInternalLogger->info( "Puma engine uninitializing." );
         m_services->uninit();
     }
 
@@ -90,7 +95,13 @@ namespace puma
         m_deltaTime.update();
         gInternalEngineApplication->getInput()->update();
         gInternalEngineApplication->update();
+        
         m_shouldQuit = gInternalEngineApplication->shouldQuit();
+
+        if ( m_shouldQuit )
+        {
+            return;
+        }
 
         float currentDeltaTime = (float)m_deltaTime.get();
         gInternalSystems->update( currentDeltaTime );
@@ -101,6 +112,10 @@ namespace puma
 
     void Engine::render()
     {
+        if ( m_shouldQuit )
+        {
+            return;
+        }
 
         m_engineRenderer.beginRender();
 
