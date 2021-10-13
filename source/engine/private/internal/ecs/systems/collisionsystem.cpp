@@ -10,17 +10,29 @@
 #include <internal/ecs/components/collisioncomponent.h>
 #include <internal/ecs/components/locationcomponent.h>
 
+#include <internal/renderer/renderqueue.h>
+
 #include <physics/simulation/frames/iframe.h>
 #include <physics/simulation/world/iworld.h>
+
+//#define PHYSICS_DEBUG_RENDER
 
 namespace puma
 {
     void CollisionSystem::init( Vec2 _gravity )
     {
-        m_properties.updateBitMask = (SystemUpdateBitMask)SystemUpdateFlag::PostPhysicsUpdate;
-                                   //| (SystemUpdateBitMask)SystemUpdateFlag::PrePhysicsUpdate;
+        m_properties.updateBitMask = (SystemUpdateBitMask)SystemUpdateFlag::PostPhysicsUpdate
+                                   | (SystemUpdateBitMask)SystemUpdateFlag::QueueRenderables;
 
         m_worldId = gPhysics->addWorld( _gravity );
+
+#ifdef PHYSICS_DEBUG_RENDER
+        std::unique_ptr<PhysicsDebugDraw> physicsDebugDraw = std::make_unique<PhysicsDebugDraw>();
+        physicsDebugDraw->dbgShapesPtr = &m_debugShapes;
+
+        physics::IWorld* world = gPhysics->getWorld( m_worldId );
+        world->setDebugDraw( std::move(physicsDebugDraw) );
+#endif
     }
 
     void CollisionSystem::uninit()
@@ -99,6 +111,23 @@ namespace puma
                 physicsFrame->disable();
             }
         }
+
+#ifdef PHYSICS_DEBUG_RENDER
+        physics::IWorld* world = gPhysics->getWorld( m_worldId );
+        m_debugShapes.clear();
+        world->debugDraw();
+#endif
+
+    }
+
+    void CollisionSystem::queueRenderables( IRenderQueue& _renderQueue )
+    {
+#ifdef PHYSICS_DEBUG_RENDER
+        for ( const PhysicsDebugShape& dbgShape : m_debugShapes )
+        {
+            _renderQueue.addRenderableShape( dbgShape.shape, dbgShape.color, dbgShape.solid, { 0.0f, 0.0f, 0.0f }, 0.0f );
+        }
+#endif
     }
 
     void CollisionSystem::setGravity( Vec2 _gravity )
@@ -125,4 +154,88 @@ namespace puma
         return ( hasCollisionComponent && hasLocationComponent );
     }
 #endif
+
+    namespace
+    {
+        Color floatToIntColor( physics::RGBA _color )
+        {
+            return { (u8)(_color.r * 255), (u8)(_color.g * 255), (u8)(_color.b * 255), (u8)(_color.a * 255) };
+        }
+    }
+
+    void CollisionSystem::PhysicsDebugDraw::renderPolygon( const std::vector<Vec2>&& _vertices, const physics::RGBA&& _color )
+    {
+        PhysicsDebugShape physicsDbgShape;
+        physicsDbgShape.color = floatToIntColor( _color );
+        physicsDbgShape.solid = false;
+
+        Polygon polygon;
+        std::transform( _vertices.begin(), _vertices.end(), std::back_inserter( polygon.vertices ), [&](const Vec2& point)
+        {
+            return point;
+        } );
+
+        
+        physicsDbgShape.shape.setAsPolygon( polygon );
+        dbgShapesPtr->push_back( physicsDbgShape );
+    }
+
+    void CollisionSystem::PhysicsDebugDraw::renderSolidPolygon( const std::vector<Vec2>&& _vertices, const physics::RGBA&& _color )
+    {
+        PhysicsDebugShape physicsDbgShape;
+        physicsDbgShape.color = floatToIntColor( _color );
+        physicsDbgShape.solid = true;
+
+        Polygon polygon;
+        std::transform( _vertices.begin(), _vertices.end(), std::back_inserter( polygon.vertices ), [&]( const Vec2& point )
+        {
+            return point;
+        } );
+
+        physicsDbgShape.shape.setAsPolygon( polygon );
+        dbgShapesPtr->push_back( physicsDbgShape );
+    }
+
+    void CollisionSystem::PhysicsDebugDraw::renderCircle( const Vec2&& _center, float _radius, const physics::RGBA&& _color )
+    {
+        PhysicsDebugShape physicsDbgShape;
+        physicsDbgShape.color = floatToIntColor( _color );
+        physicsDbgShape.solid = false;
+
+        Circle circle;
+        circle.center = _center;
+        circle.radius = _radius;
+
+        physicsDbgShape.shape.setAsCircle( circle );
+        dbgShapesPtr->push_back( physicsDbgShape );
+    }
+
+    void CollisionSystem::PhysicsDebugDraw::renderSolidCircle( const Vec2&& _center, float _radius, const physics::RGBA&& _color )
+    {
+        PhysicsDebugShape physicsDbgShape;
+        physicsDbgShape.color = floatToIntColor( _color );
+        physicsDbgShape.solid = true;
+
+        Circle circle;
+        circle.center = _center;
+        circle.radius = _radius;
+
+        physicsDbgShape.shape.setAsCircle( circle );
+        dbgShapesPtr->push_back( physicsDbgShape );
+    }
+
+    void CollisionSystem::PhysicsDebugDraw::renderSegment( const Vec2&& _point1, const Vec2&& _point2, const physics::RGBA&& _color )
+    {
+        PhysicsDebugShape physicsDbgShape;
+        physicsDbgShape.color = floatToIntColor( _color );
+
+        Chain chain;
+        chain.points.push_back( _point1 );
+        chain.points.push_back( _point2 );
+
+        physicsDbgShape.shape.setAsChain( chain );
+        dbgShapesPtr->push_back( physicsDbgShape );
+    }
+
 }
+

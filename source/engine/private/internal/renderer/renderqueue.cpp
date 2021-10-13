@@ -63,13 +63,12 @@ namespace puma
         }
     }
     
-    void RenderQueue::addRenderableShape( const Shape& _shape, const Color& _color, const Position& _position, const RotationDegrees& _rotation )
+    void RenderQueue::addRenderableShape( const Shape& _shape, const Color& _color, bool _solid, const Position& _position, const RotationDegrees& _rotation )
     {
         Rectangle frustum;
         float metersPerPixel;
         erh::getCameraInfo( frustum, metersPerPixel );
         Vec2 flattenedPos = { _position.x, _position.y };
-
 
         switch ( _shape.getShapeType() )
         {
@@ -97,7 +96,7 @@ namespace puma
             ScreenPos centerScreenPos = erh::worldPointToScreen( circle.center + flattenedPos, frustum, metersPerPixel );
             s32 radiusInPixels = (s32)(circle.radius / metersPerPixel);
 
-            renderable.setAsCircle( radiusInPixels, centerScreenPos, _color );
+            renderable.setAsCircle( radiusInPixels, centerScreenPos, _color, _solid );
 
             m_renderables.emplace_back( &renderable );
             ++m_renderableShapesCount;
@@ -114,7 +113,7 @@ namespace puma
                 return erh::worldPointToScreen( polygonPoint + flattenedPos, frustum, metersPerPixel );
             } );
 
-            renderable.setAsPolygon( screenPolygon, _color );
+            renderable.setAsPolygon( screenPolygon, _color, _solid );
             m_renderables.emplace_back( &renderable );
             ++m_renderableShapesCount;
             break;

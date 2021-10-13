@@ -24,11 +24,13 @@ namespace puma
     {
         s32 radius;
         ScreenPos center;
+        bool solid = false;
     };
 
     struct RenderablePolygon
     {
         ShapeScreenPointsList vertices;
+        bool solid = false;
     };
 
 
@@ -36,9 +38,9 @@ namespace puma
     {
     public:
 
-        void setAsCircle( s32 _radius, const ScreenPos& _center, const Color& _color );
+        void setAsCircle( s32 _radius, const ScreenPos& _center, const Color& _color, bool _solid );
         void setAsChain( const ShapeScreenPointsList& _points, const Color& _color );
-        void setAsPolygon( const ShapeScreenPointsList& _vertices, const Color& _color );
+        void setAsPolygon( const ShapeScreenPointsList& _vertices, const Color& _color, bool _solid );
 
         void render() override;
 

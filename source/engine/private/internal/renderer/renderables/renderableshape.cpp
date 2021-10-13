@@ -6,13 +6,14 @@
 
 namespace puma
 {
-    void RenderableShape::setAsCircle( s32 _radius, const ScreenPos& _center, const Color& _color )
+    void RenderableShape::setAsCircle( s32 _radius, const ScreenPos& _center, const Color& _color, bool _solid )
     {
         RenderableCircle circle;
         
         m_renderableShape.circle.center = _center;
         m_renderableShape.circle.radius = _radius;
-        
+        m_renderableShape.circle.solid = _solid;
+
         m_renderableShapeType = RenderableShapeType::RenderableCircle;
         
         m_color = _color;
@@ -27,9 +28,10 @@ namespace puma
         m_color = _color;
     }
 
-    void RenderableShape::setAsPolygon( const ShapeScreenPointsList& _vertices, const Color& _color )
+    void RenderableShape::setAsPolygon( const ShapeScreenPointsList& _vertices, const Color& _color, bool _solid )
     {
         m_renderableShape.polygon.vertices = _vertices;
+        m_renderableShape.polygon.solid = _solid;
 
         m_renderableShapeType = RenderableShapeType::RenderablePolygon;
 
@@ -43,7 +45,14 @@ namespace puma
         case RenderableShapeType::RenderableCircle:
         {
             const RenderableCircle& circle = m_renderableShape.circle;
-            gInternalEngineApplication->getRenderer()->renderCircle( circle.center, circle.radius, m_color );
+            if ( circle.solid )
+            {
+                gInternalEngineApplication->getRenderer()->renderSolidCircle( circle.center, circle.radius, m_color );
+            }
+            else
+            {
+                gInternalEngineApplication->getRenderer()->renderCircle( circle.center, circle.radius, m_color );
+            }
             break;
         }
         case RenderableShapeType::RenderablePolygon:
@@ -54,7 +63,14 @@ namespace puma
 
             screenPointsList.assign( polygon.vertices.begin(), polygon.vertices.end() );
 
-            gInternalEngineApplication->getRenderer()->renderPolygon( screenPointsList, m_color );
+            if ( polygon.solid )
+            {
+                gInternalEngineApplication->getRenderer()->renderSolidPolygon( screenPointsList, m_color );
+            }
+            else
+            {
+                gInternalEngineApplication->getRenderer()->renderPolygon( screenPointsList, m_color );
+            }
             break;
         }
         case RenderableShapeType::RenderableChain:
