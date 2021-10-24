@@ -104,7 +104,7 @@ namespace puma
 
                 Position pos = { physicsFrame->getPosition().x, physicsFrame->getPosition().y, 0.0f };
                 locationComponent->setPosition( pos );
-                locationComponent->setDegreesRotation( -physicsFrame->getAngle() );
+                locationComponent->setDegreesRotation( physicsFrame->getAngle() );
             }
             else
             {

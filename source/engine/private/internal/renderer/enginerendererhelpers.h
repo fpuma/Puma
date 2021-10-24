@@ -6,6 +6,9 @@
 #include <internal/ecs/components/locationcomponent.h>
 #include <internal/services/engineapplicationservice.h>
 #include <utils/graphics/dimensions.h>
+#include <utils/geometry/geometryhelpers.h>
+
+#include <physics/geometry/overlapcheck.h>
 
 namespace puma::erh
 {
@@ -64,4 +67,27 @@ namespace puma::erh
         return worldPointToScreen( Vec2{_position.x, _position.y}, _frustum, _metersPerPixel );
     }
 
+    bool shouldRender( const ShapeVerticesList& _vertices, const Rectangle& _frustum )
+    {
+        const auto itMaxPointX = std::max_element( _vertices.begin(), _vertices.end(), [&]( const Vec2& point0, const Vec2& point1 ) 
+        {return point0.x < point1.x; } );
+
+        const auto itMaxPointY = std::max_element( _vertices.begin(), _vertices.end(), [&]( const Vec2& point0, const Vec2& point1 )
+        {return point0.y < point1.y; } );
+
+        const auto itMinPointX = std::max_element( _vertices.begin(), _vertices.end(), [&]( const Vec2& point0, const Vec2& point1 )
+        {return point0.x > point1.x; } );
+
+        const auto itMinPointY = std::max_element( _vertices.begin(), _vertices.end(), [&]( const Vec2& point0, const Vec2& point1 )
+        {return point0.y > point1.y; } );
+
+        Rectangle aabb = { {itMaxPointX->x, itMaxPointY->y}, {itMinPointX->x, itMinPointY->y} };
+
+        return physics::areShapesOverLapping( aabb, _frustum );
+    }
+
+    bool shouldRender( const Rectangle& _aabb, const Rectangle& _frustum )
+    {
+        return physics::areShapesOverLapping( _aabb, _frustum );
+    }
 }

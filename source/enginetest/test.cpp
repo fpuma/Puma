@@ -97,8 +97,8 @@ void initTest()
     Floor1 = spawnFloor( gEngineApplication->getTextureManager(), { -15.0f, -15.0f, 0.0f }, -45.0f );
     Floor2 = spawnFloor( gEngineApplication->getTextureManager(), { 15.0f, 15.0f, 0.0f }, -45.0f );
     Floor3 = spawnFloor( gEngineApplication->getTextureManager(), { -15.0f, 15.0f, 0.0f }, 45.0f );
-    Ball0 = spawnBall( gEngineApplication->getTextureManager(), { 5.0f, 10.0f, 0.0f } );
-    Ball1 = spawnBall( gEngineApplication->getTextureManager(), { -5.0f, 10.0f, 0.0f } );
+    Ball0 = spawnBall( gEngineApplication->getTextureManager(), { 10.0f, 10.0f, 0.0f } );
+    Ball1 = spawnBall( gEngineApplication->getTextureManager(), { -10.0f, 10.0f, 0.0f } );
 }
 
 void uninitTest()
@@ -217,7 +217,8 @@ puma::Entity spawnBall( puma::app::ITextureManager* _textureManager, const puma:
     ballBodyInfo.density = 1.0f;
     ballBodyInfo.collisionIndex = 0;
     ballBodyInfo.shape.setAsCircle( ballShape );
-    ballBodyInfo.restitution = 1.1f;
+    ballBodyInfo.restitution = 0.0f;
+    //ballBodyInfo.restitution = 1.1f;
 
     collisionComponent->addBody( ballBodyInfo );
 

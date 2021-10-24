@@ -2,7 +2,6 @@
 
 #include "renderqueue.h"
 #include "enginerendererhelpers.h"
-#include <physics/geometry/overlapcheck.h>
 
 namespace puma
 {
@@ -19,11 +18,11 @@ namespace puma
 
         Rectangle boundingBox = erh::getAABB( _position, _renderSize );
 
-        if ( physics::areShapesOverLapping( boundingBox, frustum ) )
+        if ( erh::shouldRender( boundingBox, frustum ) )
         {
             RenderableTexture& renderable = m_textures[m_renderableTexturesCount];
             renderable.setTexture( _texture, _textureSample );
-            renderable.setRotationDegrees( _rotation );
+            renderable.setRotationDegrees( -_rotation );
 
             Extent screenExtent;
 
@@ -74,48 +73,86 @@ namespace puma
         {
         case ShapeType::Chain:
         {
-            Chain chain = _shape.getAsChain();
-            RenderableShape& renderable = m_shapes[m_renderableShapesCount];
-            ShapeScreenPointsList screenChain;
+            const Chain& chain = _shape.getAsChain();
 
-            std::transform( chain.points.begin(), chain.points.end(), std::back_inserter( screenChain ), [&]( const Vec2& chainPoint )
+            Chain newChain;
+
+            std::transform( chain.points.begin(), chain.points.end(), std::back_inserter( newChain.points ), [&]( const Vec2& point )
             {
-                return erh::worldPointToScreen( chainPoint + flattenedPos, frustum, metersPerPixel );
+                Vec2 newPoint = GeometryHelpers::rotatePoint2D( point, _rotation );
+                newPoint = newPoint + flattenedPos;
+                return newPoint;
             } );
 
-            renderable.setAsChain( screenChain, _color);
-            m_renderables.emplace_back( &renderable );
-            ++m_renderableShapesCount;
+            if ( erh::shouldRender( newChain.points, frustum ) )
+            {
+                RenderableShape& renderable = m_shapes[m_renderableShapesCount];
+                ShapeScreenPointsList screenChain;
+
+                std::transform( newChain.points.begin(), newChain.points.end(), std::back_inserter( screenChain ), [&]( const Vec2& chainPoint )
+                {
+                    return erh::worldPointToScreen( chainPoint, frustum, metersPerPixel );
+                } );
+
+                renderable.setAsChain( screenChain, _color);
+                m_renderables.emplace_back( &renderable );
+                ++m_renderableShapesCount;
+            }
+
             break;
         }
         case ShapeType::Circle:
         {
             Circle circle = _shape.getAsCircle();
-            RenderableShape& renderable = m_shapes[m_renderableShapesCount];
 
-            ScreenPos centerScreenPos = erh::worldPointToScreen( circle.center + flattenedPos, frustum, metersPerPixel );
-            s32 radiusInPixels = (s32)(circle.radius / metersPerPixel);
+            Vec2 circleWorldPosition = circle.center + flattenedPos;
+            Vec2 upperBoundOffset = { circle.radius, circle.radius };
+            Vec2 lowerBoundOffset = { -circle.radius, -circle.radius };
 
-            renderable.setAsCircle( radiusInPixels, centerScreenPos, _color, _solid );
+            Rectangle circleAABB = { upperBoundOffset, lowerBoundOffset };
 
-            m_renderables.emplace_back( &renderable );
-            ++m_renderableShapesCount;
+            if ( erh::shouldRender( circleAABB, frustum ) )
+            {
+                RenderableShape& renderable = m_shapes[m_renderableShapesCount];
+
+                ScreenPos centerScreenPos = erh::worldPointToScreen( circleWorldPosition, frustum, metersPerPixel );
+                s32 radiusInPixels = (s32)(circle.radius / metersPerPixel);
+
+                renderable.setAsCircle( radiusInPixels, centerScreenPos, _color, _solid );
+
+                m_renderables.emplace_back( &renderable );
+                ++m_renderableShapesCount;
+            }
+
             break;
         }
         case ShapeType::Polygon:
         {
             Polygon polygon = _shape.getAsPolygon();
-            RenderableShape& renderable = m_shapes[m_renderableShapesCount];
-            ShapeScreenPointsList screenPolygon;
 
-            std::transform( polygon.vertices.begin(), polygon.vertices.end(), std::back_inserter( screenPolygon ), [&]( const Vec2& polygonPoint )
+            Polygon newPolygon;
+
+            std::transform( polygon.vertices.begin(), polygon.vertices.end(), std::back_inserter( newPolygon.vertices ), [&]( const Vec2& point )
             {
-                return erh::worldPointToScreen( polygonPoint + flattenedPos, frustum, metersPerPixel );
+                Vec2 newPoint = GeometryHelpers::rotatePoint2D( point, _rotation );
+                newPoint = newPoint + flattenedPos;
+                return newPoint;
             } );
 
-            renderable.setAsPolygon( screenPolygon, _color, _solid );
-            m_renderables.emplace_back( &renderable );
-            ++m_renderableShapesCount;
+            if ( erh::shouldRender( newPolygon.vertices, frustum ) )
+            {
+                RenderableShape& renderable = m_shapes[m_renderableShapesCount];
+                ShapeScreenPointsList screenPolygon;
+
+                std::transform( newPolygon.vertices.begin(), newPolygon.vertices.end(), std::back_inserter( screenPolygon ), [&]( const Vec2& polygonPoint )
+                {
+                    return erh::worldPointToScreen( polygonPoint, frustum, metersPerPixel );
+                } );
+
+                renderable.setAsPolygon( screenPolygon, _color, _solid );
+                m_renderables.emplace_back( &renderable );
+                ++m_renderableShapesCount;
+            }
             break;
         }
         default:
