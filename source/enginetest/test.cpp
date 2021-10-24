@@ -217,8 +217,8 @@ puma::Entity spawnBall( puma::app::ITextureManager* _textureManager, const puma:
     ballBodyInfo.density = 1.0f;
     ballBodyInfo.collisionIndex = 0;
     ballBodyInfo.shape.setAsCircle( ballShape );
-    ballBodyInfo.restitution = 0.0f;
-    //ballBodyInfo.restitution = 1.1f;
+    //ballBodyInfo.restitution = 0.0f;
+    ballBodyInfo.restitution = 1.1f;
 
     collisionComponent->addBody( ballBodyInfo );
 
