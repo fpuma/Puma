@@ -125,7 +125,7 @@ namespace puma
 #ifdef PHYSICS_DEBUG_RENDER
         for ( const PhysicsDebugShape& dbgShape : m_debugShapes )
         {
-            _renderQueue.addRenderableShape( dbgShape.shape, dbgShape.color, dbgShape.solid, { 0.0f, 0.0f, 0.0f }, 0.0f );
+            _renderQueue.addRenderableShape( dbgShape.shape, dbgShape.color, dbgShape.solid, { 0.0f, 0.0f, 0.0f }, 0.0f, true );
         }
 #endif
     }

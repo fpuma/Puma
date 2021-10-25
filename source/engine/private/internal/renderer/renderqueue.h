@@ -16,9 +16,9 @@ namespace puma
 
         RenderQueue();
 
-        void addRenderableTexture( const AppTexture& _texture, const AppTextureSample& _textureSample, const RenderSize& _renderSize, const Position& _position, const RotationDegrees& _rotation ) override;
-        void addRenderableText( const std::string& _textToRender, const Color& _color, const Position& _position ) override;
-        void addRenderableShape( const Shape& _shape, const Color& _color, bool _solid, const Position& _position, const RotationDegrees& _rotation ) override;
+        void addRenderableTexture( const AppTexture& _texture, const AppTextureSample& _textureSample, const RenderSize& _renderSize, const Position& _position, const RotationDegrees& _rotation, bool _debug = false ) override;
+        void addRenderableText( const std::string& _textToRender, const Color& _color, const Position& _position, bool _debug = false ) override;
+        void addRenderableShape( const Shape& _shape, const Color& _color, bool _solid, const Position& _position, const RotationDegrees& _rotation, bool _debug = false ) override;
 
         void render();
 
@@ -26,7 +26,10 @@ namespace puma
 
     private:
 
+        void addRenderable( IRenderable* _renderable, bool _debug );
+
         std::vector<IRenderable*> m_renderables;
+        std::vector<IRenderable*> m_debugRenderables;
 
         u32 m_renderableTexturesCount = 0;
         std::array<RenderableTexture, kMaxRenderablesCount> m_textures;

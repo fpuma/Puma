@@ -8,9 +8,10 @@ namespace puma
     RenderQueue::RenderQueue()
     {
         m_renderables.reserve( kMaxRenderablesCount * 3 );
+        m_debugRenderables.reserve( kMaxRenderablesCount * 3 );
     }
 
-    void RenderQueue::addRenderableTexture( const AppTexture& _texture, const AppTextureSample& _textureSample, const RenderSize& _renderSize, const Position& _position, const RotationDegrees& _rotation )
+    void RenderQueue::addRenderableTexture( const AppTexture& _texture, const AppTextureSample& _textureSample, const RenderSize& _renderSize, const Position& _position, const RotationDegrees& _rotation, bool _debug /*= false*/ )
     {
         Rectangle frustum;
         float metersPerPixel;
@@ -39,7 +40,7 @@ namespace puma
         }
     }
 
-    void RenderQueue::addRenderableText( const std::string& _textToRender, const Color& _color, const Position& _position )
+    void RenderQueue::addRenderableText( const std::string& _textToRender, const Color& _color, const Position& _position, bool _debug /*= false*/ )
     {
         Rectangle frustum;
         float metersPerPixel;
@@ -56,13 +57,13 @@ namespace puma
             ScreenPos screenPosition = erh::worldPointToScreen(_position, frustum, metersPerPixel);
             renderable.setText(_textToRender, screenPosition, _color);
 
-            m_renderables.emplace_back( &renderable );
+            addRenderable( &renderable, _debug );
 
             ++m_renderableTextsCount;
         }
     }
     
-    void RenderQueue::addRenderableShape( const Shape& _shape, const Color& _color, bool _solid, const Position& _position, const RotationDegrees& _rotation )
+    void RenderQueue::addRenderableShape( const Shape& _shape, const Color& _color, bool _solid, const Position& _position, const RotationDegrees& _rotation, bool _debug /*= false*/ )
     {
         Rectangle frustum;
         float metersPerPixel;
@@ -95,7 +96,7 @@ namespace puma
                 } );
 
                 renderable.setAsChain( screenChain, _color);
-                m_renderables.emplace_back( &renderable );
+                addRenderable( &renderable, _debug );
                 ++m_renderableShapesCount;
             }
 
@@ -120,7 +121,7 @@ namespace puma
 
                 renderable.setAsCircle( radiusInPixels, centerScreenPos, _color, _solid );
 
-                m_renderables.emplace_back( &renderable );
+                addRenderable( &renderable, _debug );
                 ++m_renderableShapesCount;
             }
 
@@ -150,7 +151,7 @@ namespace puma
                 } );
 
                 renderable.setAsPolygon( screenPolygon, _color, _solid );
-                m_renderables.emplace_back( &renderable );
+                addRenderable( &renderable, _debug );
                 ++m_renderableShapesCount;
             }
             break;
@@ -167,6 +168,11 @@ namespace puma
         {
             renderable->render();
         }
+
+        for ( IRenderable* renderable : m_debugRenderables )
+        {
+            renderable->render();
+        }
     }
 
     void RenderQueue::clear()
@@ -175,5 +181,17 @@ namespace puma
         m_renderableTexturesCount = 0;
         m_renderableTextsCount = 0;
         m_renderableShapesCount = 0;
+    }
+
+    void RenderQueue::addRenderable( IRenderable* _renderable, bool _debug )
+    {
+        if ( _debug )
+        {
+            m_debugRenderables.emplace_back( _renderable );
+        }
+        else
+        {
+            m_renderables.emplace_back( _renderable );
+        }
     }
 }
