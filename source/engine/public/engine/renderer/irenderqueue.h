@@ -8,6 +8,8 @@ namespace puma
 {
     class Shape;
 
+    constexpr int kMaxRenderablesCount = 1000;
+
     class IRenderQueue
     {
     public:

@@ -8,8 +8,6 @@
 
 namespace puma
 {
-    constexpr int kMaxRenderablesCount = 100;
-
     class RenderQueue : public IRenderQueue
     {
     public:

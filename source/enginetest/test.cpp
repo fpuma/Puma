@@ -5,6 +5,9 @@
 #include "test.h"
 
 #include <application/iwindow.h>
+#include <input/iinput.h>
+#include <input/devices/ikeyboard.h>
+#include <input/inputids.h>
 #include <texturemanager/itexturemanager.h>
 
 #include <engine/services/iprovidersservice.h>
@@ -22,24 +25,30 @@
 #include <engine/ecs/systems/icollisionsystem.h>
 #include <engine/ecs/systems/irendersystem.h>
 
+#include <engine/services/iloggerservice.h>
+
 #include <engine/physics/physicsdefinitions.h>
 
 #include <engine/services/iengineapplicationservice.h>
 
 #include <utils/graphics/dimensions.h>
 
+#include <utils/formatstring.h>
+
 #include <texturemanager/itexturemanager.h>
 
 namespace
 {
+
+    constexpr float kBallRadius = 1.0f;
 
     puma::Entity MyDefaultCamera = puma::kInvalidEntity;
     puma::Entity Floor0 = puma::kInvalidEntity;
     puma::Entity Floor1 = puma::kInvalidEntity;
     puma::Entity Floor2 = puma::kInvalidEntity;
     puma::Entity Floor3 = puma::kInvalidEntity;
-    puma::Entity Ball0 = puma::kInvalidEntity;
-    puma::Entity Ball1 = puma::kInvalidEntity;
+
+    std::vector<puma::Entity> Balls;
 
     puma::Entity buildDefaultCamera()
     {
@@ -95,10 +104,21 @@ void initTest()
 
     Floor0 = spawnFloor( gEngineApplication->getTextureManager(), { 15.0f, -15.0f, 0.0f }, 45.0f );
     Floor1 = spawnFloor( gEngineApplication->getTextureManager(), { -15.0f, -15.0f, 0.0f }, -45.0f );
+    
     Floor2 = spawnFloor( gEngineApplication->getTextureManager(), { 15.0f, 15.0f, 0.0f }, -45.0f );
     Floor3 = spawnFloor( gEngineApplication->getTextureManager(), { -15.0f, 15.0f, 0.0f }, 45.0f );
-    Ball0 = spawnBall( gEngineApplication->getTextureManager(), { 10.0f, 10.0f, 0.0f } );
-    Ball1 = spawnBall( gEngineApplication->getTextureManager(), { -10.0f, 10.0f, 0.0f } );
+    
+    //Ball0 = spawnBall( gEngineApplication->getTextureManager(), { 0.0f, 40.0f, 0.0f } );
+    //Ball1 = spawnBall( gEngineApplication->getTextureManager(), { -10.0f, 10.0f, 0.0f } );
+}
+
+void updateTest()
+{
+    if ( gEngineApplication->getInput()->getKeyboard().keyPressed( puma::app::KeyboardKey::KB_B ) )
+    {
+        Balls.push_back( spawnBall( gEngineApplication->getTextureManager(), { -5.0f, 5.0f, 0.0f } ) );
+        gLogger->info( puma::formatString( "Ball %d spawned!", Balls.size() ).c_str() );
+    }
 }
 
 void uninitTest()
@@ -109,8 +129,12 @@ void uninitTest()
     unspawnFloor( Floor1 );
     unspawnFloor( Floor2 );
     unspawnFloor( Floor3 );
-    unspawnBall( Ball0 );
-    unspawnBall( Ball1 );
+
+    for ( puma::Entity ballEntity : Balls )
+    {
+        unspawnBall( ballEntity );
+    }
+    Balls.clear();
 }
 
 void initWindow()
@@ -199,7 +223,7 @@ puma::Entity spawnBall( puma::app::ITextureManager* _textureManager, const puma:
     puma::app::Texture tennisTexture = _textureManager->loadTexture( "../assets/tennisball.png" );
     puma::TextureInfo textureInfo;
     textureInfo.texture = tennisTexture;
-    textureInfo.renderSize = { 5.0f, 5.0f };
+    textureInfo.renderSize = { kBallRadius * 2.0f, kBallRadius * 2.0f };
     textureInfo.textureSample = { 1.5f,1.5f };
 
     renderComponent->addTextureInfo( textureInfo );
@@ -212,7 +236,7 @@ puma::Entity spawnBall( puma::app::ITextureManager* _textureManager, const puma:
     gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::PhysicsFrameType::Dynamic );
 
     puma::Circle ballShape;
-    ballShape.radius = 2.5f;
+    ballShape.radius = kBallRadius;
     puma::PhysicsBodyInfo ballBodyInfo;
     ballBodyInfo.density = 1.0f;
     ballBodyInfo.collisionIndex = 0;

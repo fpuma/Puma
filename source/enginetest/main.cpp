@@ -1,6 +1,7 @@
 #include <precompiledengine.h>
 
 #include <engine/iengine.h>
+#include <input/iinput.h>
 
 #include "test.h"
 
@@ -20,11 +21,11 @@ int main( int argc, char* argv[] )
     while ( !enginePtr->shouldQuit() )
     {
         enginePtr->update();
+        updateTest();
         enginePtr->render();
     };
 
     uninitTest();
-
     enginePtr->uninit();
 
     return 0;
