@@ -5,10 +5,12 @@
 #include <internal/ecs/base/providers/entityprovider.h>
 #include <internal/ecs/components/cameracomponent.h>
 #include <internal/ecs/components/collisioncomponent.h>
+#include <internal/ecs/components/inputcomponent.h>
 #include <internal/ecs/components/locationcomponent.h>
 #include <internal/ecs/components/rendercomponent.h>
 #include <internal/ecs/systems/collisionsystem.h>
 #include <internal/ecs/systems/rendersystem.h>
+#include <internal/ecs/systems/inputsystem.h>
 #include <internal/services/base/servicecontainer.h>
 #include <internal/services/engineapplicationservice.h>
 #include <internal/services/loggerservice.h>
@@ -16,17 +18,12 @@
 #include <internal/services/providersservice.h>
 #include <internal/services/systemsservice.h>
 
-#include <logger/output/consolelogoutput.h>
-
+#include <application/irenderer.h>
 #include <engine/utils/timerprovider.h>
-
+#include <logger/output/consolelogoutput.h>
 #include <time/timestamp.h>
 
-#include <application/irenderer.h>
 
-#include <iostream>
-
-#include <string>
 
 
 namespace puma
@@ -42,6 +39,7 @@ namespace puma
 
             gInternalSystems->registerInterface<IRenderSystem, RenderSystem>();
             gInternalSystems->registerInterface<ICollisionSystem, CollisionSystem>();
+            gInternalSystems->registerInterface<IInputSystem, InputSystem>();
         }
 
         void registerComponents()
@@ -52,6 +50,7 @@ namespace puma
             componentProvider->registerInterface<ICollisionComponent, CollisionComponent>();
             componentProvider->registerInterface<ILocationComponent, LocationComponent>();
             componentProvider->registerInterface<IRenderComponent, RenderComponent>();
+            componentProvider->registerInterface<IInputComponent, InputComponent>();
         }
     }
 
@@ -76,6 +75,7 @@ namespace puma
 
         gInternalSystems->add<RenderSystem>();
         gInternalSystems->add<CollisionSystem>();
+        gInternalSystems->add<InputSystem>();
 
         gInternalSystems->updateSystemsProperties();
 

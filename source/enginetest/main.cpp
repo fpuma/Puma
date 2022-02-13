@@ -16,16 +16,18 @@ int main( int argc, char* argv[] )
     auto enginePtr = puma::IEngine::create();
     enginePtr->init();
 
-    initTest();
+    Game::Test gameTest;
+
+    gameTest.initTest();
 
     while ( !enginePtr->shouldQuit() )
     {
         enginePtr->update();
-        updateTest();
+        gameTest.updateTest();
         enginePtr->render();
     };
 
-    uninitTest();
+    gameTest.uninitTest();
     enginePtr->uninit();
 
     return 0;

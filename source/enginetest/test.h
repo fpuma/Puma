@@ -2,8 +2,22 @@
 
 #include <engine/ecs/base/entity.h>
 
-void initTest();
-void updateTest();
-void uninitTest();
+
+namespace Game
+{
+    class Test
+    {
+    public:
+
+        void initTest();
+        void updateTest();
+        void uninitTest();
+
+    private:
+
+
+    };
+}
+
 
 

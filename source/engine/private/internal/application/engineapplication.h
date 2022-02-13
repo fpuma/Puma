@@ -2,6 +2,7 @@
 
 #include <application/iapplication.h>
 #include <engine/application/iengineapplication.h>
+#include <engine/application/applicationdefinitions.h>
 
 namespace puma
 {
@@ -22,16 +23,16 @@ namespace puma
         Entity getCameraEntity() const { return m_cameraEntity; }
 
         bool shouldQuit() const { return m_application->shouldQuit(); }
-        app::IRenderer* getRenderer() const { return m_renderer; }
+        AppRenderer* getRenderer() const { return m_renderer; }
 
     private:
 
         std::unique_ptr<app::IApplication> m_application = nullptr;
-        std::unique_ptr<app::IInput> m_input = nullptr;
+        std::unique_ptr<AppInput> m_input = nullptr;
 
-        app::IWindow* m_window = nullptr;
-        app::ITextureManager* m_textureManager = nullptr;
-        app::IRenderer* m_renderer = nullptr;
+        AppWindow* m_window = nullptr;
+        AppTextureManager* m_textureManager = nullptr;
+        AppRenderer* m_renderer = nullptr;
         Entity m_cameraEntity = kInvalidEntity;
     };
 }

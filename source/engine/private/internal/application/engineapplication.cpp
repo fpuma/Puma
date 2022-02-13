@@ -43,7 +43,7 @@ namespace puma
             m_textureManager = m_window->getRenderer()->getTextureManager();
         }
 
-        m_input = app::IInput::create();
+        m_input = AppInput::create();
         m_input->init();
     }
 

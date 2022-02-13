@@ -21,7 +21,7 @@ namespace puma
 
     struct SystemProperties
     {
-        SystemPriority priority = 0; //The lower the number the higher the priority
+        SystemPriority priority = 5; //The lower the number the higher the priority
         SystemUpdateBitMask updateBitMask = 0; //Should be a combination of SystemUpdateFlags
     };
 
