@@ -18,10 +18,40 @@ namespace puma
         RALT = static_cast<AppInputId>(AppKeyboardKey::KB_RALT),
     };
 
+    enum class ControllerJoystick : AppInputId
+    {
+        LEFT_STICK,
+        RIGHT_STICK,
+    };
+
     enum class InputState
     {
         Pressed,
         Released,
+    };
+
+    struct InputActionExtraInfo
+    {
+        float x = 0.0f;
+        float y = 0.0f;
+    };
+
+    struct MousePositionInput
+    {
+        bool operator == ( const MousePositionInput& _other ) const
+        {
+            return (modifier == _other.modifier) && (state == _other.state);
+        }
+
+        bool operator < ( const MousePositionInput& _other ) const
+        {
+            if ( modifier != _other.modifier ) { return modifier < _other.modifier; }
+            if ( state != _other.state ) { return state < _other.state; }
+            return false;
+        }
+
+        InputModifier modifier = InputModifier::NONE;
+        InputState state;
     };
 
     struct MouseButtonInput
@@ -117,6 +147,24 @@ namespace puma
         }
 
         AppControllerTrigger controllerTrigger;
+        AppControllerId controllerId;
+    };
+
+    struct ControllerJoystickInput
+    {
+        bool operator == ( const ControllerJoystickInput& _other ) const
+        {
+            return (controllerJoystick == _other.controllerJoystick) && (controllerId == _other.controllerId);
+        }
+
+        bool operator < ( const ControllerJoystickInput& _other ) const
+        {
+            if ( controllerJoystick != _other.controllerJoystick ) { return controllerJoystick < _other.controllerJoystick; }
+            if ( controllerId != _other.controllerId ) { return controllerId < _other.controllerId; }
+            return false;
+        }
+
+        ControllerJoystick controllerJoystick;
         AppControllerId controllerId;
     };
 }

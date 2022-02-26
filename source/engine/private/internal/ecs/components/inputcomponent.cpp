@@ -4,6 +4,11 @@
 
 namespace puma
 {
+    void InputComponent::addInputMap( InputAction _inputAction, MousePositionInput _mousePositionInput )
+    {
+        m_inputMaps.insert( InputMap( _inputAction, _mousePositionInput ) );
+    }
+
     void InputComponent::addInputMap( InputAction _inputAction, MouseButtonInput _mouseButtonInput )
     {
         m_inputMaps.insert( InputMap( _inputAction, _mouseButtonInput ) );
@@ -29,6 +34,11 @@ namespace puma
         m_inputMaps.insert( InputMap( _inputAction, _controllerTriggerInput ) );
     }
 
+    void InputComponent::addInputMap( InputAction _inputAction, ControllerJoystickInput _controllerJoystickInput )
+    {
+        m_inputMaps.insert( InputMap( _inputAction, _controllerJoystickInput ) );
+    }
+
     void InputComponent::enableAction( InputAction _inputAction )
     {
         m_disabledActions.erase( _inputAction );
@@ -45,15 +55,38 @@ namespace puma
         return (found);
     }
 
+    InputActionExtraInfo InputComponent::getInputActionExtraInfo( InputAction _inputAction ) const
+    {
+        auto itFound = std::find_if( m_extraInfo.begin(), m_extraInfo.end(), [_inputAction]( const ExtraInfoData& extraInfoData )
+        {
+            return extraInfoData.inputAction == _inputAction;
+        } );
+
+        InputActionExtraInfo result;
+
+        if ( itFound != m_extraInfo.end() )
+        {
+            result = itFound->extraInfo;
+        }
+
+        return result;
+    }
+
     void InputComponent::evaluate()
     {
         m_activeAction.clear();
+        m_extraInfo.clear();
 
         for ( const InputMap& inputMap : m_inputMaps )
         {
-            if ( inputMap.evaluate() )
+            InputEvalResult result = inputMap.evaluate();
+            if ( result.active )
             {
                 m_activeAction.insert( inputMap.getInputAction() );
+                if ( result.hasExtraInfo )
+                {
+                    m_extraInfo.insert( { inputMap.getInputAction(), result.extraInfo } );
+                }
             }
         }
     }

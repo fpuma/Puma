@@ -57,6 +57,7 @@ namespace Game
         puma::Entity BallSpawner = puma::kInvalidEntity;
         
         puma::InputAction SpawnBallAction( 0 );
+        puma::InputAction MouseMove( 1 );
 
         puma::Entity buildDefaultCamera()
         {
@@ -136,6 +137,12 @@ namespace Game
         {
             Balls.push_back( spawnBall( gEngineApplication->getTextureManager(), locationComponent->getPosition() ) );
             gLogger->info( puma::formatString( "Ball %d spawned!", Balls.size() ).c_str() );
+        }
+
+        if ( inputComponent->isActionActive( MouseMove ) )
+        {
+            puma::InputActionExtraInfo extraInfo = inputComponent->getInputActionExtraInfo( MouseMove );
+            gLogger->info( puma::formatString( "Mouse moved. %d | %d", static_cast<puma::s32>(extraInfo.x), static_cast<puma::s32>(extraInfo.y) ).c_str() );
         }
     }
 
@@ -293,17 +300,38 @@ namespace Game
         
         locationComponent->setPosition( { -5.0f, 5.0f, 0.0f } );
         
+        //=====================================================================
+
         puma::KeyboardInput keyboardInput;
         keyboardInput.keyboardKey = puma::app::KeyboardKey::KB_B;
         keyboardInput.state = puma::InputState::Released;
 
         inputComponent->addInputMap( SpawnBallAction, keyboardInput );
 
+        //=====================================================================
+
         keyboardInput.keyboardKey = puma::app::KeyboardKey::KB_V;
         keyboardInput.modifier = puma::InputModifier::LCTRL;
         keyboardInput.state = puma::InputState::Pressed;
 
         inputComponent->addInputMap( SpawnBallAction, keyboardInput );
+
+        //=====================================================================
+
+        puma::ControllerButtonInput controllerButtonInput;
+        controllerButtonInput.controllerId = 0;
+        controllerButtonInput.controllerButton = puma::AppControllerButton::CB_B;
+        controllerButtonInput.state = puma::InputState::Pressed;
+
+        inputComponent->addInputMap( SpawnBallAction, controllerButtonInput );
+
+        //=====================================================================
+
+        puma::MousePositionInput mousePositionInput;
+        
+        inputComponent->addInputMap( MouseMove, mousePositionInput );
+
+        //=====================================================================
 
         gSystems->get<puma::IInputSystem>()->registerEntity( result );
 

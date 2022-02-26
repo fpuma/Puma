@@ -17,7 +17,7 @@ namespace puma
         void update() override { m_application->update(); }
         AppWindow* getWindow() const override { return m_window; }
         AppTextureManager* getTextureManager() const override { return m_textureManager; }
-        AppInput* getInput() const override { return m_input.get(); }
+        AppInput* getInput() const { return m_input.get(); }
 
         void setCameraEntity( Entity _cameraEntity ) override;
         Entity getCameraEntity() const { return m_cameraEntity; }

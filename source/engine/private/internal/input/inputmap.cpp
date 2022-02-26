@@ -6,6 +6,12 @@
 
 namespace puma
 {
+    InputMap::InputMap( InputAction _action, MousePositionInput _mousePosition )
+        : m_deviceType( MousePosition )
+        , m_inputAction( _action )
+    {
+        m_inputMap.mousePosition = _mousePosition;
+    }
 
     InputMap::InputMap( InputAction _action, MouseButtonInput _mouseInput )
         : m_deviceType( MouseButton )
@@ -42,16 +48,34 @@ namespace puma
         m_inputMap.controllerTrigger = _controllerTrigger;
     }
 
-    bool InputMap::evaluate() const
+    InputMap::InputMap( InputAction _action, ControllerJoystickInput _controllerJoystick )
+        : m_deviceType( ControllerJoystick )
+        , m_inputAction( _action )
+    {
+        m_inputMap.controllerJoystick = _controllerJoystick;
+    }
+
+    InputEvalResult InputMap::evaluate() const
     {
         const AppInput* input = gInternalEngineApplication->getInput();
 
         assert( nullptr != input ); //Input was not initialized?
 
-        bool result = true;
+        InputEvalResult result;
 
         switch ( m_deviceType )
         {
+        case MousePosition:
+        {
+            const AppMouse& mouse = input->getMouse();
+            result.active = mouse.wasMousePositionUpdated();
+            if ( result.active )
+            {
+                result.hasExtraInfo = true;
+                result.extraInfo = { static_cast<float>(mouse.getMousePosition().x), static_cast<float>(mouse.getMousePosition().y) };
+            }
+            break;
+        }
         case MouseButton:
         {
             const AppMouse& mouse = input->getMouse();
@@ -59,15 +83,14 @@ namespace puma
 
             const auto& deviceInput = m_inputMap.mouseButton;
 
-            if ( deviceInput.modifier != InputModifier::NONE )
-            {
-                result &= keyboard.keyState( static_cast<AppKeyboardKey>(deviceInput.modifier) );
-            }
+            result.active = deviceInput.modifier != InputModifier::NONE ?
+                            keyboard.keyState( static_cast<AppKeyboardKey>(deviceInput.modifier) ) :
+                            true;
 
             switch ( deviceInput.state )
             {
-            case InputState::Pressed: { result &= mouse.buttonPressed( deviceInput.mouseButton ); break; }
-            case InputState::Released:{ result &= mouse.buttonReleased( deviceInput.mouseButton ); break; }
+            case InputState::Pressed: { result.active &= mouse.buttonPressed( deviceInput.mouseButton ); break; }
+            case InputState::Released:{ result.active &= mouse.buttonReleased( deviceInput.mouseButton ); break; }
             default: 
                 gLogger->error( "InputMap::evaluate - Invalid mouse button state." );
                 break;
@@ -81,14 +104,13 @@ namespace puma
 
             const auto& deviceInput = m_inputMap.mouseWheel;
 
-            if ( deviceInput.modifier != InputModifier::NONE )
-            {
-                result &= keyboard.keyState( static_cast<AppKeyboardKey>(deviceInput.modifier) );
-            }
+            result.active = deviceInput.modifier != InputModifier::NONE ?
+                            keyboard.keyState( static_cast<AppKeyboardKey>(deviceInput.modifier) ) :
+                            true;
 
             if ( deviceInput.mouseWheel != AppMouseWheel::MW_IDLE )
             {
-                result &= (mouse.getMouseWheelState() == deviceInput.mouseWheel);
+                result.active &= (mouse.getMouseWheelState() == deviceInput.mouseWheel);
             }
 
             break;
@@ -99,15 +121,14 @@ namespace puma
 
             const auto& deviceInput = m_inputMap.keyboard;
 
-            if ( deviceInput.modifier != InputModifier::NONE )
-            {
-                result &= keyboard.keyState( static_cast<AppKeyboardKey>(deviceInput.modifier) );
-            }
+            result.active = deviceInput.modifier != InputModifier::NONE ?
+                            keyboard.keyState( static_cast<AppKeyboardKey>(deviceInput.modifier) ) :
+                            true;
 
             switch ( deviceInput.state )
             {
-            case InputState::Pressed: { result &= keyboard.keyPressed(  deviceInput.keyboardKey ); break; }
-            case InputState::Released: { result &= keyboard.keyReleased( deviceInput.keyboardKey ); break; }
+            case InputState::Pressed: { result.active &= keyboard.keyPressed(  deviceInput.keyboardKey ); break; }
+            case InputState::Released: { result.active &= keyboard.keyReleased( deviceInput.keyboardKey ); break; }
             default: 
                 gLogger->error( "InputMap::evaluate - Invalid keyboard key state." );
                 break;
@@ -117,14 +138,16 @@ namespace puma
         }
         case ControllerButton:
         {
+            if ( input->getControllerCount() == 0 ) break;
+
             const auto& deviceInput = m_inputMap.controllerButton;
             
             const AppController& controller = input->getController( deviceInput.controllerId );
 
             switch ( deviceInput.state )
             {
-            case InputState::Pressed: { result &= controller.buttonPressed( deviceInput.controllerButton ); break; }
-            case InputState::Released: { result &= controller.buttonReleased( deviceInput.controllerButton ); break; }
+            case InputState::Pressed: { result.active = controller.buttonPressed( deviceInput.controllerButton ); break; }
+            case InputState::Released: { result.active = controller.buttonReleased( deviceInput.controllerButton ); break; }
             default: 
                 gLogger->error( "InputMap::evaluate - Invalid controller button state." );
                 break;
@@ -134,6 +157,8 @@ namespace puma
         }
         case ControllerTrigger:
         {
+            if ( input->getControllerCount() == 0 ) break;
+
             const auto& deviceInput = m_inputMap.controllerTrigger;
 
             const AppController& controller = input->getController( deviceInput.controllerId );
@@ -142,14 +167,22 @@ namespace puma
             {
             case AppControllerTrigger::CT_LTRIGGER:
             {
-                result &= controller.getLeftTrigger() > 0;
-                //Store trigger value
+                result.active = controller.wasLeftTriggerUpdated();
+                if ( result.active )
+                {
+                    result.hasExtraInfo = true;
+                    result.extraInfo = { controller.getLeftTrigger(), 0.0f };
+                }
                 break;
             }
             case AppControllerTrigger::CT_RTRIGGER:
             {
-                result &= controller.getRightTrigger() > 0;
-                //Store trigger value
+                result.active = controller.wasRightTriggerUpdated();
+                if ( result.active )
+                {
+                    result.hasExtraInfo = true;
+                    result.extraInfo = { controller.getRightTrigger(), 0.0f };
+                }
                 break;
             }
             default:
@@ -159,11 +192,48 @@ namespace puma
 
             break;
         }
+        case ControllerJoystick:
+        {
+            if ( input->getControllerCount() == 0 ) break;
+
+            const auto& deviceInput = m_inputMap.controllerJoystick;
+
+            const AppController& controller = input->getController( deviceInput.controllerId );
+
+            switch ( deviceInput.controllerJoystick )
+            {
+            case ControllerJoystick::LEFT_STICK:
+            {
+                result.active = controller.wasLeftJoystickUpdated();
+                if ( result.active )
+                {
+                    result.hasExtraInfo = true;
+                    result.extraInfo = { controller.getLeftJoystickPosition().x, controller.getLeftJoystickPosition().y };
+                }
+                break;
+            }
+            case ControllerJoystick::RIGHT_STICK:
+            {
+                result.active = controller.wasRightJoystickUpdated();
+                if ( result.active )
+                {
+                    result.hasExtraInfo = true;
+                    result.extraInfo = { controller.getRightJoystickPosition().x, controller.getRightJoystickPosition().y };
+                }
+                break;
+            }
+            default:
+                gLogger->error( "InputMap::evaluate - Invalid controller joystick." );
+                break;
+            }
+            break;
+        }
         default:
+            assert( false ); //DeviceType not yet supported
             break;
         }
 
-        return result;
+        return { result };
     }
 
     bool InputMap::operator == ( const InputMap& _other ) const
@@ -173,12 +243,15 @@ namespace puma
         {
             switch ( m_deviceType )
             {
+            case MousePosition: { result &= m_inputMap.mousePosition == _other.m_inputMap.mousePosition; break; }
             case MouseButton: { result &= m_inputMap.mouseButton == _other.m_inputMap.mouseButton; break; }
             case MouseWheel: { result &= m_inputMap.mouseWheel == _other.m_inputMap.mouseWheel; break; }
             case KeyboardKey: { result &= m_inputMap.keyboard == _other.m_inputMap.keyboard; break; }
             case ControllerButton: { result &= m_inputMap.controllerButton == _other.m_inputMap.controllerButton; break; }
             case ControllerTrigger: { result &= m_inputMap.controllerTrigger == _other.m_inputMap.controllerTrigger; break; }
+            case ControllerJoystick: { result &= m_inputMap.controllerJoystick == _other.m_inputMap.controllerJoystick; break; }
             default:
+                assert( false ); //Invalid DeviceType
                 break;
             }
         }
@@ -205,12 +278,15 @@ namespace puma
         {
             switch ( m_deviceType )
             {
+            case MousePosition: { result = m_inputMap.mousePosition < _other.m_inputMap.mousePosition; break; }
             case MouseButton: { result = m_inputMap.mouseButton < _other.m_inputMap.mouseButton; break; }
             case MouseWheel: { result = m_inputMap.mouseWheel < _other.m_inputMap.mouseWheel; break; }
             case KeyboardKey: { result = m_inputMap.keyboard < _other.m_inputMap.keyboard; break; }
             case ControllerButton: { result = m_inputMap.controllerButton < _other.m_inputMap.controllerButton; break; }
             case ControllerTrigger: { result = m_inputMap.controllerTrigger < _other.m_inputMap.controllerTrigger; break; }
+            case ControllerJoystick: { result = m_inputMap.controllerJoystick < _other.m_inputMap.controllerJoystick; break; }
             default:
+                assert( false ); //Invalid DeviceType
                 break;
             }
         }

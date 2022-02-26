@@ -59,7 +59,7 @@ namespace puma
         case physics::FrameType::Dynamic:    frameId = world->addDynamicFrame( _frameInfo ); break;
         case physics::FrameType::Static:     frameId = world->addStaticFrame( _frameInfo ); break;
         case physics::FrameType::Kinematic:  frameId = world->addKinematicFrame( _frameInfo ); break;
-        default: break;
+        default: assert( false ); break;
         }
 
         CollisionComponent* collisionComponent = componentProvider->get<CollisionComponent>( _entity );

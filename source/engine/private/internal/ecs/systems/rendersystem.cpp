@@ -21,6 +21,8 @@
 #include <physics/geometry/overlapcheck.h>
 #include <utils/geometry/shapes/shape.h>
 
+//#define RENDER_SYSTEM_DEBUG
+
 namespace puma
 {
 
@@ -58,7 +60,7 @@ namespace puma
                     offsetPosition,
                     locationComponent->getDegreesRotation() );
                 
-#ifdef _DEBUG
+#ifdef RENDER_SYSTEM_DEBUG
                 std::string posString = formatString( "x: %.3f | y: %.3f", locationComponent->getPosition().x, locationComponent->getPosition().y );
                 _renderQueue.addRenderableText( posString, Color::Red(), locationComponent->getPosition() );
 #endif
