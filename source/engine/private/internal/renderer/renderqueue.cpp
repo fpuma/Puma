@@ -178,6 +178,7 @@ namespace puma
     void RenderQueue::clear()
     {
         m_renderables.clear();
+        m_debugRenderables.clear();
         m_renderableTexturesCount = 0;
         m_renderableTextsCount = 0;
         m_renderableShapesCount = 0;
