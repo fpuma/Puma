@@ -3,7 +3,7 @@
 #include <engine/iengine.h>
 #include <input/iinput.h>
 
-#include "test.h"
+#include "test/test.h"
 
 int main( int argc, char* argv[] )
 {
@@ -16,7 +16,7 @@ int main( int argc, char* argv[] )
     auto enginePtr = puma::IEngine::create();
     enginePtr->init();
 
-    Game::Test gameTest;
+    test::Test gameTest;
 
     gameTest.initTest();
 

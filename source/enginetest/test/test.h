@@ -1,9 +1,6 @@
 #pragma once
 
-#include <engine/ecs/base/entity.h>
-
-
-namespace Game
+namespace test
 {
     class Test
     {
@@ -12,10 +9,6 @@ namespace Game
         void initTest();
         void updateTest();
         void uninitTest();
-
-    private:
-
-
     };
 }
 
