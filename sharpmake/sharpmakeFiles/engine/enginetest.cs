@@ -14,6 +14,7 @@ namespace Puma
             conf.AddPublicDependency<Puma.Engine>(target);
 
             conf.IncludePaths.Add(SourceRootPath);
+            conf.IncludePaths.Add(Puma.Physics.SharedFilesPath);
 
             conf.Options.Add(Sharpmake.Options.Vc.General.TreatWarningsAsErrors.Enable);
         }

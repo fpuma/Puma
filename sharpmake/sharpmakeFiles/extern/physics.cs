@@ -3,9 +3,11 @@ namespace Puma
     [Sharpmake.Generate]
     class Physics : Puma.Common.IExternLib
     {
+        public static readonly string SharedFilesPath = Puma.SharpmakeUtils.GetExternPath() + @"\physics2dmodule\source\physics\shared";
         public Physics()
             : base("Physics", @"physics2dmodule\source\physics")
-        { }
+        { 
+        }
 
         public override void ConfigureAll(Configuration conf, Sharpmake.Target target)
         {
@@ -16,6 +18,7 @@ namespace Puma
 
             conf.IncludePrivatePaths.Add(@"\private");
             conf.IncludePaths.Add(@"\public");
+            conf.IncludePaths.Add(@"\shared");
 
             conf.PrecompHeader = @"precompiledphysics.h";
             conf.PrecompSource = @"precompiledphysics.cpp";
