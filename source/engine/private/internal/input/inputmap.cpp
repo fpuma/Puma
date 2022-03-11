@@ -3,6 +3,7 @@
 
 #include <engine/application/applicationdefinitions.h>
 #include <engine/services/iloggerservice.h>
+#include <input/iinput.h>
 
 namespace puma
 {

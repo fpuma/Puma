@@ -3,6 +3,7 @@ namespace Puma
     [Sharpmake.Generate]
     class Gfx2dApp : Puma.Common.IExternLib
     {
+        public static readonly string SharedFilesPath = Puma.SharpmakeUtils.GetExternPath() + @"\gfx2dappmodule\source\gfx2dapp\shared";
         public Gfx2dApp()
             : base("Gfx2dApp", @"gfx2dappmodule\source\gfx2dapp")
         { }
@@ -20,6 +21,7 @@ namespace Puma
 
             conf.IncludePrivatePaths.Add(@"\private");
             conf.IncludePaths.Add(@"\public");
+            conf.IncludePaths.Add(@"\shared");
 
             conf.PrecompHeader = @"precompiledapplication.h";
             conf.PrecompSource = @"precompiledapplication.cpp";

@@ -13,7 +13,7 @@ namespace Puma
         {
             base.ConfigureAll(conf, target);
 
-            conf.AddPublicDependency<Puma.Gfx2dApp>(target);
+            conf.AddPrivateDependency<Puma.Gfx2dApp>(target);
             conf.AddPrivateDependency<Puma.Physics>(target);
             conf.AddPublicDependency<Puma.Time>(target);
             conf.AddPublicDependency<Puma.Utils>(target);

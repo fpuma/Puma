@@ -1,6 +1,10 @@
 #include <precompiledengine.h>
 #include <internal/engine.h>
 
+#include <application/irenderer.h>
+#include <engine/utils/timerprovider.h>
+#include <input/iinput.h>
+
 #include <internal/ecs/base/providers/componentprovider.h>
 #include <internal/ecs/base/providers/entityprovider.h>
 #include <internal/ecs/components/cameracomponent.h>
@@ -18,13 +22,9 @@
 #include <internal/services/providersservice.h>
 #include <internal/services/systemsservice.h>
 
-#include <application/irenderer.h>
-#include <engine/utils/timerprovider.h>
 #include <logger/output/consolelogoutput.h>
+
 #include <time/timestamp.h>
-
-
-
 
 namespace puma
 {

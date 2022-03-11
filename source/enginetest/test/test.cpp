@@ -4,8 +4,6 @@
 
 #include "test.h"
 
-#include <application/iwindow.h>
-#include <input/iinput.h>
 #include <input/devices/ikeyboard.h>
 #include <input/inputids.h>
 #include <texturemanager/itexturemanager.h>

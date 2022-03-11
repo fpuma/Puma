@@ -1,5 +1,6 @@
 #pragma once
 
+#include <application/iwindow.h>
 #include <engine/services/iprovidersservice.h>
 #include <internal/ecs/base/providers/componentprovider.h>
 #include <internal/ecs/components/cameracomponent.h>

@@ -5,8 +5,12 @@
 #include <application/iwindow.h>
 #include <application/irenderer.h>
 
+#include <input/iinput.h>
+
 #include <logger/logger.h>
 #include <logger/output/consolelogoutput.h>
+
+#include <texturemanager/itexturemanager.h>
 
 #ifdef _DEBUG
 #include <engine/services/iprovidersservice.h>
