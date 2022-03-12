@@ -15,13 +15,22 @@ namespace puma
         void disable() override { m_enabled = false; };
         bool isEnabled() const override { return m_enabled; }
 
+        PhysicsFrameID getFrameID() const { return m_frameId; }
         PhysicsFrameType getFrameType() const override { return m_frameType; }
-        PhysicsFrameID getFrameID() const override { return m_frameId; }
+        
+        const PhysicsDynamicFrame* getDynamicFrame() const override;
+        PhysicsDynamicFrame* getDynamicFrame() override;
+
+        const PhysicsKinematicFrame* getKinematicFrame() const override;
+        PhysicsKinematicFrame* getKinematicFrame() override;
+
+        const PhysicsStaticFrame* getStaticFrame() const override;
+        PhysicsStaticFrame* getStaticFrame() override;
 
         void addBody( const PhysicsBodyInfo& _bodyInfo ) override;
         void addTrigger( const PhysicsTriggerInfo& _triggerInfo ) override;
 
-        bool isValid() const override { return (physics::FrameType::Invalid != m_frameType) && (m_frameId.value() != physics::kInvalidPhysicsID); }
+        bool isValid() const override { return (PhysicsFrameType::Invalid != m_frameType) && (m_frameId.value() != physics::kInvalidPhysicsID); }
 
     private:
 

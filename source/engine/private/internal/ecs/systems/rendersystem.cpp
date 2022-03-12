@@ -18,7 +18,6 @@
 
 #include <internal/services/providersservice.h>
 
-#include <physics/geometry/overlapcheck.h>
 #include <utils/geometry/shapes/shape.h>
 
 //#define RENDER_SYSTEM_DEBUG

@@ -5,6 +5,7 @@
 #include <data/inputactions.h>
 #include <data/spawners/ballspawner.h>
 #include <data/spawners/ballspawnspawner.h>
+
 #include <engine/ecs/base/providers/icomponentprovider.h>
 #include <engine/ecs/components/icollisioncomponent.h>
 #include <engine/ecs/components/iinputcomponent.h>
@@ -13,6 +14,9 @@
 #include <engine/services/iengineapplicationservice.h>
 #include <engine/services/iloggerservice.h>
 #include <engine/services/iprovidersservice.h>
+
+#include <test/components/movedirectioncomponent.h>
+
 #include <utils/geometry/shapes/shape.h>
 
 namespace test
@@ -24,8 +28,8 @@ namespace test
 
     void BallSpawnerSystem::init()
     {
-        m_spawner0 = spawnBallSpawner( kSpawner0KeyboardInput, { -5.0f, 5.0f, 0.0f } );
-        m_spawner1 = spawnBallSpawner( kSpawner1KeyboardInput, { 5.0f, 5.0f, 0.0f } );
+        m_spawner0 = spawnBallSpawner( kSpawner0KeyboardInput, kSpawner0ControllerJoystickInput, kSpawner0ControllerButtonInput, { -5.0f, 5.0f, 0.0f } );
+        m_spawner1 = spawnBallSpawner( kSpawner1KeyboardInput, kSpawner1ControllerJoystickInput, kSpawner1ControllerButtonInput, { 5.0f, 5.0f, 0.0f } );
     }
 
     void BallSpawnerSystem::uninit()
@@ -64,6 +68,36 @@ namespace test
             m_balls.push_back( spawnBall( gEngineApplication->getTextureManager(), locationComponent->getPosition() ) );
             gLogger->info( puma::formatString( "Ball %d spawned!", m_balls.size() ).c_str() );
         }
+
+        test::MoveDirectionComponent* moveDirectionComponent = componentProvider->get<test::MoveDirectionComponent>( _spawner );
+        Vec2 currentDir = moveDirectionComponent->getDirection();
+        Vec2 inputDir;
+        if ( inputComponent->isActionActive( TestInputActions::MoveBallSpawnerStartUp ) ) inputDir = inputDir + Vec2( { 0.0f, 1.0f } );
+        if ( inputComponent->isActionActive( TestInputActions::MoveBallSpawnerStartDown ) ) inputDir = inputDir + Vec2( { 0.0f, -1.0f } );
+        if ( inputComponent->isActionActive( TestInputActions::MoveBallSpawnerStartLeft ) ) inputDir = inputDir + Vec2( { -1.0f, 0.0f } );
+        if ( inputComponent->isActionActive( TestInputActions::MoveBallSpawnerStartRight ) ) inputDir = inputDir + Vec2( { 1.0f, 0.0f } );
+
+        if ( inputComponent->isActionActive( TestInputActions::MoveBallSpawnerStopUp ) ) inputDir = inputDir + Vec2( { 0.0f, -1.0f } );
+        if ( inputComponent->isActionActive( TestInputActions::MoveBallSpawnerStopDown ) ) inputDir = inputDir + Vec2( { 0.0f, 1.0f } );
+        if ( inputComponent->isActionActive( TestInputActions::MoveBallSpawnerStopLeft ) ) inputDir = inputDir + Vec2( { 1.0f, 0.0f } );
+        if ( inputComponent->isActionActive( TestInputActions::MoveBallSpawnerStopRight ) ) inputDir = inputDir + Vec2( { -1.0f, 0.0f } );
+
+        bool controllerInput = false;
+        if ( inputComponent->isActionActive( TestInputActions::MoveBallSpawner ) )
+        {
+            InputActionExtraInfo joystickDir = inputComponent->getInputActionExtraInfo( TestInputActions::MoveBallSpawner );
+            inputDir = { joystickDir.x, joystickDir.y };
+            controllerInput = true;
+        }
+
+        inputDir = inputDir.normalize();
+
+        currentDir = controllerInput ? inputDir : currentDir + inputDir;
+
+        moveDirectionComponent->setDirection( currentDir );
+        puma::ICollisionComponent* collisionComponent = componentProvider->get<puma::ICollisionComponent>( _spawner );
+        PhysicsDynamicFrame* dynamicFrame = collisionComponent->getDynamicFrame();
+        dynamicFrame->setLinearVelocity( currentDir * m_spawnerSpeed );
     }
 
     void BallSpawnerSystem::renderDebugSpawner( Entity _spawner, IRenderQueue& _renderQueue )

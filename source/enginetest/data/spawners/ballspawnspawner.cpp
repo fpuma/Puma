@@ -2,6 +2,8 @@
 
 #include "ballspawnspawner.h"
 
+#include <data/collisionindexes.h>
+
 #include <engine/ecs/base/providers/icomponentprovider.h>
 #include <engine/ecs/base/providers/ientityprovider.h>
 #include <engine/ecs/components/ilocationcomponent.h>
@@ -12,11 +14,11 @@
 #include <engine/services/isystemsservice.h>
 #include <engine/services/iprovidersservice.h>
 
-#include <data/collisionindexes.h>
+#include <test/components/movedirectioncomponent.h>
 
 namespace test
 {
-    puma::Entity spawnBallSpawner( InputActionKeyboardPairList _keyboardInputList, const puma::Position& _position )
+    puma::Entity spawnBallSpawner( const InputActionKeyboardPairList& _keyboardInputList, const InputActionControllerPairList& _controllerInputList, const InputActionControllerButtonPairList& _controllerButtonInputList, const puma::Position& _position )
     {
         puma::Entity result = gProviders->get<puma::IEntityProvider>()->requestEntity();
         puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
@@ -24,20 +26,25 @@ namespace test
         puma::ILocationComponent* locationComponent = componentProvider->add<puma::ILocationComponent>( result );
         puma::IInputComponent* inputComponent = componentProvider->add<puma::IInputComponent>( result );
         puma::ICollisionComponent* collisionComponent = componentProvider->add<puma::ICollisionComponent>( result );
-        
+        componentProvider->add<test::MoveDirectionComponent>( result );
 
         locationComponent->setPosition( _position );
 
         for ( InputActionKeyboardPairList::value_type keyboardInputPair : _keyboardInputList )
         {
-            puma::KeyboardInput keyboardInput;
-            keyboardInput.keyboardKey = keyboardInputPair.second.keyboardKey;
-            keyboardInput.modifier = keyboardInputPair.second.modifier;
-            keyboardInput.state = keyboardInputPair.second.state;
-
-            inputComponent->addInputMap( keyboardInputPair.first, keyboardInput );
+            inputComponent->addInputMap( keyboardInputPair.first, keyboardInputPair.second );
         }
-  
+        
+        for ( InputActionControllerPairList::value_type controllerInputPair : _controllerInputList )
+        {
+            inputComponent->addInputMap( controllerInputPair.first, controllerInputPair.second );
+        }
+
+        for ( InputActionControllerButtonPairList::value_type controllerInputPair : _controllerButtonInputList )
+        {
+            inputComponent->addInputMap( controllerInputPair.first, controllerInputPair.second );
+        }
+
         puma::PhysicsFrameInfo frameInfo;
         frameInfo.position = { locationComponent->getPosition().x, locationComponent->getPosition().y };
         frameInfo.gravityScale = 0.0f;
@@ -67,6 +74,7 @@ namespace test
         componentProvider->remove<puma::ILocationComponent>( _spawnerEntity );
         componentProvider->remove<puma::IInputComponent>( _spawnerEntity );
         componentProvider->remove<puma::ICollisionComponent>( _spawnerEntity );
+        componentProvider->remove<test::MoveDirectionComponent>( _spawnerEntity );
 
         gProviders->get<puma::IEntityProvider>()->disposeEntity( _spawnerEntity );
     }

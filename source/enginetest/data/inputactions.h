@@ -8,9 +8,13 @@ namespace test
     {
         static const puma::InputAction SpawnBallAction;
         static const puma::InputAction MoveBallSpawner;
-        static const puma::InputAction MoveBallSpawnerUp;
-        static const puma::InputAction MoveBallSpawnerDown;
-        static const puma::InputAction MoveBallSpawnerLeft;
-        static const puma::InputAction MoveBallSpawnerRight;
+        static const puma::InputAction MoveBallSpawnerStartUp;
+        static const puma::InputAction MoveBallSpawnerStartDown;
+        static const puma::InputAction MoveBallSpawnerStartLeft;
+        static const puma::InputAction MoveBallSpawnerStartRight;
+        static const puma::InputAction MoveBallSpawnerStopUp;
+        static const puma::InputAction MoveBallSpawnerStopDown;
+        static const puma::InputAction MoveBallSpawnerStopLeft;
+        static const puma::InputAction MoveBallSpawnerStopRight;
     }; 
 }

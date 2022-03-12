@@ -8,40 +8,33 @@
 #include <input/inputids.h>
 #include <texturemanager/itexturemanager.h>
 
-#include <engine/services/iprovidersservice.h>
-#include <engine/services/isystemsservice.h>
-#include <engine/services/iengineapplicationservice.h>
+#include <data/collisionindexes.h>
 
+#include <engine/ecs/base/entity.h>
 #include <engine/ecs/base/providers/icomponentprovider.h>
 #include <engine/ecs/base/providers/ientityprovider.h>
-
 #include <engine/ecs/components/icameracomponent.h>
 #include <engine/ecs/components/icollisioncomponent.h>
 #include <engine/ecs/components/ilocationcomponent.h>
 #include <engine/ecs/components/irendercomponent.h>
 #include <engine/ecs/components/iinputcomponent.h>
-
 #include <engine/ecs/systems/icollisionsystem.h>
 #include <engine/ecs/systems/irendersystem.h>
 #include <engine/ecs/systems/iinputsystem.h>
-
-#include <engine/services/iloggerservice.h>
-
 #include <engine/physics/physicsdefinitions.h>
 
 #include <engine/services/iengineapplicationservice.h>
+#include <engine/services/iloggerservice.h>
+#include <engine/services/iprovidersservice.h>
+#include <engine/services/isystemsservice.h>
 
 #include <utils/graphics/dimensions.h>
-
 #include <utils/formatstring.h>
 
-#include <texturemanager/itexturemanager.h>
-
 #include <test/systems/ballspawnersystem.h>
+#include <test/components/movedirectioncomponent.h>
 
-#include <engine/ecs/base/entity.h>
-
-#include <data/collisionindexes.h>
+#include <texturemanager/itexturemanager.h>
 
 namespace test
 {
@@ -100,15 +93,19 @@ namespace test
         initPhysics();
         setCamera();
 
+        //Register components
+        gProviders->get<IComponentProvider>()->registerClass<MoveDirectionComponent>();
+
+        //Register systems
         gSystems->registerClass<BallSpawnerSystem>();
         BallSpawnerSystem* ballSpawnerSystem = gSystems->add<BallSpawnerSystem>();
-
         assert( nullptr != ballSpawnerSystem );
 
+        //Init systems
         ballSpawnerSystem->init();
-
         gSystems->updateSystemsProperties();
 
+        //Spawn
         Floor0 = spawnFloor( gEngineApplication->getTextureManager(), { 15.0f, -15.0f, 0.0f }, 45.0f );
         Floor1 = spawnFloor( gEngineApplication->getTextureManager(), { -15.0f, -15.0f, 0.0f }, -45.0f );
 
