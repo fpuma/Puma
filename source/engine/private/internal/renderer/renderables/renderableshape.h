@@ -1,12 +1,12 @@
 #pragma once
 
+#include <engine/utils/renderdefinitions.h>
 #include <internal/renderer/renderables/irenderable.h>
 #include <utils/geometry/shapes/shape.h>
 #include <utils/containers/containedvector.h>
 
 namespace puma
 {
-    
 
     enum class RenderableShapeType
     {
@@ -38,9 +38,13 @@ namespace puma
     {
     public:
 
+        void fromWorldShape( const Shape& _shape, const Color& _color, bool _solid, const Position& _position, const RotationDegrees& _rotation );
+
         void setAsCircle( s32 _radius, const ScreenPos& _center, const Color& _color, bool _solid );
         void setAsChain( const ShapeScreenPointsList& _points, const Color& _color );
         void setAsPolygon( const ShapeScreenPointsList& _vertices, const Color& _color, bool _solid );
+
+        bool shouldRender() const { return m_shouldRender; }
 
         void render() override;
 
@@ -58,5 +62,6 @@ namespace puma
         RenderableShapeType m_renderableShapeType = RenderableShapeType::RenderableCircle;
         ScreenPos m_position;
         Color m_color;
+        bool m_shouldRender = false;
     };
 }

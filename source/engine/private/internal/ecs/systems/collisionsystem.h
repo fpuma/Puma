@@ -38,7 +38,7 @@ namespace puma
 #endif
         std::set<Entity> m_entities;
         SystemProperties m_properties;
-        physics::WorldID m_worldId = physics::kInvalidPhysicsID;
+        physics::WorldID m_worldId;
 
         struct PhysicsDebugShape
         {

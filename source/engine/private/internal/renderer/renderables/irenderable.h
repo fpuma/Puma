@@ -1,9 +1,11 @@
 #pragma once
 
 #include <engine/utils/position.h>
+#include <engine/utils/renderdefinitions.h>
 #include <texturemanager/texture.h>
 #include <texturemanager/texturedefinitions.h>
 #include <utils/graphics/dimensions.h>
+#include <utils/genericid.h>
 
 namespace puma
 {
@@ -14,5 +16,12 @@ namespace puma
         virtual ~IRenderable() {}
 
         virtual void render() = 0;
+
+        void setRenderLayer( RenderLayer _value ) { m_renderLayer = _value; }
+        RenderLayer getRenderLayer() const { return m_renderLayer; }
+
+    private:
+        
+        RenderLayer m_renderLayer = RenderLayer(0);
     };
 }

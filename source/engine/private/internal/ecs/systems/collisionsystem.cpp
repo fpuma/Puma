@@ -52,7 +52,7 @@ namespace puma
 
         physics::IWorld* world = gPhysics->getWorld( m_worldId );
 
-        physics::FrameID frameId = physics::kInvalidPhysicsID;
+        physics::FrameID frameId;
 
         switch ( _frameType )
         {

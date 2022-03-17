@@ -109,6 +109,6 @@ namespace test
         Shape circleShape;
         circleShape.setAsCircle( { Vec2(), 1.0f } );
 
-        _renderQueue.addRenderableShape( circleShape, Color::Red(), false, locationComponent->getPosition(), 0.0f, true);
+        _renderQueue.addRenderableShape( circleShape, Color::Red(), false, locationComponent->getPosition(), 0.0f, {}, true );
     }
 }

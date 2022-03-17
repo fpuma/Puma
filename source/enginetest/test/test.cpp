@@ -32,6 +32,7 @@
 #include <utils/formatstring.h>
 
 #include <test/systems/ballspawnersystem.h>
+#include <test/systems/staticstuffsystem.h>
 #include <test/components/movedirectioncomponent.h>
 
 #include <texturemanager/itexturemanager.h>
@@ -101,8 +102,13 @@ namespace test
         BallSpawnerSystem* ballSpawnerSystem = gSystems->add<BallSpawnerSystem>();
         assert( nullptr != ballSpawnerSystem );
 
+        gSystems->registerClass<StaticStuffSystem>();
+        StaticStuffSystem* staticStuffSystem = gSystems->add<StaticStuffSystem>();
+        assert( nullptr != staticStuffSystem );
+
         //Init systems
         ballSpawnerSystem->init();
+        staticStuffSystem->init();
         gSystems->updateSystemsProperties();
 
         //Spawn

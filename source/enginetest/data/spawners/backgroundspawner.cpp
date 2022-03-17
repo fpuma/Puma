@@ -20,65 +20,40 @@
 
 namespace test
 {
-    namespace
-    {
-        constexpr float kBallRadius = 1.0f;
-    }
-
-    puma::Entity spawnBall( puma::app::ITextureManager* _textureManager, const puma::Position& _pos )
+    puma::Entity spawnBackground( puma::app::ITextureManager* _textureManager, const puma::Position& _pos )
     {
         puma::Entity result = gProviders->get<puma::IEntityProvider>()->requestEntity();
         puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
 
         puma::ILocationComponent* locationComponent = componentProvider->add<puma::ILocationComponent>( result );
         puma::IRenderComponent* renderComponent = componentProvider->add<puma::IRenderComponent>( result );
-        puma::ICollisionComponent* collisionComponent = componentProvider->add<puma::ICollisionComponent>( result );
 
         puma::IRenderSystem* renderSystem = gSystems->get<puma::IRenderSystem>();
 
         locationComponent->setPosition( _pos );
 
         //Render
-        puma::app::Texture tennisTexture = _textureManager->loadTexture( "../assets/tennisball.png" );
+        puma::app::Texture bricksTexture = _textureManager->loadTexture( "../assets/bricks.jpg" );
         puma::TextureInfo textureInfo;
-        textureInfo.texture = tennisTexture;
-        textureInfo.renderSize = { kBallRadius * 2.0f, kBallRadius * 2.0f };
-        textureInfo.textureSample = { 1.5f,1.5f };
-        textureInfo.renderLayer = puma::RenderLayer( 5 );
+        textureInfo.texture = bricksTexture;
+        textureInfo.renderSize = { 100.0f, 100.0f };
+        textureInfo.textureSample = { 1.0f,1.0f };
+        textureInfo.renderLayer = puma::RenderLayer( 0 );
 
         renderComponent->addTextureInfo( textureInfo );
         renderSystem->registerEntity( result );
 
-
-        //Physics
-        puma::PhysicsFrameInfo frameInfo;
-        frameInfo.position = { _pos.x, _pos.y };
-        gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::PhysicsFrameType::Dynamic );
-
-        puma::Circle ballShape;
-        ballShape.radius = kBallRadius;
-        puma::PhysicsBodyInfo ballBodyInfo;
-        ballBodyInfo.density = 1.0f;
-        ballBodyInfo.shape.setAsCircle( ballShape );
-        ballBodyInfo.collisionIndex = TestCollisionIndexes::Ball;
-        //ballBodyInfo.restitution = 0.0f;
-        ballBodyInfo.restitution = 1.1f;
-
-        collisionComponent->addBody( ballBodyInfo );
-
         return result;
     }
 
-    void unspawnBall( puma::Entity _ballEntity )
+    void unspawnBackground( puma::Entity _ballEntity )
     {
         gSystems->get<puma::IRenderSystem>()->unregisterEntity( _ballEntity );
-        gSystems->get<puma::ICollisionSystem>()->unregisterEntity( _ballEntity );
 
         puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
 
         componentProvider->remove<puma::ILocationComponent>( _ballEntity );
         componentProvider->remove<puma::IRenderComponent>( _ballEntity );
-        componentProvider->remove<puma::ICollisionComponent>( _ballEntity );
 
         gProviders->get<puma::IEntityProvider>()->disposeEntity( _ballEntity );
     }

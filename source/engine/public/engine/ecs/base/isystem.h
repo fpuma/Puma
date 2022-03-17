@@ -11,7 +11,7 @@ namespace puma
 
     class IRenderQueue;
 
-    enum class SystemUpdateFlag
+    enum class SystemUpdateFlag : SystemUpdateBitMask
     {
         Update = 0x1,
         PrePhysicsUpdate = 0x2,

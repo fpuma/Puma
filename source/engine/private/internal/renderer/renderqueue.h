@@ -14,9 +14,14 @@ namespace puma
 
         RenderQueue();
 
-        void addRenderableTexture( const AppTexture& _texture, const AppTextureSample& _textureSample, const RenderSize& _renderSize, const Position& _position, const RotationDegrees& _rotation, bool _debug = false ) override;
-        void addRenderableText( const std::string& _textToRender, const Color& _color, const Position& _position, bool _debug = false ) override;
-        void addRenderableShape( const Shape& _shape, const Color& _color, bool _solid, const Position& _position, const RotationDegrees& _rotation, bool _debug = false ) override;
+        void addRenderableTexture( const AppTexture& _texture, const AppTextureSample& _textureSample, const RenderSize& _renderSize, const Position& _position, const RotationDegrees& _rotation, RenderLayer _renderLayer, bool _debug = false ) override;
+        void addRenderableText( const std::string& _textToRender, const Color& _color, const Position& _position, RenderLayer _renderLayer, bool _debug = false ) override;
+        void addRenderableShape( const Shape& _shape, const Color& _color, bool _solid, const Position& _position, const RotationDegrees& _rotation, RenderLayer _renderLayer, bool _debug = false ) override;
+
+        void addScreenRenderableTexture( const AppTexture& _texture, const AppTextureSample& _textureSample, const Extent& _screenExtent, const RotationDegrees& _rotation, RenderLayer _renderLayer, bool _debug = false ) override;
+        void addScreenRenderableText( const std::string& _textToRender, const Color& _color, const ScreenPos& _screenPos, RenderLayer _renderLayer, bool _debug = false ) override;
+
+        void sortByRenderLayer();
 
         void render();
 

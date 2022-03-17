@@ -5,6 +5,8 @@
 
 namespace puma
 {
+    DECLARE_GENERIC_ID( RenderLayer, u32, kMaxU32 )
+
     struct RenderSize
     {
         float x = 0.0f;
@@ -17,6 +19,7 @@ namespace puma
         AppTextureSample textureSample;
         Position offset;
         RenderSize renderSize;
+        RenderLayer renderLayer;
     };
 
     using RotationDegrees = float;

@@ -35,5 +35,6 @@ namespace puma
     void EngineRenderer::queueRenderables()
     {
         gInternalSystems->queueRenderables( m_renderQueue );
+        m_renderQueue.sortByRenderLayer();
     }
 }

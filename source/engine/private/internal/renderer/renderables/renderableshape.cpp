@@ -2,10 +2,104 @@
 
 #include "renderableshape.h"
 #include <application/irenderer.h>
+#include <internal/renderer/enginerendererhelpers.h>
 #include <internal/services/engineapplicationservice.h>
+#include <utils/geometry/geometryhelpers.h>
 
 namespace puma
 {
+
+    void RenderableShape::fromWorldShape( const Shape& _shape, const Color& _color, bool _solid, const Position& _position, const RotationDegrees& _rotation )
+    {
+        Vec2 flattenedPos = { _position.x, _position.y };
+        Rectangle frustum; 
+        float metersPerPixel = 0.0f;
+        erh::getCameraInfo( frustum, metersPerPixel );
+
+        switch ( _shape.getShapeType() )
+        {
+        case ShapeType::Chain:
+        {
+            const Chain& chain = _shape.getAsChain();
+
+            Chain newChain;
+
+            std::transform( chain.points.begin(), chain.points.end(), std::back_inserter( newChain.points ), [&]( const Vec2& point )
+            {
+                Vec2 newPoint = GeometryHelpers::rotatePoint2D( point, _rotation );
+                newPoint = newPoint + flattenedPos;
+                return newPoint;
+            } );
+
+            if ( erh::shouldRender( newChain.points, frustum ) )
+            {
+                ShapeScreenPointsList screenChain;
+
+                std::transform( newChain.points.begin(), newChain.points.end(), std::back_inserter( screenChain ), [&]( const Vec2& chainPoint )
+                {
+                    return erh::worldPointToScreen( chainPoint, frustum, metersPerPixel );
+                } );
+
+                setAsChain( screenChain, _color );
+                m_shouldRender = true;
+            }
+
+            break;
+        }
+        case ShapeType::Circle:
+        {
+            Circle circle = _shape.getAsCircle();
+
+            Vec2 circleWorldPosition = circle.center + flattenedPos;
+            Vec2 upperBoundOffset = { circle.radius, circle.radius };
+            Vec2 lowerBoundOffset = { -circle.radius, -circle.radius };
+
+            Rectangle circleAABB = { upperBoundOffset, lowerBoundOffset };
+
+            if ( erh::shouldRender( circleAABB, frustum ) )
+            {
+                ScreenPos centerScreenPos = erh::worldPointToScreen( circleWorldPosition, frustum, metersPerPixel );
+                s32 radiusInPixels = (s32)(circle.radius / metersPerPixel);
+
+                setAsCircle( radiusInPixels, centerScreenPos, _color, _solid );
+                m_shouldRender = true;
+            }
+
+            break;
+        }
+        case ShapeType::Polygon:
+        {
+            Polygon polygon = _shape.getAsPolygon();
+
+            Polygon newPolygon;
+
+            std::transform( polygon.vertices.begin(), polygon.vertices.end(), std::back_inserter( newPolygon.vertices ), [&]( const Vec2& point )
+            {
+                Vec2 newPoint = GeometryHelpers::rotatePoint2D( point, _rotation );
+                newPoint = newPoint + flattenedPos;
+                return newPoint;
+            } );
+
+            if ( erh::shouldRender( newPolygon.vertices, frustum ) )
+            {
+                ShapeScreenPointsList screenPolygon;
+
+                std::transform( newPolygon.vertices.begin(), newPolygon.vertices.end(), std::back_inserter( screenPolygon ), [&]( const Vec2& polygonPoint )
+                {
+                    return erh::worldPointToScreen( polygonPoint, frustum, metersPerPixel );
+                } );
+
+                setAsPolygon( screenPolygon, _color, _solid );
+                m_shouldRender = true;
+            }
+            break;
+        }
+        default:
+            assert( false ); //Unsupported shape type.
+            break;
+        }
+    }
+
     void RenderableShape::setAsCircle( s32 _radius, const ScreenPos& _center, const Color& _color, bool _solid )
     {
         RenderableCircle circle;
