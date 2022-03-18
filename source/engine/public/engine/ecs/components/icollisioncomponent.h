@@ -12,19 +12,19 @@ namespace puma
 
         virtual ~ICollisionComponent(){}
 
-        virtual PhysicsFrameType getFrameType() const = 0;
+        virtual LeoFrameType getFrameType() const = 0;
 
-        virtual const PhysicsDynamicFrame* getDynamicFrame() const = 0;
-        virtual PhysicsDynamicFrame* getDynamicFrame() = 0;
+        virtual const LeoDynamicFrame* getDynamicFrame() const = 0;
+        virtual LeoDynamicFrame* getDynamicFrame() = 0;
 
-        virtual const PhysicsKinematicFrame* getKinematicFrame() const = 0;
-        virtual PhysicsKinematicFrame* getKinematicFrame() = 0;
+        virtual const LeoKinematicFrame* getKinematicFrame() const = 0;
+        virtual LeoKinematicFrame* getKinematicFrame() = 0;
 
-        virtual const PhysicsStaticFrame* getStaticFrame() const = 0;
-        virtual PhysicsStaticFrame* getStaticFrame() = 0;
+        virtual const LeoStaticFrame* getStaticFrame() const = 0;
+        virtual LeoStaticFrame* getStaticFrame() = 0;
 
-        virtual void addBody( const PhysicsBodyInfo& _bodyInfo ) = 0;
-        virtual void addTrigger( const PhysicsTriggerInfo& _triggerInfo ) = 0;
+        virtual void addBody( const LeoBodyInfo& _bodyInfo ) = 0;
+        virtual void addTrigger( const LeoTriggerInfo& _triggerInfo ) = 0;
 
         virtual bool isValid() const = 0;
 

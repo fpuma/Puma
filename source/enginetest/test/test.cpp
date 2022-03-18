@@ -169,16 +169,16 @@ namespace test
         gSystems->get<puma::IRenderSystem>()->registerEntity( result );
 
         //Physics
-        puma::PhysicsFrameInfo frameInfo;
+        puma::LeoFrameInfo frameInfo;
         frameInfo.position = { _pos.x, _pos.y };
         frameInfo.angle = _angle;
 
-        gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::PhysicsFrameType::Static );
+        gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::LeoFrameType::Static );
 
         puma::Rectangle floorShape;
         floorShape.lowerBoundary = { -20.0f, -4.0f };
         floorShape.upperBoundary = { 20.0f, 4.0f };
-        puma::PhysicsBodyInfo floorBodyInfo;
+        puma::LeoBodyInfo floorBodyInfo;
         floorBodyInfo.collisionIndex = TestCollisionIndexes::Floor;
         floorBodyInfo.shape.setAsPolygon( floorShape );
         floorBodyInfo.restitution = 0.0f;

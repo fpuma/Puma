@@ -11,17 +11,17 @@ namespace puma
     {
     public:
 
-        PhysicsService() { m_physics = physics::IPhysics::create(); }
+        PhysicsService() { m_physics = leo::IPhysics::create(); }
 
         ~PhysicsService() { m_physics.reset(); }
 
-        physics::IPhysics* get() { return m_physics.get(); }
+        leo::IPhysics* get() { return m_physics.get(); }
 
         void uninit() {}
 
     private:
 
-        std::unique_ptr<physics::IPhysics> m_physics;
+        std::unique_ptr<leo::IPhysics> m_physics;
     };
 
 }

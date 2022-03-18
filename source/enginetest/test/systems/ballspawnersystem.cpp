@@ -96,7 +96,7 @@ namespace test
 
         moveDirectionComponent->setDirection( currentDir );
         puma::ICollisionComponent* collisionComponent = componentProvider->get<puma::ICollisionComponent>( _spawner );
-        PhysicsDynamicFrame* dynamicFrame = collisionComponent->getDynamicFrame();
+        LeoDynamicFrame* dynamicFrame = collisionComponent->getDynamicFrame();
         dynamicFrame->setLinearVelocity( currentDir * m_spawnerSpeed );
     }
 

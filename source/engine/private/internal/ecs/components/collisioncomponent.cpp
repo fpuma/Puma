@@ -9,7 +9,7 @@
 namespace puma
 {
 
-    void CollisionComponent::init( PhysicsFrameType _frameType, PhysicsFrameID _frameId )
+    void CollisionComponent::init( LeoFrameType _frameType, LeoFrameID _frameId )
     {
         assert( !isValid() );
 
@@ -19,13 +19,13 @@ namespace puma
 
     void CollisionComponent::uninit()
     { 
-        physics::IFrame* frame = gPhysics->getFrame( m_frameId );
-        for ( const PhysicsFramePartID& framePartId : m_bodyIds )
+        leo::IFrame* frame = gPhysics->getFrame( m_frameId );
+        for ( const LeoFramePartID& framePartId : m_bodyIds )
         {
             frame->removeFramePart( framePartId );
         }
 
-        for ( const PhysicsFramePartID framePartId : m_triggerIds )
+        for ( const LeoFramePartID framePartId : m_triggerIds )
         {
             frame->removeFramePart( framePartId );
         }
@@ -34,82 +34,82 @@ namespace puma
         m_triggerIds.clear();
 
         m_frameId.invalidate(); 
-        m_frameType = PhysicsFrameType::Invalid; 
+        m_frameType = LeoFrameType::Invalid; 
     }
     
-    const PhysicsDynamicFrame* CollisionComponent::getDynamicFrame() const
+    const LeoDynamicFrame* CollisionComponent::getDynamicFrame() const
     {
-        assert( PhysicsFrameType::Dynamic == m_frameType );
-        if ( PhysicsFrameType::Dynamic == m_frameType )
+        assert( LeoFrameType::Dynamic == m_frameType );
+        if ( LeoFrameType::Dynamic == m_frameType )
         {
             return gPhysics->getDynamicFrame( m_frameId );
         }
         return nullptr;
     }
 
-    PhysicsDynamicFrame* CollisionComponent::getDynamicFrame()
+    LeoDynamicFrame* CollisionComponent::getDynamicFrame()
     {
-        assert( PhysicsFrameType::Dynamic == m_frameType );
-        if ( PhysicsFrameType::Dynamic == m_frameType )
+        assert( LeoFrameType::Dynamic == m_frameType );
+        if ( LeoFrameType::Dynamic == m_frameType )
         {
             return gPhysics->getDynamicFrame( m_frameId );
         }
         return nullptr;
     }
 
-    const PhysicsKinematicFrame* CollisionComponent::getKinematicFrame() const
+    const LeoKinematicFrame* CollisionComponent::getKinematicFrame() const
     {
-        assert( PhysicsFrameType::Kinematic == m_frameType );
-        if ( PhysicsFrameType::Kinematic == m_frameType )
+        assert( LeoFrameType::Kinematic == m_frameType );
+        if ( LeoFrameType::Kinematic == m_frameType )
         {
             return gPhysics->getKinematicFrame( m_frameId );
         }
         return nullptr;
     }
 
-    PhysicsKinematicFrame* CollisionComponent::getKinematicFrame()
+    LeoKinematicFrame* CollisionComponent::getKinematicFrame()
     {
-        assert( PhysicsFrameType::Static == m_frameType );
-        assert( PhysicsFrameType::Kinematic == m_frameType );
-        if ( PhysicsFrameType::Kinematic == m_frameType )
+        assert( LeoFrameType::Static == m_frameType );
+        assert( LeoFrameType::Kinematic == m_frameType );
+        if ( LeoFrameType::Kinematic == m_frameType )
         {
             return gPhysics->getKinematicFrame( m_frameId );
         }
         return nullptr;
     }
 
-    const PhysicsStaticFrame* CollisionComponent::getStaticFrame() const
+    const LeoStaticFrame* CollisionComponent::getStaticFrame() const
     {
-        assert( PhysicsFrameType::Static == m_frameType );
-        if ( PhysicsFrameType::Static == m_frameType )
+        assert( LeoFrameType::Static == m_frameType );
+        if ( LeoFrameType::Static == m_frameType )
         {
             return gPhysics->getStaticFrame( m_frameId );
         }
         return nullptr;
     }
-    PhysicsStaticFrame* CollisionComponent::getStaticFrame()
+    LeoStaticFrame* CollisionComponent::getStaticFrame()
     {
-        assert( PhysicsFrameType::Static == m_frameType );
-        if ( PhysicsFrameType::Static == m_frameType )
+        assert( LeoFrameType::Static == m_frameType );
+        if ( LeoFrameType::Static == m_frameType )
         {
             return gPhysics->getStaticFrame( m_frameId );
         }
         return nullptr;
     }
 
-    void CollisionComponent::addBody( const PhysicsBodyInfo& _bodyInfo )
+    void CollisionComponent::addBody( const LeoBodyInfo& _bodyInfo )
     {
         assert( isValid() );
 
-        physics::IFrame* frame = gPhysics->getFrame( m_frameId );
+        leo::IFrame* frame = gPhysics->getFrame( m_frameId );
         m_bodyIds.emplace_back( frame->addBody( _bodyInfo ) );
     }
 
-    void CollisionComponent::addTrigger( const PhysicsTriggerInfo& _triggerInfo )
+    void CollisionComponent::addTrigger( const LeoTriggerInfo& _triggerInfo )
     {
         assert( isValid() );
 
-        physics::IFrame* frame = gPhysics->getFrame( m_frameId );
+        leo::IFrame* frame = gPhysics->getFrame( m_frameId );
         m_bodyIds.emplace_back( frame->addTrigger( _triggerInfo ) );
     }
 }

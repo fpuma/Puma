@@ -51,13 +51,13 @@ namespace test
 
 
         //Physics
-        puma::PhysicsFrameInfo frameInfo;
+        puma::LeoFrameInfo frameInfo;
         frameInfo.position = { _pos.x, _pos.y };
-        gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::PhysicsFrameType::Dynamic );
+        gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::LeoFrameType::Dynamic );
 
         puma::Circle ballShape;
         ballShape.radius = kBallRadius;
-        puma::PhysicsBodyInfo ballBodyInfo;
+        puma::LeoBodyInfo ballBodyInfo;
         ballBodyInfo.density = 1.0f;
         ballBodyInfo.shape.setAsCircle( ballShape );
         ballBodyInfo.collisionIndex = TestCollisionIndexes::Ball;

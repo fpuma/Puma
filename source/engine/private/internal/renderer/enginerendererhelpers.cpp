@@ -86,11 +86,11 @@ namespace puma::erh
 
         Rectangle aabb = { {itMaxPointX->x, itMaxPointY->y}, {itMinPointX->x, itMinPointY->y} };
 
-        return physics::areShapesOverLapping( aabb, _frustum );
+        return leo::areShapesOverLapping( aabb, _frustum );
     }
 
     bool shouldRender( const Rectangle& _aabb, const Rectangle& _frustum )
     {
-        return physics::areShapesOverLapping( _aabb, _frustum );
+        return leo::areShapesOverLapping( _aabb, _frustum );
     }
 }

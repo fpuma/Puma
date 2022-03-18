@@ -4,7 +4,7 @@
 
 namespace test
 {
-    const puma::PhysicsCollisionIndex TestCollisionIndexes::Ball = puma::PhysicsCollisionIndex( 1 );
-    const puma::PhysicsCollisionIndex TestCollisionIndexes::Floor = puma::PhysicsCollisionIndex( 2 );
-    const puma::PhysicsCollisionIndex TestCollisionIndexes::BallSpawner = puma::PhysicsCollisionIndex( 3 );
+    const puma::LeoCollisionIndex TestCollisionIndexes::Ball = puma::LeoCollisionIndex( 1 );
+    const puma::LeoCollisionIndex TestCollisionIndexes::Floor = puma::LeoCollisionIndex( 2 );
+    const puma::LeoCollisionIndex TestCollisionIndexes::BallSpawner = puma::LeoCollisionIndex( 3 );
 }

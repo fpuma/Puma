@@ -30,7 +30,7 @@ namespace puma
         std::unique_ptr<PhysicsDebugDraw> physicsDebugDraw = std::make_unique<PhysicsDebugDraw>();
         physicsDebugDraw->dbgShapesPtr = &m_debugShapes;
 
-        physics::IWorld* world = gPhysics->getWorld( m_worldId );
+        leo::IWorld* world = gPhysics->getWorld( m_worldId );
         world->setDebugDraw( std::move(physicsDebugDraw) );
 #endif
     }
@@ -42,7 +42,7 @@ namespace puma
         gPhysics->removeWorld( m_worldId );
     }
 
-    void CollisionSystem::registerEntity( Entity _entity, physics::FrameInfo _frameInfo, physics::FrameType _frameType )
+    void CollisionSystem::registerEntity( Entity _entity, LeoFrameInfo _frameInfo, LeoFrameType _frameType )
     {
         assert( entityComponentCheck( _entity ) ); //This entity does not have the necessary components to be registered into this system
 
@@ -50,15 +50,15 @@ namespace puma
 
         assert( nullptr != componentProvider );
 
-        physics::IWorld* world = gPhysics->getWorld( m_worldId );
+        leo::IWorld* world = gPhysics->getWorld( m_worldId );
 
-        physics::FrameID frameId;
+        LeoFrameID frameId;
 
         switch ( _frameType )
         {
-        case physics::FrameType::Dynamic:    frameId = world->addDynamicFrame( _frameInfo ); break;
-        case physics::FrameType::Static:     frameId = world->addStaticFrame( _frameInfo ); break;
-        case physics::FrameType::Kinematic:  frameId = world->addKinematicFrame( _frameInfo ); break;
+        case LeoFrameType::Dynamic:    frameId = world->addDynamicFrame( _frameInfo ); break;
+        case LeoFrameType::Static:     frameId = world->addStaticFrame( _frameInfo ); break;
+        case LeoFrameType::Kinematic:  frameId = world->addKinematicFrame( _frameInfo ); break;
         default: assert( false ); break;
         }
 
@@ -72,11 +72,11 @@ namespace puma
     {
         assert( m_entities.find( _entity ) != m_entities.end() ); //This entity is not registered to this system
 
-        physics::IWorld* world = gPhysics->getWorld( m_worldId );
+        leo::IWorld* world = gPhysics->getWorld( m_worldId );
         ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
         CollisionComponent* collisionComponent = componentProvider->get<CollisionComponent>( _entity );
 
-        physics::FrameID frameToRemove = collisionComponent->getFrameID();
+        LeoFrameID frameToRemove = collisionComponent->getFrameID();
 
         assert( nullptr != collisionComponent );
 
@@ -96,7 +96,7 @@ namespace puma
             CollisionComponent* collisionComponent = componentProvider->get<CollisionComponent>( entity );
             shouldUpdate = shouldUpdate && collisionComponent->isEnabled();
 
-            physics::IFrame* physicsFrame = gPhysics->getFrame( collisionComponent->getFrameID() );
+            leo::IFrame* physicsFrame = gPhysics->getFrame( collisionComponent->getFrameID() );
 
             if ( shouldUpdate )
             {
@@ -113,7 +113,7 @@ namespace puma
         }
 
 #ifdef PHYSICS_DEBUG_RENDER
-        physics::IWorld* world = gPhysics->getWorld( m_worldId );
+        leo::IWorld* world = gPhysics->getWorld( m_worldId );
         m_debugShapes.clear();
         world->debugDraw();
 #endif
@@ -140,7 +140,7 @@ namespace puma
         return gPhysics->getWorld( m_worldId )->getGravity();
     }
 
-    void CollisionSystem::setCollisionCompatibility( const physics::CollisionCompatibility& _collisionCompatibility )
+    void CollisionSystem::setCollisionCompatibility( const LeoCollisionCompatibility& _collisionCompatibility )
     {
         gPhysics->getWorld( m_worldId )->setCollisionCompatibility( _collisionCompatibility );
     }
@@ -157,13 +157,13 @@ namespace puma
 
     namespace
     {
-        Color floatToIntColor( physics::RGBA _color )
+        Color floatToIntColor( leo::RGBA _color )
         {
             return { (u8)(_color.r * 255), (u8)(_color.g * 255), (u8)(_color.b * 255), (u8)(_color.a * 255) };
         }
     }
 
-    void CollisionSystem::PhysicsDebugDraw::renderPolygon( const std::vector<Vec2>&& _vertices, const physics::RGBA&& _color )
+    void CollisionSystem::PhysicsDebugDraw::renderPolygon( const std::vector<Vec2>&& _vertices, const leo::RGBA&& _color )
     {
         PhysicsDebugShape physicsDbgShape;
         physicsDbgShape.color = floatToIntColor( _color );
@@ -180,7 +180,7 @@ namespace puma
         dbgShapesPtr->push_back( physicsDbgShape );
     }
 
-    void CollisionSystem::PhysicsDebugDraw::renderSolidPolygon( const std::vector<Vec2>&& _vertices, const physics::RGBA&& _color )
+    void CollisionSystem::PhysicsDebugDraw::renderSolidPolygon( const std::vector<Vec2>&& _vertices, const leo::RGBA&& _color )
     {
         PhysicsDebugShape physicsDbgShape;
         physicsDbgShape.color = floatToIntColor( _color );
@@ -196,7 +196,7 @@ namespace puma
         dbgShapesPtr->push_back( physicsDbgShape );
     }
 
-    void CollisionSystem::PhysicsDebugDraw::renderCircle( const Vec2&& _center, float _radius, const physics::RGBA&& _color )
+    void CollisionSystem::PhysicsDebugDraw::renderCircle( const Vec2&& _center, float _radius, const leo::RGBA&& _color )
     {
         PhysicsDebugShape physicsDbgShape;
         physicsDbgShape.color = floatToIntColor( _color );
@@ -210,7 +210,7 @@ namespace puma
         dbgShapesPtr->push_back( physicsDbgShape );
     }
 
-    void CollisionSystem::PhysicsDebugDraw::renderSolidCircle( const Vec2&& _center, float _radius, const physics::RGBA&& _color )
+    void CollisionSystem::PhysicsDebugDraw::renderSolidCircle( const Vec2&& _center, float _radius, const leo::RGBA&& _color )
     {
         PhysicsDebugShape physicsDbgShape;
         physicsDbgShape.color = floatToIntColor( _color );
@@ -224,7 +224,7 @@ namespace puma
         dbgShapesPtr->push_back( physicsDbgShape );
     }
 
-    void CollisionSystem::PhysicsDebugDraw::renderSegment( const Vec2&& _point1, const Vec2&& _point2, const physics::RGBA&& _color )
+    void CollisionSystem::PhysicsDebugDraw::renderSegment( const Vec2&& _point1, const Vec2&& _point2, const leo::RGBA&& _color )
     {
         PhysicsDebugShape physicsDbgShape;
         physicsDbgShape.color = floatToIntColor( _color );

@@ -6,12 +6,12 @@ namespace test
 {
     const struct TestCollisionIndexes
     {
-        static const puma::PhysicsCollisionIndex Ball;
-        static const puma::PhysicsCollisionIndex Floor;
-        static const puma::PhysicsCollisionIndex BallSpawner;
+        static const puma::LeoCollisionIndex Ball;
+        static const puma::LeoCollisionIndex Floor;
+        static const puma::LeoCollisionIndex BallSpawner;
     };
 
-    static const puma::PhysicsCollisionCompatibility kCollisionCompatibility =
+    static const puma::LeoCollisionCompatibility kCollisionCompatibility =
     {
         { TestCollisionIndexes::Ball, TestCollisionIndexes::Floor },
         { TestCollisionIndexes::BallSpawner, TestCollisionIndexes::Floor },

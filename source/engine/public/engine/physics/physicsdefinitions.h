@@ -12,31 +12,31 @@
 
 namespace puma
 {
-    using PhysicsFrameInfo = physics::FrameInfo;
-    using PhysicsBodyInfo = physics::BodyInfo;
-    using PhysicsTriggerInfo = physics::TriggerInfo;
+    using LeoFrameInfo = leo::FrameInfo;
+    using LeoBodyInfo = leo::BodyInfo;
+    using LeoTriggerInfo = leo::TriggerInfo;
 
-    using PhysicsDynamicFrame = physics::IDynamicFrame;
-    using PhysicsKinematicFrame = physics::IKinematicFrame;
-    using PhysicsStaticFrame = physics::IStaticFrame;
+    using LeoDynamicFrame = leo::IDynamicFrame;
+    using LeoKinematicFrame = leo::IKinematicFrame;
+    using LeoStaticFrame = leo::IStaticFrame;
 
-    using PhysicsBodyPart = physics::IFrameBody;
-    using PhysicsTriggerPart = physics::IFrameTrigger;
+    using LeoBodyPart = leo::IFrameBody;
+    using LeoTriggerPart = leo::IFrameTrigger;
 
-    using PhysicsCollisionIndex = physics::CollisionIndex;
+    using LeoCollisionIndex = leo::CollisionIndex;
 
-    constexpr PhysicsCollisionIndex kPhysicsDefaultCollisionIndex = physics::kDefaultCollisionID;
-    constexpr u32 kPhysicsMaxCollisionCategories = physics::kMaxCollisionCateogries;
-    using PhysicsCollisionRelation = physics::CollisionRelation;
-    using PhysicsCollisionCompatibility = physics::CollisionCompatibility;
-    using PhyscisCollisionMask = physics::CollisionMask;
-    using PhysicsUserCollisionData = physics::UserCollisionData;
+    constexpr LeoCollisionIndex kLeoDefaultCollisionIndex = leo::kDefaultCollisionID;
+    constexpr u32 kLeoMaxCollisionCategories = leo::kMaxCollisionCateogries;
+    using LeoCollisionRelation = leo::CollisionRelation;
+    using LeoCollisionCompatibility = leo::CollisionCompatibility;
+    using LeoCollisionMask = leo::CollisionMask;
+    using LeoUserCollisionData = leo::UserCollisionData;
 
-    using PhysicsFrameType = physics::FrameType;
-    using PhysicsFramePartType = physics::FramePartType;
+    using LeoFrameType = leo::FrameType;
+    using LeoFramePartType = leo::FramePartType;
 
-    using PhysicsWorldID = physics::WorldID;
-    using PhysicsFrameID = physics::FrameID;
-    using PhysicsFramePartID = physics::FramePartID;
+    using LeoWorldID = leo::WorldID;
+    using LeoFrameID = leo::FrameID;
+    using LeoFramePartID = leo::FramePartID;
 
 }

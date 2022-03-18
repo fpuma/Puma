@@ -11,6 +11,7 @@
 #include <engine/ecs/components/icollisioncomponent.h>
 #include <engine/ecs/systems/iinputsystem.h>
 #include <engine/ecs/systems/icollisionsystem.h>
+#include <engine/physics/physicsdefinitions.h>
 #include <engine/services/isystemsservice.h>
 #include <engine/services/iprovidersservice.h>
 
@@ -45,13 +46,13 @@ namespace test
             inputComponent->addInputMap( controllerInputPair.first, controllerInputPair.second );
         }
 
-        puma::PhysicsFrameInfo frameInfo;
+        puma::LeoFrameInfo frameInfo;
         frameInfo.position = { locationComponent->getPosition().x, locationComponent->getPosition().y };
         frameInfo.gravityScale = 0.0f;
         frameInfo.preventRotation = true;
-        gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::PhysicsFrameType::Dynamic );
+        gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::LeoFrameType::Dynamic );
 
-        puma::PhysicsBodyInfo bodyInfo;
+        puma::LeoBodyInfo bodyInfo;
         bodyInfo.collisionIndex = TestCollisionIndexes::BallSpawner;
 
         bodyInfo.shape.setAsCircle( { puma::Vec2(), 1.0f } );
