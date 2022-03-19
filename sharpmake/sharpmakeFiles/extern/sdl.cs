@@ -4,7 +4,7 @@ namespace Export
     class SDLgfx : Puma.Common.IExternBinaries
     {
         public SDLgfx()
-            : base("SDLgfx", @"gfx2dappmodule\extern\SDL2_gfx-1.0.1")
+            : base("SDLgfx", @"nina\extern\SDL2_gfx-1.0.1")
         { }
 
         public override void ConfigureIncludes(Configuration conf, Sharpmake.Target target)
@@ -32,7 +32,7 @@ namespace Export
     class SDL : Puma.Common.IExternBinaries
     {
         public SDL()
-            : base("ExternSDL", @"gfx2dappmodule\extern\SDL2-2.0.10")
+            : base("ExternSDL", @"nina\extern\SDL2-2.0.10")
         { }
 
         public override void ConfigureIncludes(Configuration conf, Sharpmake.Target target)
@@ -57,7 +57,7 @@ namespace Export
     class SDLImage : Puma.Common.IExternBinaries
     {
         public SDLImage()
-            : base("ExternSDLImage", @"gfx2dappmodule\extern\SDL2_image-2.0.5")
+            : base("ExternSDLImage", @"nina\extern\SDL2_image-2.0.5")
         { }
 
         public override void ConfigureIncludes(Configuration conf, Sharpmake.Target target)
@@ -85,7 +85,7 @@ namespace Export
     class SDLTtf : Puma.Common.IExternBinaries
     {
         public SDLTtf()
-            : base("ExternSDLImage", @"gfx2dappmodule\extern\SDL2_ttf-2.0.15")
+            : base("ExternSDLImage", @"nina\extern\SDL2_ttf-2.0.15")
         { }
 
         public override void ConfigureIncludes(Configuration conf, Sharpmake.Target target)

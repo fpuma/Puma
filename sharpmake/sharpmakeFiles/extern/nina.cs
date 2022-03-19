@@ -3,9 +3,9 @@ namespace Puma
     [Sharpmake.Generate]
     class Nina : Puma.Common.IExternLib
     {
-        public static readonly string SharedFilesPath = Puma.SharpmakeUtils.GetExternPath() + @"\gfx2dappmodule\source\nina\shared";
+        public static readonly string SharedFilesPath = Puma.SharpmakeUtils.GetExternPath() + @"\nina\source\nina\shared";
         public Nina()
-            : base("Nina", @"gfx2dappmodule\source\nina")
+            : base("Nina", @"nina\source\nina")
         { }
 
         public override void ConfigureAll(Configuration conf, Sharpmake.Target target)
