@@ -29,16 +29,16 @@ namespace puma
 
     EngineApplication::EngineApplication()
     {
-        m_application = app::IApplication::create();
+        m_application = nina::IApplication::create();
         m_application->getLogger()->addOutput<ConsoleLogOutput>();
     }
 
     void EngineApplication::init( Extent _windowExtent, const char* _windowName )
     {
         m_application->init();
-        app::WindowHandle windowHandle = m_application->createWindow( _windowExtent, _windowName );
+        nina::WindowHandle windowHandle = m_application->createWindow( _windowExtent, _windowName );
         
-        assert( windowHandle != app::kInvalidWindowHandle );
+        assert( windowHandle != nina::kInvalidWindowHandle );
 
         m_window = m_application->getWindow( windowHandle );
         if ( m_window->getRenderer()->isValid() )
@@ -47,7 +47,7 @@ namespace puma
             m_textureManager = m_window->getRenderer()->getTextureManager();
         }
 
-        m_input = AppInput::create();
+        m_input = NinaInput::create();
         m_input->init();
     }
 

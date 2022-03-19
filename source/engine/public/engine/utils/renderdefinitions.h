@@ -15,8 +15,8 @@ namespace puma
 
     struct TextureInfo
     {
-        AppTexture texture;
-        AppTextureSample textureSample;
+        NinaTexture texture;
+        NinaTextureSample textureSample;
         Position offset;
         RenderSize renderSize;
         RenderLayer renderLayer;

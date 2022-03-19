@@ -79,7 +79,7 @@ namespace test
     void initWindow();
     void initPhysics();
 
-    puma::Entity spawnFloor( puma::app::ITextureManager* _textureManager, const puma::Position& _pos, float _angle );
+    puma::Entity spawnFloor( NinaTextureManager* _textureManager, const puma::Position& _pos, float _angle );
     void unspawnFloor( puma::Entity _floorEntity );
 
     void setCamera()
@@ -147,7 +147,7 @@ namespace test
         collisitonSystemPtr->setCollisionCompatibility( kCollisionCompatibility );
     }
 
-    puma::Entity spawnFloor( puma::app::ITextureManager* _textureManager, const puma::Position& _pos, float _angle )
+    puma::Entity spawnFloor( NinaTextureManager* _textureManager, const puma::Position& _pos, float _angle )
     {
         puma::Entity result = gProviders->get<puma::IEntityProvider>()->requestEntity();
         puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
@@ -159,7 +159,7 @@ namespace test
         locationComponent->setPosition( _pos );
 
         //Render
-        puma::app::Texture greenTexture = _textureManager->loadTexture( "../assets/green.png" );
+        puma::NinaTexture greenTexture = _textureManager->loadTexture( "../assets/green.png" );
         puma::TextureInfo textureInfo;
         textureInfo.texture = greenTexture;
         textureInfo.renderSize = { 40.0f, 8.0f };

@@ -58,7 +58,7 @@ namespace puma
 
     InputEvalResult InputMap::evaluate() const
     {
-        const AppInput* input = gInternalEngineApplication->getInput();
+        const NinaInput* input = gInternalEngineApplication->getInput();
 
         assert( nullptr != input ); //Input was not initialized?
 
@@ -68,7 +68,7 @@ namespace puma
         {
         case MousePosition:
         {
-            const AppMouse& mouse = input->getMouse();
+            const NinaMouse& mouse = input->getMouse();
             result.active = mouse.wasMousePositionUpdated();
             if ( result.active )
             {
@@ -79,13 +79,13 @@ namespace puma
         }
         case MouseButton:
         {
-            const AppMouse& mouse = input->getMouse();
-            const AppKeyboard& keyboard = input->getKeyboard();
+            const NinaMouse& mouse = input->getMouse();
+            const NinaKeyboard& keyboard = input->getKeyboard();
 
             const auto& deviceInput = m_inputMap.mouseButton;
 
             result.active = deviceInput.modifier != InputModifier::NONE ?
-                            keyboard.keyState( static_cast<AppKeyboardKey>(deviceInput.modifier) ) :
+                            keyboard.keyState( static_cast<NinaKeyboardKey>(deviceInput.modifier) ) :
                             true;
 
             switch ( deviceInput.state )
@@ -100,16 +100,16 @@ namespace puma
         }
         case MouseWheel:
         {
-            const AppMouse& mouse = input->getMouse();
-            const AppKeyboard& keyboard = input->getKeyboard();
+            const NinaMouse& mouse = input->getMouse();
+            const NinaKeyboard& keyboard = input->getKeyboard();
 
             const auto& deviceInput = m_inputMap.mouseWheel;
 
             result.active = deviceInput.modifier != InputModifier::NONE ?
-                            keyboard.keyState( static_cast<AppKeyboardKey>(deviceInput.modifier) ) :
+                            keyboard.keyState( static_cast<NinaKeyboardKey>(deviceInput.modifier) ) :
                             true;
 
-            if ( deviceInput.mouseWheel != AppMouseWheel::MW_IDLE )
+            if ( deviceInput.mouseWheel != NinaMouseWheel::MW_IDLE )
             {
                 result.active &= (mouse.getMouseWheelState() == deviceInput.mouseWheel);
             }
@@ -118,12 +118,12 @@ namespace puma
         }
         case KeyboardKey:
         {
-            const AppKeyboard& keyboard = input->getKeyboard();
+            const NinaKeyboard& keyboard = input->getKeyboard();
 
             const auto& deviceInput = m_inputMap.keyboard;
 
             result.active = deviceInput.modifier != InputModifier::NONE ?
-                            keyboard.keyState( static_cast<AppKeyboardKey>(deviceInput.modifier) ) :
+                            keyboard.keyState( static_cast<NinaKeyboardKey>(deviceInput.modifier) ) :
                             true;
 
             switch ( deviceInput.state )
@@ -143,7 +143,7 @@ namespace puma
 
             const auto& deviceInput = m_inputMap.controllerButton;
             
-            const AppController& controller = input->getController( deviceInput.controllerId );
+            const NinaController& controller = input->getController( deviceInput.controllerId );
 
             switch ( deviceInput.state )
             {
@@ -162,11 +162,11 @@ namespace puma
 
             const auto& deviceInput = m_inputMap.controllerTrigger;
 
-            const AppController& controller = input->getController( deviceInput.controllerId );
+            const NinaController& controller = input->getController( deviceInput.controllerId );
 
             switch ( deviceInput.controllerTrigger )
             {
-            case AppControllerTrigger::CT_LTRIGGER:
+            case NinaControllerTrigger::CT_LTRIGGER:
             {
                 result.active = controller.wasLeftTriggerUpdated();
                 if ( result.active )
@@ -176,7 +176,7 @@ namespace puma
                 }
                 break;
             }
-            case AppControllerTrigger::CT_RTRIGGER:
+            case NinaControllerTrigger::CT_RTRIGGER:
             {
                 result.active = controller.wasRightTriggerUpdated();
                 if ( result.active )
@@ -199,7 +199,7 @@ namespace puma
 
             const auto& deviceInput = m_inputMap.controllerJoystick;
 
-            const AppController& controller = input->getController( deviceInput.controllerId );
+            const NinaController& controller = input->getController( deviceInput.controllerId );
 
             switch ( deviceInput.controllerJoystick )
             {

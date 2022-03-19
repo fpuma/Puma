@@ -17,7 +17,7 @@ namespace puma
         virtual void uninit() = 0;
         virtual void update() = 0;
 
-        virtual AppTextureManager* getTextureManager() const = 0;
+        virtual NinaTextureManager* getTextureManager() const = 0;
 
         virtual void setCameraEntity( Entity _cameraEntity ) = 0;
     };

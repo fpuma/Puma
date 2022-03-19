@@ -9,21 +9,21 @@
 namespace puma
 {
     
-    using AppRenderer = app::IRenderer;
-    using AppTextureManager = app::ITextureManager;
-    using AppTexture = app::Texture;
-    using AppTextureSample = app::TextureSample;
+    using NinaRenderer = nina::IRenderer;
+    using NinaTextureManager = nina::ITextureManager;
+    using NinaTexture = nina::Texture;
+    using NinaTextureSample = nina::TextureSample;
     
-    using AppInputId = app::InputId;
-    using AppKeyboardKey = app::KeyboardKey;
-    using AppMouseButton = app::MouseButton;
-    using AppMouseWheel = app::MouseWheelState;
+    using NinaInputId = nina::InputId;
+    using NinaKeyboardKey = nina::KeyboardKey;
+    using NinaMouseButton = nina::MouseButton;
+    using NinaMouseWheel = nina::MouseWheelState;
     
-    using AppControllerButton = app::ControllerButton;
-    using AppControllerTrigger = app::ControllerTrigger;
-    using AppControllerId = app::ControllerId;
+    using NinaControllerButton = nina::ControllerButton;
+    using NinaControllerTrigger = nina::ControllerTrigger;
+    using NinaControllerId = nina::ControllerId;
     
-    using AppController = app::IController;
-    using AppKeyboard = app::IKeyboard;
-    using AppMouse = app::IMouse;
+    using NinaController = nina::IController;
+    using NinaKeyboard = nina::IKeyboard;
+    using NinaMouse = nina::IMouse;
 }

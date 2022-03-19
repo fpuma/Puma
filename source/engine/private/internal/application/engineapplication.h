@@ -7,16 +7,15 @@
 
 namespace puma
 {
-    namespace app
+    namespace nina
     {
         class IInput;
         class ITextureManager;
         class IWindow;
     }
 
-    using AppInput = app::IInput;
-    using AppTextureManager = app::ITextureManager;
-    using AppWindow = app::IWindow;
+    using NinaInput = nina::IInput;
+    using NinaWindow = nina::IWindow;
 
     class EngineApplication : public IEngineApplication
     {
@@ -27,25 +26,25 @@ namespace puma
         void init( Extent _windowExtent, const char* _windowName ) override;
         void uninit() override;
         void update() override { m_application->update(); }
-        AppTextureManager* getTextureManager() const override { return m_textureManager; }
+        NinaTextureManager* getTextureManager() const override { return m_textureManager; }
         
-        AppWindow* getWindow() const { return m_window; }
-        AppInput* getInput() const { return m_input.get(); }
+        NinaWindow* getWindow() const { return m_window; }
+        NinaInput* getInput() const { return m_input.get(); }
 
         void setCameraEntity( Entity _cameraEntity ) override;
         Entity getCameraEntity() const { return m_cameraEntity; }
 
         bool shouldQuit() const { return m_application->shouldQuit(); }
-        AppRenderer* getRenderer() const { return m_renderer; }
+        NinaRenderer* getRenderer() const { return m_renderer; }
 
     private:
 
-        std::unique_ptr<app::IApplication> m_application = nullptr;
-        std::unique_ptr<AppInput> m_input = nullptr;
+        std::unique_ptr<nina::IApplication> m_application = nullptr;
+        std::unique_ptr<NinaInput> m_input = nullptr;
 
-        AppWindow* m_window = nullptr;
-        AppTextureManager* m_textureManager = nullptr;
-        AppRenderer* m_renderer = nullptr;
+        NinaWindow* m_window = nullptr;
+        NinaTextureManager* m_textureManager = nullptr;
+        NinaRenderer* m_renderer = nullptr;
         Entity m_cameraEntity = kInvalidEntity;
     };
 }

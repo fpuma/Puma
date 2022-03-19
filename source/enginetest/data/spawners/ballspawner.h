@@ -6,6 +6,6 @@
 
 namespace test
 {
-    puma::Entity spawnBall( puma::AppTextureManager* _textureManager, const puma::Position& _pos );
+    puma::Entity spawnBall( puma::NinaTextureManager* _textureManager, const puma::Position& _pos );
     void unspawnBall( puma::Entity _ballEntity );
 }

@@ -7,18 +7,18 @@ namespace puma
 {
     DECLARE_GENERIC_ID( InputAction, s32, kMaxS32 )
 
-    enum class InputModifier : AppInputId
+    enum class InputModifier : NinaInputId
     {
         NONE = 0,
-        LCTRL = static_cast<AppInputId>(AppKeyboardKey::KB_LCTRL),
-        RCTRL = static_cast<AppInputId>(AppKeyboardKey::KB_RCTRL),
-        LSHIFT = static_cast<AppInputId>(AppKeyboardKey::KB_LSHIFT),
-        RSHIFT = static_cast<AppInputId>(AppKeyboardKey::KB_RSHIFT),
-        LALT = static_cast<AppInputId>(AppKeyboardKey::KB_LALT),
-        RALT = static_cast<AppInputId>(AppKeyboardKey::KB_RALT),
+        LCTRL = static_cast<NinaInputId>(NinaKeyboardKey::KB_LCTRL),
+        RCTRL = static_cast<NinaInputId>(NinaKeyboardKey::KB_RCTRL),
+        LSHIFT = static_cast<NinaInputId>(NinaKeyboardKey::KB_LSHIFT),
+        RSHIFT = static_cast<NinaInputId>(NinaKeyboardKey::KB_RSHIFT),
+        LALT = static_cast<NinaInputId>(NinaKeyboardKey::KB_LALT),
+        RALT = static_cast<NinaInputId>(NinaKeyboardKey::KB_RALT),
     };
 
-    enum class ControllerJoystick : AppInputId
+    enum class ControllerJoystick : NinaInputId
     {
         LEFT_STICK,
         RIGHT_STICK,
@@ -69,7 +69,7 @@ namespace puma
             return false;
         }
 
-        AppMouseButton mouseButton;
+        NinaMouseButton mouseButton;
         InputModifier modifier = InputModifier::NONE;
         InputState state;
     };
@@ -88,7 +88,7 @@ namespace puma
             return false;
         }
 
-        AppMouseWheel mouseWheel = AppMouseWheel::MW_IDLE;
+        NinaMouseWheel mouseWheel = NinaMouseWheel::MW_IDLE;
         InputModifier modifier = InputModifier::NONE;
     };
 
@@ -107,7 +107,7 @@ namespace puma
             return false;
         }
 
-        AppKeyboardKey keyboardKey;
+        NinaKeyboardKey keyboardKey;
         InputModifier modifier = InputModifier::NONE;
         InputState state;
     };
@@ -127,8 +127,8 @@ namespace puma
             return false;
         }
 
-        AppControllerButton controllerButton;
-        AppControllerId controllerId;
+        NinaControllerButton controllerButton;
+        NinaControllerId controllerId;
         InputState state;
     };
 
@@ -146,8 +146,8 @@ namespace puma
             return false;
         }
 
-        AppControllerTrigger controllerTrigger;
-        AppControllerId controllerId;
+        NinaControllerTrigger controllerTrigger;
+        NinaControllerId controllerId;
     };
 
     struct ControllerJoystickInput
@@ -165,6 +165,6 @@ namespace puma
         }
 
         ControllerJoystick controllerJoystick;
-        AppControllerId controllerId;
+        NinaControllerId controllerId;
     };
 }

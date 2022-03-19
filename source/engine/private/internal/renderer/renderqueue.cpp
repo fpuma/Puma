@@ -11,7 +11,7 @@ namespace puma
         m_debugRenderables.reserve( kMaxRenderablesCount * 3 );
     }
 
-    void RenderQueue::addRenderableTexture( const AppTexture& _texture, const AppTextureSample& _textureSample, const RenderSize& _renderSize, const Position& _position, const RotationDegrees& _rotation, RenderLayer _renderLayer, bool _debug /*= false*/ )
+    void RenderQueue::addRenderableTexture( const NinaTexture& _texture, const NinaTextureSample& _textureSample, const RenderSize& _renderSize, const Position& _position, const RotationDegrees& _rotation, RenderLayer _renderLayer, bool _debug /*= false*/ )
     {
         Rectangle frustum;
         float metersPerPixel;
@@ -70,7 +70,7 @@ namespace puma
         }
     }
 
-    void RenderQueue::addScreenRenderableTexture( const AppTexture& _texture, const AppTextureSample& _textureSample, const Extent& _screenExtent, const RotationDegrees& _rotation, RenderLayer _renderLayer, bool _debug /*= false*/ )
+    void RenderQueue::addScreenRenderableTexture( const NinaTexture& _texture, const NinaTextureSample& _textureSample, const Extent& _screenExtent, const RotationDegrees& _rotation, RenderLayer _renderLayer, bool _debug /*= false*/ )
     {
         RenderableTexture& renderable = m_textures[m_renderableTexturesCount];
         renderable.setRenderLayer( _renderLayer );

@@ -17,7 +17,6 @@
 #include <engine/ecs/systems/irendersystem.h>
 #include <engine/ecs/systems/icollisionsystem.h>
 
-
 namespace test
 {
     namespace
@@ -25,7 +24,7 @@ namespace test
         constexpr float kBallRadius = 1.0f;
     }
 
-    puma::Entity spawnBall( puma::app::ITextureManager* _textureManager, const puma::Position& _pos )
+    puma::Entity spawnBall( puma::NinaTextureManager* _textureManager, const puma::Position& _pos )
     {
         puma::Entity result = gProviders->get<puma::IEntityProvider>()->requestEntity();
         puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
@@ -39,7 +38,7 @@ namespace test
         locationComponent->setPosition( _pos );
 
         //Render
-        puma::app::Texture tennisTexture = _textureManager->loadTexture( "../assets/tennisball.png" );
+        puma::NinaTexture tennisTexture = _textureManager->loadTexture( "../assets/tennisball.png" );
         puma::TextureInfo textureInfo;
         textureInfo.texture = tennisTexture;
         textureInfo.renderSize = { kBallRadius * 2.0f, kBallRadius * 2.0f };
