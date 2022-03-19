@@ -7,9 +7,9 @@
 [submodule "extern/gfx2dappmodule"]
 	path = extern/gfx2dappmodule
 	url = https://github.com/fpuma/Gfx2dAppModule.git
-[submodule "extern/physics2dmodule"]
-	path = extern/physics2dmodule
-	url = https://github.com/fpuma/Physics2dModule.git
 [submodule "extern/logger"]
 	path = extern/logger
 	url = https://github.com/fpuma/Logger.git
+[submodule "Leo"]
+	path = Leo
+	url = https://github.com/fpuma/Leo.git
