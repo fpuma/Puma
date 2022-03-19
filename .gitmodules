@@ -10,6 +10,6 @@
 [submodule "extern/logger"]
 	path = extern/logger
 	url = https://github.com/fpuma/Logger.git
-[submodule "Leo"]
-	path = Leo
-	url = https://github.com/fpuma/Leo.git
+[submodule "leo"]
+	path = extern/leo
+	url = https://github.com/fpuma/leo.git
