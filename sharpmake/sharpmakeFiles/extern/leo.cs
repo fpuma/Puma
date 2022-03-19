@@ -3,9 +3,9 @@ namespace Puma
     [Sharpmake.Generate]
     class Leo : Puma.Common.IExternLib
     {
-        public static readonly string SharedFilesPath = Puma.SharpmakeUtils.GetExternPath() + @"\physics2dmodule\source\leo\shared";
+        public static readonly string SharedFilesPath = Puma.SharpmakeUtils.GetExternPath() + @"\leo\source\leo\shared";
         public Leo()
-            : base("Leo", @"physics2dmodule\source\leo")
+            : base("Leo", @"leo\source\leo")
         { 
         }
 

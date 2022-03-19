@@ -4,7 +4,7 @@ namespace Extern
     class Box2D : Puma.Common.IExternLib
     {
         public Box2D()
-            : base("Box2D", @"physics2dmodule\extern\box2d")
+            : base("Box2D", @"leo\extern\box2d")
         { }
 
         public override void ConfigureAll(Configuration conf, Sharpmake.Target target)
