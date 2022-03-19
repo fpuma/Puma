@@ -1,11 +1,11 @@
 namespace Puma
 {
     [Sharpmake.Generate]
-    class Gfx2dApp : Puma.Common.IExternLib
+    class Nina : Puma.Common.IExternLib
     {
-        public static readonly string SharedFilesPath = Puma.SharpmakeUtils.GetExternPath() + @"\gfx2dappmodule\source\gfx2dapp\shared";
-        public Gfx2dApp()
-            : base("Gfx2dApp", @"gfx2dappmodule\source\gfx2dapp")
+        public static readonly string SharedFilesPath = Puma.SharpmakeUtils.GetExternPath() + @"\gfx2dappmodule\source\nina\shared";
+        public Nina()
+            : base("Nina", @"gfx2dappmodule\source\nina")
         { }
 
         public override void ConfigureAll(Configuration conf, Sharpmake.Target target)
