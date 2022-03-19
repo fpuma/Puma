@@ -14,7 +14,7 @@ namespace Puma
             conf.AddPublicDependency<Puma.Engine>(target);
 
             conf.IncludePaths.Add(SourceRootPath);
-            conf.IncludePaths.Add(Puma.Physics.SharedFilesPath);
+            conf.IncludePaths.Add(Puma.Leo.SharedFilesPath);
             conf.IncludePaths.Add(Puma.Gfx2dApp.SharedFilesPath);
 
             conf.Options.Add(Sharpmake.Options.Vc.General.TreatWarningsAsErrors.Enable);
