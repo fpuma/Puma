@@ -7,3 +7,9 @@
 [submodule "extern/logger"]
 	path = extern/logger
 	url = https://github.com/fpuma/Logger.git
+[submodule "extern/nina"]
+	path = extern/nina
+	url = https://github.com/fpuma/Nina.git
+[submodule "extern/leo"]
+	path = extern/leo
+	url = https://github.com/fpuma/Leo.git
