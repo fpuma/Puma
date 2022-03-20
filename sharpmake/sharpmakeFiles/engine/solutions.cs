@@ -1,16 +1,16 @@
 namespace Puma
 {
     [Sharpmake.Generate]
-    class MiniEngineSolution : Puma.Common.IMySolution
+    class PumaEngineSolution : Puma.Common.IMySolution
     {
-        public MiniEngineSolution()
-            : base("MiniEngine")
+        public PumaEngineSolution()
+            : base("Puma")
         { }
 
         public override void ConfigureAll(Configuration conf, Sharpmake.Target target)
         {
             base.ConfigureAll(conf, target);
-            conf.AddProject<Puma.Engine>(target);
+            conf.AddProject<Puma.PumaEngine>(target);
             conf.AddProject<Puma.EngineTest>(target);
         }
     }

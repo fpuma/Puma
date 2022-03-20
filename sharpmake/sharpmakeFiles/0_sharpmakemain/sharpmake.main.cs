@@ -11,7 +11,7 @@ public static class SharpmakeMainClass
     public static void SharpmakeMain(Sharpmake.Arguments sharpmakeArgs)
     {
         sharpmakeArgs.Generate<Puma.ExternLibs>();
-        sharpmakeArgs.Generate<Puma.MiniEngineSolution>();
+        sharpmakeArgs.Generate<Puma.PumaEngineSolution>();
     }
 }
 

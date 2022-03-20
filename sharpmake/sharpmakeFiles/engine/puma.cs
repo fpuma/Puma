@@ -3,10 +3,10 @@ using Sharpmake;
 namespace Puma
 {
     [Sharpmake.Generate]
-    class Engine : Puma.Common.IMyLib
+    class PumaEngine : Puma.Common.IMyLib
     {
-        public Engine()
-            : base ("Engine", @"engine")
+        public PumaEngine()
+            : base ("Puma", @"puma")
         { }
 
         public override void ConfigureAll(Configuration conf, Sharpmake.Target target)

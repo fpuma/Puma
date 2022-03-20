@@ -11,7 +11,7 @@ namespace Puma
         {
             base.ConfigureAll(conf, target);
 
-            conf.AddPublicDependency<Puma.Engine>(target);
+            conf.AddPublicDependency<Puma.PumaEngine>(target);
 
             conf.IncludePaths.Add(SourceRootPath);
             conf.IncludePaths.Add(Puma.Leo.SharedFilesPath);
