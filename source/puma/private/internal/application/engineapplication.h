@@ -23,11 +23,14 @@ namespace puma
 
         EngineApplication();
 
-        void init( Extent _windowExtent, const char* _windowName ) override;
-        void uninit() override;
-        void update() override { m_application->update(); }
+        void init( Extent _windowExtent, const char* _windowName );
+        void uninit();
+        void update() { m_application->update(); }
         NinaTextureManager* getTextureManager() const override { return m_textureManager; }
         
+        void setWindowSize( s32 _width, s32 _height ) override;
+        void setWindowPosition( s32 _x, s32 _y ) override;
+
         NinaWindow* getWindow() const { return m_window; }
         NinaInput* getInput() const { return m_input.get(); }
 

@@ -2,7 +2,7 @@
 
 #include <engine/iengine.h>
 
-#include "test/test.h"
+#include <engine/services/iengineapplicationservice.h>
 
 int main( int argc, char* argv[] )
 {
@@ -15,22 +15,15 @@ int main( int argc, char* argv[] )
 #endif
 
     auto enginePtr = puma::IEngine::create();
-    enginePtr->init( { 500, 500, 100, 100 }, "EngineTest" );
-
-    test::Test gameTest;
-
-    gameTest.initTest();
+    enginePtr->init();
 
     while ( !enginePtr->shouldQuit() )
     {
         enginePtr->update();
-        gameTest.updateTest();
         enginePtr->render();
     };
 
-    gameTest.uninitTest();
     enginePtr->uninit();
 
     return 0;
 }
-

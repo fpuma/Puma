@@ -21,12 +21,6 @@
 
 namespace puma
 {
-
-    std::unique_ptr<IEngineApplication> IEngineApplication::create()
-    {
-        return std::make_unique<EngineApplication>();
-    }
-
     EngineApplication::EngineApplication()
     {
         m_application = nina::IApplication::create();
@@ -70,5 +64,15 @@ namespace puma
         assert( (nullptr != cameraComponent) && (nullptr != locationComponent) );
 #endif
         m_cameraEntity = _cameraEntity;
+    }
+
+    void EngineApplication::setWindowSize( s32 _width, s32 _height )
+    {
+        m_window->setWindowSize( _width, _height );
+    }
+
+    void EngineApplication::setWindowPosition( s32 _x, s32 _y )
+    {
+        m_window->setWindowPosition( _x, _y );
     }
 }

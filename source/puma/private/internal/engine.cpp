@@ -31,12 +31,15 @@ namespace puma
 
     namespace
     {
-        void registerServicesClasses()
+        void registerServices()
         {
             gProviders->registerInterface<IEntityProvider, EntityProvider>();
             gProviders->registerInterface<IComponentProvider, ComponentProvider>();
             gProviders->registerClass<TimerProvider>( );
+        }
 
+        void registerSystems()
+        {
             gInternalSystems->registerInterface<IRenderSystem, RenderSystem>();
             gInternalSystems->registerInterface<ICollisionSystem, CollisionSystem>();
             gInternalSystems->registerInterface<IInputSystem, InputSystem>();
@@ -59,13 +62,14 @@ namespace puma
         return std::make_unique<Engine>();
     }
 
-    void Engine::init()
+    void Engine::init( const Extent _windowExtent, const char* _windowName )
     {
         m_services = std::make_unique<ServiceContainer>();
         m_services->init();
         DefaultInstance<IServiceContainer>::setInstance( m_services.get() );
         
-        registerServicesClasses();
+        registerServices();
+        registerSystems();
 
         gProviders->add<EntityProvider>();
         gProviders->add<ComponentProvider>();
@@ -82,6 +86,8 @@ namespace puma
         gInternalLogger->getLogger()->addOutput<ConsoleLogOutput>();
 
         gInternalLogger->info( "Puma engine initialized." );
+
+        gInternalEngineApplication->init( _windowExtent, _windowName );
     }
 
     void Engine::uninit()

@@ -13,7 +13,7 @@ namespace puma
     {
     public:
 
-        void init() override;
+        void init( const Extent _windowExtent, const char* _windowName ) override;
         void uninit() override;
 
         void update() override;

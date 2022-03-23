@@ -9,16 +9,12 @@ namespace puma
     {
     public:
 
-        static std::unique_ptr<IEngineApplication> create();
-
         virtual ~IEngineApplication() {}
-
-        virtual void init( Extent _windowExtent, const char* _windowName ) = 0;
-        virtual void uninit() = 0;
-        virtual void update() = 0;
 
         virtual NinaTextureManager* getTextureManager() const = 0;
 
+        virtual void setWindowSize( s32 _width, s32 _height ) = 0;
+        virtual void setWindowPosition( s32 _x, s32 _y ) = 0;
         virtual void setCameraEntity( Entity _cameraEntity ) = 0;
     };
 }

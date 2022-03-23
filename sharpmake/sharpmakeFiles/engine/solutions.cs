@@ -12,6 +12,7 @@ namespace Puma
             base.ConfigureAll(conf, target);
             conf.AddProject<Puma.PumaEngine>(target);
             conf.AddProject<Puma.EngineTest>(target);
+            conf.AddProject<Puma.Asteroids>(target);
         }
     }
 

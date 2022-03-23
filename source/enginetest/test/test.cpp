@@ -76,7 +76,6 @@ namespace test
     }
 
     void setCamera();
-    void initWindow();
     void initPhysics();
 
     puma::Entity spawnFloor( NinaTextureManager* _textureManager, const puma::Position& _pos, float _angle );
@@ -90,7 +89,6 @@ namespace test
 
     void Test::initTest()
     {
-        initWindow();
         initPhysics();
         setCamera();
 
@@ -132,12 +130,6 @@ namespace test
         unspawnFloor( Floor1 );
         unspawnFloor( Floor2 );
         unspawnFloor( Floor3 );
-    }
-
-    void initWindow()
-    {
-        puma::Extent windowExtent = { 500,500,100,100 };
-        gEngineApplication->init( windowExtent, "EngineTest" );
     }
 
     void initPhysics()

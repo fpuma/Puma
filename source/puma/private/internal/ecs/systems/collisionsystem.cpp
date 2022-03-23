@@ -39,7 +39,10 @@ namespace puma
     {
         assert( m_entities.empty() ); //Warning not all entities have been unregistered.
         m_entities.clear();
-        gPhysics->removeWorld( m_worldId );
+        if ( m_worldId.isValid() )
+        {
+            gPhysics->removeWorld( m_worldId );
+        }
     }
 
     void CollisionSystem::registerEntity( Entity _entity, LeoFrameInfo _frameInfo, LeoFrameType _frameType )
