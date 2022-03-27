@@ -1,5 +1,3 @@
-#include <precompiledapplication.h>
-#include <precompiledphysics.h>
 #include <precompiledengine.h>
 
 #include "test.h"
@@ -41,11 +39,11 @@ namespace test
 {
     namespace
     {
-        puma::Entity MyDefaultCamera = puma::kInvalidEntity;
-        puma::Entity Floor0 = puma::kInvalidEntity;
-        puma::Entity Floor1 = puma::kInvalidEntity;
-        puma::Entity Floor2 = puma::kInvalidEntity;
-        puma::Entity Floor3 = puma::kInvalidEntity;
+        puma::Entity MyDefaultCamera;
+        puma::Entity Floor0;
+        puma::Entity Floor1;
+        puma::Entity Floor2;
+        puma::Entity Floor3;
 
         puma::Entity buildDefaultCamera()
         {

@@ -30,8 +30,8 @@ namespace test
         void updateSpawner( Entity _spawner );
         void renderDebugSpawner( Entity _spawner, IRenderQueue& _renderQueue );
 
-        Entity m_spawner0 = kInvalidEntity;
-        Entity m_spawner1 = kInvalidEntity;
+        Entity m_spawner0;
+        Entity m_spawner1;
         SystemProperties m_systemProperties;
 
         float m_spawnerSpeed = 10.0f;

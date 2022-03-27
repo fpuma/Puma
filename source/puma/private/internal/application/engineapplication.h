@@ -48,6 +48,6 @@ namespace puma
         NinaWindow* m_window = nullptr;
         NinaTextureManager* m_textureManager = nullptr;
         NinaRenderer* m_renderer = nullptr;
-        Entity m_cameraEntity = kInvalidEntity;
+        Entity m_cameraEntity;
     };
 }

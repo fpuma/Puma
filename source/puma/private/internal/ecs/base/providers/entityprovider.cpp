@@ -21,18 +21,18 @@ namespace puma
 
     Entity EntityProvider::requestEntity()
     {
-        Entity result = kInvalidEntity;
+        Entity result;
 
         auto itFoundEntity = std::find( m_entities.begin(), m_entities.end(), EntityStatus::Unassigned );
 
         if ( m_entities.end() != itFoundEntity )
         {
-            result = std::distance( m_entities.begin(), itFoundEntity );
+            result = Entity(std::distance( m_entities.begin(), itFoundEntity ));
             *itFoundEntity = EntityStatus::Enabled;
         }
         else
         {
-            result = m_entities.size();
+            result = Entity(m_entities.size());
             m_entities.push_back( EntityStatus::Enabled );
         }
 
@@ -41,25 +41,25 @@ namespace puma
 
     void EntityProvider::disposeEntity( const Entity& _entity )
     {
-        assert( m_entities[_entity] != EntityStatus::Unassigned );
-        m_entities[_entity] = EntityStatus::Unassigned;
+        assert( m_entities[_entity.value()] != EntityStatus::Unassigned );
+        m_entities[_entity.value()] = EntityStatus::Unassigned;
     }
 
     void EntityProvider::enableEntity(const Entity& _entity)
     {
-        assert( m_entities[_entity] != EntityStatus::Unassigned );
-        m_entities[_entity] = EntityStatus::Enabled; 
+        assert( m_entities[_entity.value()] != EntityStatus::Unassigned );
+        m_entities[_entity.value()] = EntityStatus::Enabled;
     }
 
     void EntityProvider::disableEntity( const Entity& _entity )
     { 
-        assert( m_entities[_entity] != EntityStatus::Unassigned );
-        m_entities[_entity] = EntityStatus::Disabled; 
+        assert( m_entities[_entity.value()] != EntityStatus::Unassigned );
+        m_entities[_entity.value()] = EntityStatus::Disabled;
     }
     
     bool EntityProvider::isEntityEnabled( const Entity& _entity ) const
     { 
-        assert( m_entities[_entity] != EntityStatus::Unassigned );
-        return m_entities[_entity] == EntityStatus::Enabled; 
+        assert( m_entities[_entity.value()] != EntityStatus::Unassigned );
+        return m_entities[_entity.value()] == EntityStatus::Enabled;
     }
 }

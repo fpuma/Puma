@@ -1,7 +1,8 @@
 #pragma once
 
+#include <utils/genericid.h>
+
 namespace puma
 {
-    using Entity = size_t;
-    const Entity kInvalidEntity = (size_t)-1;
+    DECLARE_GENERIC_ID( Entity, size_t, (size_t)-1 );
 }

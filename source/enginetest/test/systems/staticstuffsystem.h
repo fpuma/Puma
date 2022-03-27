@@ -28,6 +28,6 @@ namespace test
     private:
         SystemProperties m_systemProperties;
 
-        Entity m_backgroundEntity = kInvalidEntity;
+        Entity m_backgroundEntity;
     };
 }
