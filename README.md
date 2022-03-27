@@ -1,2 +1,2 @@
-# SharpmakeTemplate
-Template with a sharpmake setup to create visual studio solutions based on the source files and libraries to be used
+# Puma
+Puma is a work in progress of the initial implementation of a mini engine 2D
