@@ -11,12 +11,12 @@ namespace puma
 
     class IRenderQueue;
 
-    enum class SystemUpdateFlag : SystemUpdateBitMask
+    enum SystemUpdateFlag : SystemUpdateBitMask
     {
-        Update = 0x1,
-        PrePhysicsUpdate = 0x2,
-        PostPhysicsUpdate = 0x4,
-        QueueRenderables = 0x08,
+        SystemUpdateFlag_Update = 0x1,
+        SystemUpdateFlag_PrePhysicsUpdate = 0x2,
+        SystemUpdateFlag_PostPhysicsUpdate = 0x4,
+        SystemUpdateFlag_QueueRenderables = 0x08,
     };
 
     struct SystemProperties

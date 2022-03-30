@@ -32,7 +32,7 @@ namespace puma
 
     void RenderSystem::init()
     {
-        m_properties.updateBitMask = (SystemUpdateBitMask)SystemUpdateFlag::QueueRenderables;
+        m_properties.updateBitMask = SystemUpdateFlag_QueueRenderables;
     }
 
     void RenderSystem::uninit()

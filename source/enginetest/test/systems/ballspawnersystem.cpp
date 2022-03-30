@@ -6,14 +6,18 @@
 #include <data/spawners/ballspawner.h>
 #include <data/spawners/ballspawnspawner.h>
 
+#include <engine/ecs/base/providers/ientityprovider.h>
 #include <engine/ecs/base/providers/icomponentprovider.h>
 #include <engine/ecs/components/icollisioncomponent.h>
 #include <engine/ecs/components/iinputcomponent.h>
 #include <engine/ecs/components/ilocationcomponent.h>
+#include <engine/ecs/systems/iinputsystem.h>
+#include <engine/ecs/systems/icollisionsystem.h>
 #include <engine/renderer/irenderqueue.h>
 #include <engine/services/iengineapplicationservice.h>
 #include <engine/services/iloggerservice.h>
 #include <engine/services/iprovidersservice.h>
+#include <engine/services/isystemsservice.h>
 
 #include <test/components/movedirectioncomponent.h>
 
@@ -23,13 +27,22 @@ namespace test
 {
     BallSpawnerSystem::BallSpawnerSystem()
     {
-        m_systemProperties.updateBitMask = static_cast<SystemUpdateBitMask>(SystemUpdateFlag::Update) | static_cast<SystemUpdateBitMask>(SystemUpdateFlag::QueueRenderables);
+        m_systemProperties.updateBitMask = SystemUpdateFlag_Update | SystemUpdateFlag_QueueRenderables;
     }
 
     void BallSpawnerSystem::init()
     {
         m_spawner0 = spawnBallSpawner( kSpawner0KeyboardInput, kSpawner0ControllerJoystickInput, kSpawner0ControllerButtonInput, { -5.0f, 5.0f, 0.0f } );
         m_spawner1 = spawnBallSpawner( kSpawner1KeyboardInput, kSpawner1ControllerJoystickInput, kSpawner1ControllerButtonInput, { 5.0f, 5.0f, 0.0f } );
+
+        m_spawnerHandler = gProviders->get<IEntityProvider>()->requestEntity();
+
+        IInputComponent* inputComponent = gProviders->get<IComponentProvider>()->add<IInputComponent>( m_spawnerHandler );
+
+        KeyboardInput keyboardInput;
+        keyboardInput.keyboardKey = NinaKeyboardKey::KB_Y;
+        inputComponent->addInputMap( TestInputActions::InvertGravity, keyboardInput );
+        gSystems->get<IInputSystem>()->registerEntity( m_spawnerHandler );
     }
 
     void BallSpawnerSystem::uninit()
@@ -41,12 +54,24 @@ namespace test
         {
             unspawnBall( entity );
         }
+
+        gSystems->get<IInputSystem>()->unregisterEntity( m_spawnerHandler );
+        gProviders->get<IComponentProvider>()->remove<IInputComponent>( m_spawnerHandler );
+        gProviders->get<IEntityProvider>()->disposeEntity( m_spawnerHandler );
     }
 
     void BallSpawnerSystem::update( float _deltaTime )
     {
         updateSpawner( m_spawner0 );
         updateSpawner( m_spawner1 );
+
+        IInputComponent* inputComponent = gProviders->get<IComponentProvider>()->get<IInputComponent>(m_spawnerHandler);
+        if ( inputComponent->isActionActive( TestInputActions::InvertGravity ) )
+        {
+            ICollisionSystem* collisionSystem = gSystems->get<ICollisionSystem>();
+            Vec2 currentGravity = collisionSystem->getGravity();
+            collisionSystem->setGravity( currentGravity * -1.0f );
+        }
     }
     
     void BallSpawnerSystem::queueRenderables( IRenderQueue& _renderQueue )

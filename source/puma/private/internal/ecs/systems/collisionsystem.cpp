@@ -15,14 +15,14 @@
 #include <physics/simulation/frames/iframe.h>
 #include <physics/simulation/world/iworld.h>
 
-//#define PHYSICS_DEBUG_RENDER
+#define PHYSICS_DEBUG_RENDER
 
 namespace puma
 {
     void CollisionSystem::init( Vec2 _gravity )
     {
-        m_properties.updateBitMask = (SystemUpdateBitMask)SystemUpdateFlag::PostPhysicsUpdate
-                                   | (SystemUpdateBitMask)SystemUpdateFlag::QueueRenderables;
+        m_properties.updateBitMask = SystemUpdateFlag_PostPhysicsUpdate
+                                   | SystemUpdateFlag_QueueRenderables;
 
         m_worldId = gPhysics->addWorld( _gravity );
 
@@ -116,9 +116,12 @@ namespace puma
         }
 
 #ifdef PHYSICS_DEBUG_RENDER
-        leo::IWorld* world = gPhysics->getWorld( m_worldId );
-        m_debugShapes.clear();
-        world->debugDraw();
+        if ( m_debugDraw )
+        {
+            leo::IWorld* world = gPhysics->getWorld( m_worldId );
+            m_debugShapes.clear();
+            world->debugDraw();
+        }
 #endif
 
     }
@@ -126,9 +129,33 @@ namespace puma
     void CollisionSystem::queueRenderables( IRenderQueue& _renderQueue )
     {
 #ifdef PHYSICS_DEBUG_RENDER
-        for ( const PhysicsDebugShape& dbgShape : m_debugShapes )
+        if ( m_debugDraw )
         {
-            _renderQueue.addRenderableShape( dbgShape.shape, dbgShape.color, dbgShape.solid, { 0.0f, 0.0f, 0.0f }, 0.0f, true );
+            for ( const PhysicsDebugShape& dbgShape : m_debugShapes )
+            {
+                _renderQueue.addRenderableShape( dbgShape.shape, dbgShape.color, dbgShape.solid, { 0.0f, 0.0f, 0.0f }, 0.0f, RenderLayer(), true );
+            }
+
+            ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
+            for ( const Entity& entity : m_entities )
+            {
+                CollisionComponent* collisionComponent = componentProvider->get<CollisionComponent>( entity );
+                LocationComponent* locationComponent = componentProvider->get<LocationComponent>( entity );
+
+
+                Vec2 lv;
+                switch ( collisionComponent->getFrameType() )
+                {
+                case LeoFrameType::Dynamic: lv = collisionComponent->getDynamicFrame()->getLinearVelocity(); break;
+                case LeoFrameType::Kinematic: lv = collisionComponent->getKinematicFrame()->getLinearVelocity(); break;
+                default: break;
+                }
+
+                if ( lv.length() > 0.0f )
+                {
+                    _renderQueue.addRenderableText( formatString( "LV: %.2f, %.2f", lv.x, lv.y ), Color::Red(), locationComponent->getPosition(), RenderLayer(), true );
+                }
+            }
         }
 #endif
     }

@@ -51,7 +51,7 @@ namespace puma
         }
 
         InputModifier modifier = InputModifier::NONE;
-        InputState state;
+        InputState state = InputState::Pressed;
     };
 
     struct MouseButtonInput
@@ -71,7 +71,7 @@ namespace puma
 
         NinaMouseButton mouseButton;
         InputModifier modifier = InputModifier::NONE;
-        InputState state;
+        InputState state = InputState::Pressed;
     };
 
     struct MouseWheelInput
@@ -109,7 +109,7 @@ namespace puma
 
         NinaKeyboardKey keyboardKey;
         InputModifier modifier = InputModifier::NONE;
-        InputState state;
+        InputState state = InputState::Pressed;
     };
 
     struct ControllerButtonInput
@@ -129,7 +129,7 @@ namespace puma
 
         NinaControllerButton controllerButton;
         NinaControllerId controllerId;
-        InputState state;
+        InputState state = InputState::Pressed;
     };
 
     struct ControllerTriggerInput

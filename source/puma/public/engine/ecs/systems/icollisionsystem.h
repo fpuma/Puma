@@ -22,5 +22,8 @@ namespace puma
         virtual Vec2 getGravity() = 0;
 
         virtual void setCollisionCompatibility( const LeoCollisionCompatibility& _collisionCompatibility ) = 0;
+
+        virtual void enableDebugDraw() = 0;
+        virtual void disableDebugDraw() = 0;
     };
 }

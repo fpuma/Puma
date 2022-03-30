@@ -14,25 +14,25 @@ namespace puma
             return _sys1->getProperties().priority < _sys2->getProperties().priority;
         };
 
-        if ( properties.updateBitMask & (SystemUpdateBitMask)SystemUpdateFlag::Update )
+        if ( properties.updateBitMask & SystemUpdateFlag_Update )
         {
             m_systemsToUpdate.push_back( _system );
             std::sort( m_systemsToUpdate.begin(), m_systemsToUpdate.end(), sortCallback );
         }
 
-        if ( properties.updateBitMask & (SystemUpdateBitMask)SystemUpdateFlag::PrePhysicsUpdate )
+        if ( properties.updateBitMask & SystemUpdateFlag_PrePhysicsUpdate )
         {
             m_systemsToUpdatePrePhysics.push_back( _system );
             std::sort( m_systemsToUpdatePrePhysics.begin(), m_systemsToUpdatePrePhysics.end(), sortCallback );
         }
 
-        if ( properties.updateBitMask & (SystemUpdateBitMask)SystemUpdateFlag::PostPhysicsUpdate )
+        if ( properties.updateBitMask & SystemUpdateFlag_PostPhysicsUpdate )
         {
             m_systemsToUpdatePostPhysics.push_back( _system );
             std::sort( m_systemsToUpdatePostPhysics.begin(), m_systemsToUpdatePostPhysics.end(), sortCallback );
         }
 
-        if ( properties.updateBitMask & (SystemUpdateBitMask)SystemUpdateFlag::QueueRenderables )
+        if ( properties.updateBitMask & SystemUpdateFlag_QueueRenderables )
         {
             m_systemsToQueueRenderables.push_back( _system );
         }
@@ -100,22 +100,22 @@ namespace puma
         {
             SystemProperties properties = _system->getProperties();
 
-            if ( properties.updateBitMask & (SystemUpdateBitMask)SystemUpdateFlag::Update )
+            if ( properties.updateBitMask & SystemUpdateFlag_Update )
             {
                 m_systemsToUpdate.push_back( _system );
             }
 
-            if ( properties.updateBitMask & (SystemUpdateBitMask)SystemUpdateFlag::PrePhysicsUpdate )
+            if ( properties.updateBitMask & SystemUpdateFlag_PrePhysicsUpdate )
             {
                 m_systemsToUpdatePrePhysics.push_back( _system );
             }
 
-            if ( properties.updateBitMask & (SystemUpdateBitMask)SystemUpdateFlag::PostPhysicsUpdate )
+            if ( properties.updateBitMask & SystemUpdateFlag_PostPhysicsUpdate )
             {
                 m_systemsToUpdatePostPhysics.push_back( _system );
             }
 
-            if ( properties.updateBitMask & (SystemUpdateBitMask)SystemUpdateFlag::QueueRenderables )
+            if ( properties.updateBitMask & SystemUpdateFlag_QueueRenderables )
             {
                 m_systemsToQueueRenderables.push_back( _system );
             }

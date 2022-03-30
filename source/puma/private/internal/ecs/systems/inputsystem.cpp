@@ -65,7 +65,7 @@ namespace puma
     void InputSystem::init()
     {
         m_systemProperties.priority = 0;
-        m_systemProperties.updateBitMask = static_cast<SystemPriority>(SystemUpdateFlag::Update);
+        m_systemProperties.updateBitMask = SystemUpdateFlag_Update;
     }
 
 }

@@ -31,6 +31,9 @@ namespace puma
 
         void setCollisionCompatibility( const LeoCollisionCompatibility& _collisionCompatibility ) override;
 
+        void enableDebugDraw() { m_debugDraw = true; }
+        void disableDebugDraw() { m_debugDraw = false; }
+
     private:
 
 #ifdef _DEBUG
@@ -63,5 +66,6 @@ namespace puma
         };
 
         PhysicsDebugShapeList m_debugShapes;
+        bool m_debugDraw = false;
     };
 }

@@ -14,4 +14,6 @@ namespace test
     const puma::InputAction TestInputActions::MoveBallSpawnerStopDown = puma::InputAction( 7 );
     const puma::InputAction TestInputActions::MoveBallSpawnerStopLeft = puma::InputAction( 8 );
     const puma::InputAction TestInputActions::MoveBallSpawnerStopRight = puma::InputAction( 9 );
+    
+    const puma::InputAction TestInputActions::InvertGravity = puma::InputAction( 10 );
 }

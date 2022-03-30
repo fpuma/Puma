@@ -32,6 +32,7 @@ namespace test
 
         Entity m_spawner0;
         Entity m_spawner1;
+        Entity m_spawnerHandler;
         SystemProperties m_systemProperties;
 
         float m_spawnerSpeed = 10.0f;
