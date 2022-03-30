@@ -2,7 +2,7 @@
 
 #include <engine/iengine.h>
 
-#include <engine/services/iengineapplicationservice.h>
+#include <asteroids/asteroids.h>
 
 int main( int argc, char* argv[] )
 {
@@ -15,7 +15,11 @@ int main( int argc, char* argv[] )
 #endif
 
     auto enginePtr = puma::IEngine::create();
-    enginePtr->init();
+    enginePtr->init( { 1000, 1000, 200, 200 }, "Asteroids" );
+
+    Asteroids asteroidsGame;
+
+    asteroidsGame.init();
 
     while ( !enginePtr->shouldQuit() )
     {
@@ -23,6 +27,7 @@ int main( int argc, char* argv[] )
         enginePtr->render();
     };
 
+    asteroidsGame.uninit();
     enginePtr->uninit();
 
     return 0;
