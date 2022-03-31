@@ -133,7 +133,7 @@ namespace puma
         {
             for ( const PhysicsDebugShape& dbgShape : m_debugShapes )
             {
-                _renderQueue.addRenderableShape( dbgShape.shape, dbgShape.color, dbgShape.solid, { 0.0f, 0.0f, 0.0f }, 0.0f, RenderLayer(), true );
+                _renderQueue.addDebugRenderableShape( dbgShape.shape, dbgShape.color, dbgShape.solid, { 0.0f, 0.0f, 0.0f }, 0.0f );
             }
 
             ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
@@ -153,7 +153,7 @@ namespace puma
 
                 if ( lv.length() > 0.0f )
                 {
-                    _renderQueue.addRenderableText( formatString( "LV: %.2f, %.2f", lv.x, lv.y ), Color::Red(), locationComponent->getPosition(), RenderLayer(), true );
+                    _renderQueue.addDebugRenderableText( formatString( "LV: %.2f, %.2f", lv.x, lv.y ), Color::Red(), locationComponent->getPosition() );
                 }
             }
         }

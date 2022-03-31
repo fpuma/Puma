@@ -11,7 +11,57 @@ namespace puma
         m_debugRenderables.reserve( kMaxRenderablesCount * 3 );
     }
 
-    void RenderQueue::addRenderableTexture( const NinaTexture& _texture, const NinaTextureSample& _textureSample, const RenderSize& _renderSize, const Position& _position, const RotationDegrees& _rotation, RenderLayer _renderLayer, bool _debug /*= false*/ )
+    void RenderQueue::addRenderableTexture( const NinaTexture& _texture, const NinaTextureSample& _textureSample, const RenderSize& _renderSize, const Position& _position, const RotationDegrees& _rotation, RenderLayer _renderLayer )
+    {
+        internalAddRenderableTexture( _texture, _textureSample, _renderSize, _position, _rotation, _renderLayer, false );
+    }
+
+    void RenderQueue::addRenderableText( const std::string& _textToRender, const Color& _color, const Position& _position, RenderLayer _renderLayer )
+    {
+        internalAddRenderableText( _textToRender, _color, _position, _renderLayer, false );
+    }
+
+    void RenderQueue::addRenderableShape( const Shape& _shape, const Color& _color, bool _solid, const Position& _position, const RotationDegrees& _rotation, RenderLayer _renderLayer )
+    {
+        internalAddRenderableShape( _shape, _color, _solid, _position, _rotation, _renderLayer, false );
+    }
+
+    void RenderQueue::addScreenRenderableTexture( const NinaTexture& _texture, const NinaTextureSample& _textureSample, const Extent& _screenExtent, const RotationDegrees& _rotation, RenderLayer _renderLayer )
+    {
+        internalAddScreenRenderableTexture( _texture, _textureSample, _screenExtent, _rotation, _renderLayer, false );
+    }
+
+    void RenderQueue::addScreenRenderableText( const std::string& _textToRender, const Color& _color, const ScreenPos& _screenPos, RenderLayer _renderLayer )
+    {
+        internalAddScreenRenderableText( _textToRender, _color, _screenPos, _renderLayer, false );
+    }
+
+    void RenderQueue::addDebugRenderableTexture( const NinaTexture& _texture, const NinaTextureSample& _textureSample, const RenderSize& _renderSize, const Position& _position, const RotationDegrees& _rotation, RenderLayer _renderLayer )
+    {
+        internalAddRenderableTexture( _texture, _textureSample, _renderSize, _position, _rotation, _renderLayer, true );
+    }
+
+    void RenderQueue::addDebugRenderableText( const std::string& _textToRender, const Color& _color, const Position& _position, RenderLayer _renderLayer )
+    {
+        internalAddRenderableText( _textToRender, _color, _position, _renderLayer, true );
+    }
+
+    void RenderQueue::addDebugRenderableShape( const Shape& _shape, const Color& _color, bool _solid, const Position& _position, const RotationDegrees& _rotation, RenderLayer _renderLayer )
+    {
+        internalAddRenderableShape( _shape, _color, _solid, _position, _rotation, _renderLayer, true );
+    }
+
+    void RenderQueue::addDebugScreenRenderableTexture( const NinaTexture& _texture, const NinaTextureSample& _textureSample, const Extent& _screenExtent, const RotationDegrees& _rotation, RenderLayer _renderLayer )
+    {
+        internalAddScreenRenderableTexture( _texture, _textureSample, _screenExtent, _rotation, _renderLayer, true );
+    }
+
+    void RenderQueue::addDebugScreenRenderableText( const std::string& _textToRender, const Color& _color, const ScreenPos& _screenPos, RenderLayer _renderLayer )
+    {
+        internalAddScreenRenderableText( _textToRender, _color, _screenPos, _renderLayer, true );
+    }
+
+    void RenderQueue::internalAddRenderableTexture( const NinaTexture& _texture, const NinaTextureSample& _textureSample, const RenderSize& _renderSize, const Position& _position, const RotationDegrees& _rotation, RenderLayer _renderLayer, bool _debug )
     {
         Rectangle frustum;
         float metersPerPixel;
@@ -28,11 +78,11 @@ namespace puma
 
         if ( erh::shouldRender( boundingBox, frustum ) )
         {
-            addScreenRenderableTexture( _texture, _textureSample, screenExtent, _rotation, _renderLayer, _debug );
+            internalAddScreenRenderableTexture( _texture, _textureSample, screenExtent, _rotation, _renderLayer, _debug );
         }
     }
 
-    void RenderQueue::addRenderableText( const std::string& _textToRender, const Color& _color, const Position& _position, RenderLayer _renderLayer, bool _debug /*= false*/ )
+    void RenderQueue::internalAddRenderableText( const std::string& _textToRender, const Color& _color, const Position& _position, RenderLayer _renderLayer, bool _debug )
     {
         Rectangle frustum;
         float metersPerPixel;
@@ -47,11 +97,11 @@ namespace puma
 
         if ( isInFrustum )
         {
-            addScreenRenderableText( _textToRender, _color, screenPosition, _renderLayer, _debug );
+            internalAddScreenRenderableText( _textToRender, _color, screenPosition, _renderLayer, _debug );
         }
     }
     
-    void RenderQueue::addRenderableShape( const Shape& _shape, const Color& _color, bool _solid, const Position& _position, const RotationDegrees& _rotation, RenderLayer _renderLayer, bool _debug /*= false*/ )
+    void RenderQueue::internalAddRenderableShape( const Shape& _shape, const Color& _color, bool _solid, const Position& _position, const RotationDegrees& _rotation, RenderLayer _renderLayer, bool _debug )
     {
         Rectangle frustum;
         float metersPerPixel;
@@ -70,7 +120,7 @@ namespace puma
         }
     }
 
-    void RenderQueue::addScreenRenderableTexture( const NinaTexture& _texture, const NinaTextureSample& _textureSample, const Extent& _screenExtent, const RotationDegrees& _rotation, RenderLayer _renderLayer, bool _debug /*= false*/ )
+    void RenderQueue::internalAddScreenRenderableTexture( const NinaTexture& _texture, const NinaTextureSample& _textureSample, const Extent& _screenExtent, const RotationDegrees& _rotation, RenderLayer _renderLayer, bool _debug )
     {
         RenderableTexture& renderable = m_textures[m_renderableTexturesCount];
         renderable.setRenderLayer( _renderLayer );
@@ -84,7 +134,7 @@ namespace puma
         ++m_renderableTexturesCount;
     }
     
-    void RenderQueue::addScreenRenderableText( const std::string& _textToRender, const Color& _color, const ScreenPos& _screenPos, RenderLayer _renderLayer, bool _debug /*= false*/ )
+    void RenderQueue::internalAddScreenRenderableText( const std::string& _textToRender, const Color& _color, const ScreenPos& _screenPos, RenderLayer _renderLayer, bool _debug )
     {
         RenderableText& renderable = m_texts[m_renderableTextsCount];
         renderable.setRenderLayer( _renderLayer );
