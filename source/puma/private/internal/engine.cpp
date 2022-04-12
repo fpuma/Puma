@@ -3,6 +3,7 @@
 
 #include <application/irenderer.h>
 #include <engine/utils/timerprovider.h>
+#include <engine/igame.h>
 #include <input/iinput.h>
 
 #include <internal/ecs/base/providers/componentprovider.h>
@@ -28,7 +29,6 @@
 
 namespace puma
 {
-
     namespace
     {
         void registerServices()
@@ -60,6 +60,24 @@ namespace puma
     std::unique_ptr<IEngine> IEngine::create()
     {
         return std::make_unique<Engine>();
+    }
+
+    void Engine::run( std::unique_ptr<IGame>&& _game )
+    {
+        std::unique_ptr<Engine> engine = std::make_unique<Engine>();
+
+        engine->init();
+        _game->init();
+        
+        while ( !engine->shouldQuit() )
+        {
+            engine->update();
+            _game->update( static_cast<float>( m_deltaTime.get() ) );
+            engine->render();
+        }
+
+        _game->uninit();
+        engine->uninit();
     }
 
     void Engine::init( const Extent _windowExtent, const char* _windowName )
@@ -109,7 +127,7 @@ namespace puma
             return;
         }
 
-        float currentDeltaTime = (float)m_deltaTime.get();
+        float currentDeltaTime = static_cast<float>( m_deltaTime.get() );
         gInternalSystems->update( currentDeltaTime );
         gInternalSystems->prePhysicsUpdate( currentDeltaTime );
         gPhysics->update( currentDeltaTime );

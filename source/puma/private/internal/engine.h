@@ -13,16 +13,19 @@ namespace puma
     {
     public:
 
-        void init( const Extent _windowExtent, const char* _windowName ) override;
-        void uninit() override;
+        void run( std::unique_ptr<IGame>&& _game ) override;
 
-        void update() override;
-        void render() override;
+        void init( const Extent _windowExtent = { 1280,720,200,200 }, const char* _windowName = "Puma" );
+        void uninit();
 
-        bool shouldQuit() const override { return m_shouldQuit; }
+        void update();
+        void render();
+
+        bool shouldQuit() const { return m_shouldQuit; }
 
     private:
 
+        std::unique_ptr<IGame> m_game = nullptr;
         std::unique_ptr<ServiceContainer> m_services = nullptr;
         EngineRenderer m_engineRenderer;
         DeltaTime m_deltaTime;

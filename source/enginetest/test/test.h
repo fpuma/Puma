@@ -1,14 +1,16 @@
 #pragma once
 
+#include <engine/igame.h>
+
 namespace test
 {
-    class Test
+    class Test : public puma::IGame
     {
     public:
 
-        void initTest();
-        void updateTest();
-        void uninitTest();
+        void init() override;
+        void update(float _deltaTime) override;
+        void uninit() override;
     };
 }
 

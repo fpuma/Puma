@@ -75,4 +75,9 @@ namespace puma
     {
         m_window->setWindowPosition( _x, _y );
     }
+
+    void EngineApplication::setWindowTitle( const char* _title )
+    {
+        m_window->setWindowTitle( _title );
+    }
 }

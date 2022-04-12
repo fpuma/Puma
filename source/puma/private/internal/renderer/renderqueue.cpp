@@ -127,7 +127,7 @@ namespace puma
         renderable.setTexture( _texture, _textureSample );
         renderable.setRotationDegrees( -_rotation );
 
-        renderable.setScreenExtent( std::move( _screenExtent ) );
+        renderable.setScreenExtent( _screenExtent );
 
         addRenderable( &renderable, _debug );
 

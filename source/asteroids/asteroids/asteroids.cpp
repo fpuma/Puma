@@ -19,6 +19,10 @@ using namespace puma;
 
 void Asteroids::init()
 {
+    gEngineApplication->setWindowTitle( "Asteroids" );
+    gEngineApplication->setWindowSize( 1000, 1000 );
+    gEngineApplication->setWindowPosition( 200, 200 );
+
     //Register classes
     gSystems->registerClass<ShipMovementSystem>();
     gSystems->add<ShipMovementSystem>();
@@ -39,7 +43,7 @@ void Asteroids::uninit()
     ShipSpawner::unspawnShip( m_shipEntity );
 }
 
-void Asteroids::update()
+void Asteroids::update( float _deltaTime )
 {
 
 }

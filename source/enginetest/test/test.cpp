@@ -85,8 +85,11 @@ namespace test
         gEngineApplication->setCameraEntity( MyDefaultCamera );
     }
 
-    void Test::initTest()
+    void Test::init()
     {
+        gEngineApplication->setWindowSize( 500, 500 );
+        gEngineApplication->setWindowPosition( 100, 100 );
+
         initPhysics();
         setCamera();
 
@@ -115,12 +118,12 @@ namespace test
         Floor3 = spawnFloor( gEngineApplication->getTextureManager(), { -15.0f, 15.0f, 0.0f }, 45.0f );
     }
 
-    void Test::updateTest()
+    void Test::update( float _deltaTime )
     {
 
     }
 
-    void Test::uninitTest()
+    void Test::uninit()
     {
         destroyDefaultCamera( MyDefaultCamera );
 

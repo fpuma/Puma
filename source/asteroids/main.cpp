@@ -15,20 +15,9 @@ int main( int argc, char* argv[] )
 #endif
 
     auto enginePtr = puma::IEngine::create();
-    enginePtr->init( { 1000, 1000, 200, 200 }, "Asteroids" );
-
-    Asteroids asteroidsGame;
-
-    asteroidsGame.init();
-
-    while ( !enginePtr->shouldQuit() )
-    {
-        enginePtr->update();
-        enginePtr->render();
-    };
-
-    asteroidsGame.uninit();
-    enginePtr->uninit();
+    auto asteroidsPtr = std::make_unique<Asteroids>();
+    
+    enginePtr->run( std::move(asteroidsPtr) );
 
     return 0;
 }

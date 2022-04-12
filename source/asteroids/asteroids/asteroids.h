@@ -1,16 +1,17 @@
 #pragma once
 
 #include <engine/ecs/base/entity.h>
+#include <engine/igame.h>
 
 using namespace puma;
 
-class Asteroids
+class Asteroids : public IGame
 {
 public:
 
-    void init();
-    void uninit();
-    void update();
+    void init() override;
+    void uninit() override;
+    void update( float _deltaTime ) override;
 
 private:
 
