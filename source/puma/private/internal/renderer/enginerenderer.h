@@ -17,9 +17,9 @@ namespace puma
         void endRender();
         void render();
 
-    private:
-
         void queueRenderables();
+
+    private:
 
         RenderQueue m_renderQueue;
     };

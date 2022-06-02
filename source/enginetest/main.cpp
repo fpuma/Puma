@@ -14,10 +14,9 @@ int main( int argc, char* argv[] )
     //---------------------------------------------------------------//
 #endif
 
-    auto enginePtr = puma::IEngine::create();
     auto gamePtr = std::make_unique<test::Test>();
 
-    enginePtr->run( std::move(gamePtr) );
+    puma::IEngine::run( std::move(gamePtr) );
 
     return 0;
 }

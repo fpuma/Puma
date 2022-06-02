@@ -8,22 +8,25 @@ namespace puma
 {
 
     class ServiceContainer;
+    class IGame;
 
     class Engine : public IEngine
     {
     public:
 
-        void run( std::unique_ptr<IGame>&& _game ) override;
-
         void init( const Extent _windowExtent = { 1280,720,200,200 }, const char* _windowName = "Puma" );
         void uninit();
 
-        void update();
-        void render();
+        void simulationUpdate(IGame* _game);
+        void applicationUpdate();
 
         bool shouldQuit() const { return m_shouldQuit; }
 
+        void updateThread( IGame* _game );
+        
     private:
+
+        void render();
 
         std::unique_ptr<IGame> m_game = nullptr;
         std::unique_ptr<ServiceContainer> m_services = nullptr;

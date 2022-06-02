@@ -14,10 +14,9 @@ int main( int argc, char* argv[] )
     //---------------------------------------------------------------//
 #endif
 
-    auto enginePtr = puma::IEngine::create();
     auto asteroidsPtr = std::make_unique<Asteroids>();
     
-    enginePtr->run( std::move(asteroidsPtr) );
+    puma::IEngine::run( std::move(asteroidsPtr) );
 
     return 0;
 }

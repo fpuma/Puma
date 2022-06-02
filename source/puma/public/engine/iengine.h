@@ -9,8 +9,6 @@ namespace puma
     public:
         virtual ~IEngine(){}
 
-        static std::unique_ptr<IEngine> create();
-
-        virtual void run( std::unique_ptr<IGame>&& _game ) = 0;
+        static void run( std::unique_ptr<IGame>&& _game );
     };
 }

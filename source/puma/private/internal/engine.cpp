@@ -57,24 +57,30 @@ namespace puma
         }
     }
 
-    std::unique_ptr<IEngine> IEngine::create()
-    {
-        return std::make_unique<Engine>();
-    }
-
-    void Engine::run( std::unique_ptr<IGame>&& _game )
+    void IEngine::run( std::unique_ptr<IGame>&& _game )
     {
         std::unique_ptr<Engine> engine = std::make_unique<Engine>();
 
         engine->init();
         _game->init();
         
-        while ( !engine->shouldQuit() )
+        //*
+        while (!engine->shouldQuit())
         {
-            engine->update();
-            _game->update( static_cast<float>( m_deltaTime.get() ) );
-            engine->render();
+            engine->simulationUpdate( _game.get() );
+            engine->applicationUpdate();
         }
+        /*/
+        std::thread ut( [&]() { engine->updateThread( _game.get() ); } );
+        
+        while (!engine->shouldQuit())
+        {
+            engine->applicationUpdate();
+        }
+
+        ut.join();
+        //*/
+
 
         _game->uninit();
         engine->uninit();
@@ -114,24 +120,31 @@ namespace puma
         m_services->uninit();
     }
 
-    void Engine::update()
+    void Engine::simulationUpdate( IGame* _game )
     {
         m_deltaTime.update();
-        gInternalEngineApplication->getInput()->update();
-        gInternalEngineApplication->update();
-        
-        m_shouldQuit = gInternalEngineApplication->shouldQuit();
 
-        if ( m_shouldQuit )
+        if (m_shouldQuit)
         {
             return;
         }
 
-        float currentDeltaTime = static_cast<float>( m_deltaTime.get() );
+        float currentDeltaTime = static_cast<float>(m_deltaTime.get());
         gInternalSystems->update( currentDeltaTime );
         gInternalSystems->prePhysicsUpdate( currentDeltaTime );
         gPhysics->update( currentDeltaTime );
         gInternalSystems->postPhysicsUpdate( currentDeltaTime );
+        _game->update(currentDeltaTime);
+        m_engineRenderer.queueRenderables();
+    }
+
+    void Engine::applicationUpdate()
+    {
+        gInternalEngineApplication->getInput()->update();
+
+        gInternalEngineApplication->update();
+        m_shouldQuit = gInternalEngineApplication->shouldQuit();
+        render();
     }
 
     void Engine::render()
@@ -147,15 +160,14 @@ namespace puma
 
         gInternalEngineApplication->getRenderer()->renderText( ScreenPos{ 0, 0 }, Color{255,0,255,255}, std::to_string( 1.0f / m_deltaTime.getAverage() ).c_str() );
 
-//#ifdef _DEBUG
-//        gPhysics->getDefaultWorld()->debugDraw();
-//#endif // _DEBUG
-
-        //Timestamp ts;
-        //ts.setToCurrentLocalTime();
-        //renderer.renderText( ts.ToString().c_str() );
-
         m_engineRenderer.endRender();
     }
 
+    void Engine::updateThread( IGame* _game )
+    {
+        while (!shouldQuit())
+        {
+            simulationUpdate( _game );
+        }
+    }
 }

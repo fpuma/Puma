@@ -27,14 +27,13 @@ namespace puma
 
     void EngineRenderer::render()
     {
-        m_renderQueue.clear();
-        queueRenderables();
         m_renderQueue.render();
     }
 
     void EngineRenderer::queueRenderables()
     {
+        m_renderQueue.startQueue();
         gInternalSystems->queueRenderables( m_renderQueue );
-        m_renderQueue.sortByRenderLayer();
+        m_renderQueue.endQueue();
     }
 }
