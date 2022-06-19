@@ -3,8 +3,9 @@
 
 #include <engine/application/applicationdefinitions.h>
 #include <engine/services/iloggerservice.h>
-#include <input/iinput.h>
-
+//#include <input/iinput.h>
+#include <internal/input/inputbuffer.h>
+//#include <internal/services/engineapplicationservice.h>
 namespace puma
 {
     InputMap::InputMap( InputAction _action, MousePositionInput _mousePosition )
@@ -56,177 +57,45 @@ namespace puma
         m_inputMap.controllerJoystick = _controllerJoystick;
     }
 
-    InputEvalResult InputMap::evaluate() const
+    InputEvalResult InputMap::evaluate( const InputBuffer& _inputBuffer ) const
     {
-        const NinaInput* input = gInternalEngineApplication->getInput();
-
-        assert( nullptr != input ); //Input was not initialized?
-
         InputEvalResult result;
 
         switch ( m_deviceType )
         {
         case MousePosition:
         {
-            const NinaMouse& mouse = input->getMouse();
-            result.active = mouse.wasMousePositionUpdated();
-            if ( result.active )
-            {
-                result.hasExtraInfo = true;
-                result.extraInfo = { static_cast<float>(mouse.getMousePosition().x), static_cast<float>(mouse.getMousePosition().y) };
-            }
+            result = _inputBuffer.isActive( m_inputMap.mousePosition );
             break;
         }
         case MouseButton:
         {
-            const NinaMouse& mouse = input->getMouse();
-            const NinaKeyboard& keyboard = input->getKeyboard();
-
-            const auto& deviceInput = m_inputMap.mouseButton;
-
-            result.active = deviceInput.modifier != InputModifier::NONE ?
-                            keyboard.keyState( static_cast<NinaKeyboardKey>(deviceInput.modifier) ) :
-                            true;
-
-            switch ( deviceInput.state )
-            {
-            case InputState::Pressed: { result.active &= mouse.buttonPressed( deviceInput.mouseButton ); break; }
-            case InputState::Released:{ result.active &= mouse.buttonReleased( deviceInput.mouseButton ); break; }
-            default: 
-                gLogger->error( "InputMap::evaluate - Invalid mouse button state." );
-                break;
-            }
+            result = _inputBuffer.isActive( m_inputMap.mouseButton );
             break;
         }
         case MouseWheel:
         {
-            const NinaMouse& mouse = input->getMouse();
-            const NinaKeyboard& keyboard = input->getKeyboard();
-
-            const auto& deviceInput = m_inputMap.mouseWheel;
-
-            result.active = deviceInput.modifier != InputModifier::NONE ?
-                            keyboard.keyState( static_cast<NinaKeyboardKey>(deviceInput.modifier) ) :
-                            true;
-
-            if ( deviceInput.mouseWheel != NinaMouseWheel::MW_IDLE )
-            {
-                result.active &= (mouse.getMouseWheelState() == deviceInput.mouseWheel);
-            }
-
+            result = _inputBuffer.isActive( m_inputMap.mouseWheel );
             break;
         }
         case KeyboardKey:
         {
-            const NinaKeyboard& keyboard = input->getKeyboard();
-
-            const auto& deviceInput = m_inputMap.keyboard;
-
-            result.active = deviceInput.modifier != InputModifier::NONE ?
-                            keyboard.keyState( static_cast<NinaKeyboardKey>(deviceInput.modifier) ) :
-                            true;
-
-            switch ( deviceInput.state )
-            {
-            case InputState::Pressed: { result.active &= keyboard.keyPressed(  deviceInput.keyboardKey ); break; }
-            case InputState::Released: { result.active &= keyboard.keyReleased( deviceInput.keyboardKey ); break; }
-            default: 
-                gLogger->error( "InputMap::evaluate - Invalid keyboard key state." );
-                break;
-            }
-
+            result = _inputBuffer.isActive( m_inputMap.keyboard );
             break;
         }
         case ControllerButton:
         {
-            if ( input->getControllerCount() == 0 ) break;
-
-            const auto& deviceInput = m_inputMap.controllerButton;
-            
-            const NinaController& controller = input->getController( deviceInput.controllerId );
-
-            switch ( deviceInput.state )
-            {
-            case InputState::Pressed: { result.active = controller.buttonPressed( deviceInput.controllerButton ); break; }
-            case InputState::Released: { result.active = controller.buttonReleased( deviceInput.controllerButton ); break; }
-            default: 
-                gLogger->error( "InputMap::evaluate - Invalid controller button state." );
-                break;
-            }
-
+            result = _inputBuffer.isActive( m_inputMap.controllerButton );
             break;
         }
         case ControllerTrigger:
         {
-            if ( input->getControllerCount() == 0 ) break;
-
-            const auto& deviceInput = m_inputMap.controllerTrigger;
-
-            const NinaController& controller = input->getController( deviceInput.controllerId );
-
-            switch ( deviceInput.controllerTrigger )
-            {
-            case NinaControllerTrigger::CT_LTRIGGER:
-            {
-                result.active = controller.wasLeftTriggerUpdated();
-                if ( result.active )
-                {
-                    result.hasExtraInfo = true;
-                    result.extraInfo = { controller.getLeftTrigger(), 0.0f };
-                }
-                break;
-            }
-            case NinaControllerTrigger::CT_RTRIGGER:
-            {
-                result.active = controller.wasRightTriggerUpdated();
-                if ( result.active )
-                {
-                    result.hasExtraInfo = true;
-                    result.extraInfo = { controller.getRightTrigger(), 0.0f };
-                }
-                break;
-            }
-            default:
-                gLogger->error( "InputMap::evaluate - Invalid controller trigger." );
-                break;
-            }
-
+            result = _inputBuffer.isActive( m_inputMap.controllerTrigger );
             break;
         }
         case ControllerJoystick:
         {
-            if ( input->getControllerCount() == 0 ) break;
-
-            const auto& deviceInput = m_inputMap.controllerJoystick;
-
-            const NinaController& controller = input->getController( deviceInput.controllerId );
-
-            switch ( deviceInput.controllerJoystick )
-            {
-            case ControllerJoystick::LEFT_STICK:
-            {
-                result.active = controller.wasLeftJoystickUpdated();
-                if ( result.active )
-                {
-                    result.hasExtraInfo = true;
-                    result.extraInfo = { controller.getLeftJoystickPosition().x, controller.getLeftJoystickPosition().y };
-                }
-                break;
-            }
-            case ControllerJoystick::RIGHT_STICK:
-            {
-                result.active = controller.wasRightJoystickUpdated();
-                if ( result.active )
-                {
-                    result.hasExtraInfo = true;
-                    result.extraInfo = { controller.getRightJoystickPosition().x, controller.getRightJoystickPosition().y };
-                }
-                break;
-            }
-            default:
-                gLogger->error( "InputMap::evaluate - Invalid controller joystick." );
-                break;
-            }
+            result = _inputBuffer.isActive( m_inputMap.controllerJoystick );
             break;
         }
         default:

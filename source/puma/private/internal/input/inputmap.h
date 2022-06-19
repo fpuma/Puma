@@ -1,16 +1,10 @@
 #pragma once
 
 #include <engine/input/inputdefinitions.h>
-#include <internal/services/engineapplicationservice.h>
 
 namespace puma
 {
-    struct InputEvalResult
-    {
-        bool active = false;
-        bool hasExtraInfo = false;
-        InputActionExtraInfo extraInfo;
-    };
+    class InputBuffer;
 
     class InputMap
     {
@@ -29,7 +23,7 @@ namespace puma
         bool operator == ( const InputMap& _other ) const;
         bool operator < ( const InputMap& _other ) const;
 
-        InputEvalResult evaluate() const;
+        InputEvalResult evaluate(const InputBuffer& _inputBuffer) const;
 
         InputAction getInputAction() const { return m_inputAction; }
 

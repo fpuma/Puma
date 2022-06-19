@@ -1,6 +1,7 @@
 #pragma once
 
 #include <engine/ecs/systems/iinputsystem.h>
+#include <internal/input/inputqueue.h>
 
 namespace puma
 {
@@ -20,8 +21,12 @@ namespace puma
         virtual void setProperties( SystemProperties _properties ) { m_systemProperties = _properties; }
         virtual SystemProperties getProperties() const { return m_systemProperties; }
 
-        void registerEntity( Entity _entity );
-        void unregisterEntity( Entity _entity );
+        void registerEntity( Entity _entity ) override;
+        void unregisterEntity( Entity _entity ) override;
+
+        void registerInputListener() { m_inputQueue.registerInputListener(); }
+        void unregisterInputListener() { m_inputQueue.unregisterInputListener(); }
+        void updateWriteBuffer() { m_inputQueue.updateWriteBuffer(); }
 
     private:
 #ifdef _DEBUG
@@ -32,5 +37,7 @@ namespace puma
 
         std::set<Entity> m_entities;
         SystemProperties m_systemProperties;
+
+        InputQueue m_inputQueue;
     };
 }

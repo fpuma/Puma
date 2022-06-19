@@ -32,6 +32,7 @@ namespace puma
         std::unique_ptr<ServiceContainer> m_services = nullptr;
         EngineRenderer m_engineRenderer;
         DeltaTime m_deltaTime;
+        DeltaTime m_appDt;
         bool m_shouldQuit = false;
     };
 }

@@ -3,11 +3,10 @@
 #include "inputsystem.h"
 
 #include <engine/input/inputdefinitions.h>
-#include <internal/services/providersservice.h>
+#include <engine/services/iprovidersservice.h>
 #include <internal/ecs/base/providers/componentprovider.h>
 #include <internal/ecs/components/inputcomponent.h>
 #include <internal/services/loggerservice.h>
-
 #include <utils/formatstring.h>
 
 namespace puma
@@ -26,11 +25,15 @@ namespace puma
 
     void InputSystem::update( float _deltaTime )
     {
-        ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
-        for ( Entity entity : m_entities )
+        if (m_inputQueue.updateReadBuffer())
         {
-            InputComponent* inputComponent = componentProvider->get<InputComponent>( entity );
-            inputComponent->evaluate();
+            m_inputQueue.printInputs();
+            ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
+            for ( Entity entity : m_entities )
+            {
+                InputComponent* inputComponent = componentProvider->get<InputComponent>( entity );
+                inputComponent->evaluate( *m_inputQueue.read() );
+            }
         }
     }
 

@@ -64,7 +64,7 @@ namespace puma
         engine->init();
         _game->init();
         
-        //*
+        /*
         while (!engine->shouldQuit())
         {
             engine->simulationUpdate( _game.get() );
@@ -103,7 +103,7 @@ namespace puma
 
         gInternalSystems->add<RenderSystem>();
         gInternalSystems->add<CollisionSystem>();
-        gInternalSystems->add<InputSystem>();
+        InputSystem* inputSystem = gInternalSystems->add<InputSystem>();
 
         gInternalSystems->updateSystemsProperties();
 
@@ -112,10 +112,12 @@ namespace puma
         gInternalLogger->info( "Puma engine initialized." );
 
         gInternalEngineApplication->init( _windowExtent, _windowName );
+        inputSystem->registerInputListener();
     }
 
     void Engine::uninit()
     {
+        gInternalSystems->get<InputSystem>()->unregisterInputListener();
         gInternalLogger->info( "Puma engine uninitializing." );
         m_services->uninit();
     }
@@ -140,6 +142,7 @@ namespace puma
 
     void Engine::applicationUpdate()
     {
+        gInternalSystems->get<InputSystem>()->updateWriteBuffer();
         gInternalEngineApplication->getInput()->update();
 
         gInternalEngineApplication->update();
@@ -158,7 +161,8 @@ namespace puma
 
         m_engineRenderer.render();
 
-        gInternalEngineApplication->getRenderer()->renderText( ScreenPos{ 0, 0 }, Color{255,0,255,255}, std::to_string( 1.0f / m_deltaTime.getAverage() ).c_str() );
+        gInternalEngineApplication->getRenderer()->renderText( ScreenPos{ 0, 0 }, Color{ 255,0,255,255 }, formatString( "%.3f", 1.0f / m_deltaTime.getAverage() ).c_str() );
+        //gInternalEngineApplication->getRenderer()->renderText( ScreenPos{ 0, 25 }, Color{ 255,0,255,255 }, formatString( "%.3f", m_deltaTime.getDerivative() ).c_str() );
 
         m_engineRenderer.endRender();
     }

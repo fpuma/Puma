@@ -5,6 +5,8 @@
 
 namespace puma
 {
+    class InputBuffer;
+
     class InputComponent final : public IInputComponent
     {
     public:
@@ -28,7 +30,7 @@ namespace puma
 
         InputActionExtraInfo getInputActionExtraInfo( InputAction _inputAction ) const override;
 
-        void evaluate();
+        void evaluate( const InputBuffer& _inputBuffer );
 
     private:
 
