@@ -20,30 +20,22 @@ namespace puma
             m_queue = _queue;
         }
 
-        void onKeyboardKey( NinaKeyboardKey _key ) const override
+        void onKeyboardKey( NinaKeyboardKey _key, NinaInputButtonEvent _event ) const override
         {
-            const auto* input = gInternalEngineApplication->getInput();
-            const auto& keyboard = input->getKeyboard();
-
             KeyboardInput kbInput;
             kbInput.keyboardKey = _key;
             kbInput.modifiers = m_queue->getModifiers();
-            assert( keyboard.keyPressed( _key ) || keyboard.keyReleased( _key ) ); //If we reach this point one of these events must have happened
-            kbInput.state = keyboard.keyPressed( _key ) ? InputState::Pressed : InputState::Released;
+            kbInput.state = _event;
 
             m_queue->write()->addKeyboardInput( std::move(kbInput) );
         }
 
-        void onMouseButton( NinaMouseButton _button ) const override
+        void onMouseButton( NinaMouseButton _button, NinaInputButtonEvent _event ) const override
         {
-            const auto* input = gInternalEngineApplication->getInput();
-            const auto& mouse = input->getMouse();
-
             MouseButtonInput mbInput;
             mbInput.mouseButton = _button;
             mbInput.modifiers = m_queue->getModifiers();
-            assert( mouse.buttonPressed( _button ) || mouse.buttonReleased( _button ) ); //If we reach this point one of these events must have happened
-            mbInput.state = mouse.buttonPressed( _button ) ? InputState::Pressed : InputState::Released;
+            mbInput.state = _event;
 
             m_queue->write()->addMouseButton( std::move( mbInput ) );
         }
@@ -59,63 +51,39 @@ namespace puma
 
         void onMousePosition( nina::MousePosition _mousePosition ) const override
         {
-            const auto* input = gInternalEngineApplication->getInput();
-            const auto& mouse = input->getMouse();
-
             MousePositionInput mpInput;
             mpInput.modifiers = m_queue->getModifiers();
-            auto mousePosition = mouse.getMousePosition();
+            auto mousePosition = _mousePosition;
             m_queue->write()->setMousePosition( std::move( mpInput ), { static_cast<float>(mousePosition.x), static_cast<float>(mousePosition.y) } );
         }
 
-        void onControllerButton( nina::ControllerId _id, nina::ControllerButton _buttonId ) const override
+        void onControllerButton( nina::ControllerId _id, nina::ControllerButton _buttonId, NinaInputButtonEvent _event ) const override
         {
-            const auto* input = gInternalEngineApplication->getInput();
-            const auto& controller = input->getController( _id );
-
             ControllerButtonInput cbInput;
             cbInput.controllerId = _id;
             cbInput.controllerButton = _buttonId;
-            cbInput.state = controller.buttonPressed( _buttonId ) ? InputState::Pressed : InputState::Released;
+            cbInput.state = _event;
             m_queue->write()->addControllerButtonInput( std::move(cbInput) );
         }
 
-        void onControllerJoystick( nina::ControllerId _id, nina::ControllerJoystickAxis _joystickId, float _joystickValue ) const override
+        void onControllerJoystick( nina::ControllerId _id, nina::ControllerJoystick _joystickId, nina::JoystickPosition _joystickValue ) const override
         {
-            const auto* input = gInternalEngineApplication->getInput();
-            const auto& controller = input->getController( _id );
-
             ControllerJoystickInput cjInput;
             InputActionExtraInfo extraInfo;
             
             cjInput.controllerId = _id;
-
-            if (_joystickId == nina::ControllerJoystickAxis::CJ_LSTICK_X ||
-                _joystickId == nina::ControllerJoystickAxis::CJ_LSTICK_Y)
-            {
-                cjInput.controllerJoystick = ControllerJoystick::LEFT_STICK;
-                nina::JoystickPosition jPos = controller.getLeftJoystickPosition();
-                extraInfo = { jPos.x, jPos.y };
-            }
-            else
-            {
-                cjInput.controllerJoystick = ControllerJoystick::RIGHT_STICK;
-                nina::JoystickPosition jPos = controller.getRightJoystickPosition();
-                extraInfo = { jPos.x, jPos.y };
-            }
+            cjInput.controllerJoystick = _joystickId;
+            extraInfo = { _joystickValue.x, _joystickValue.y };
 
             m_queue->write()->setJoystickInput( std::move( cjInput ), std::move( extraInfo ) );
         }
 
         void onControllerTrigger( nina::ControllerId _id, nina::ControllerTrigger _triggerId, float _triggerValue ) const override
         {
-            const auto* input = gInternalEngineApplication->getInput();
-            const auto& controller = input->getController( _id );
-
             ControllerTriggerInput ctInput;
             ctInput.controllerId = _id;
             ctInput.controllerTrigger = _triggerId;
-            float triggerValue = _triggerId == NinaControllerTrigger::CT_LTRIGGER ? controller.getLeftTrigger() : controller.getRightTrigger();
+            float triggerValue = _triggerValue;
             m_queue->write()->setControllerTriggerInput( std::move( ctInput ), { triggerValue, 0.0f } );
         }
 

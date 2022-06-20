@@ -1,6 +1,7 @@
 #pragma once
 
 #include <nina/input/inputids.h>
+#include <nina/input/inputdefinitions.h>
 #include <nina/texturemanager/itexturemanager.h>
 
 namespace puma
@@ -19,4 +20,7 @@ namespace puma
     using NinaControllerButton = nina::ControllerButton;
     using NinaControllerTrigger = nina::ControllerTrigger;
     using NinaControllerId = nina::ControllerId;
+
+    using NinaInputButtonEvent = nina::InputButtonEvent;
+    using NinaControllerJoystick = nina::ControllerJoystick;
 }

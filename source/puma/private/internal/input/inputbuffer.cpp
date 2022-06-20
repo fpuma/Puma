@@ -176,21 +176,21 @@ namespace puma
         for (const KeyboardInput& kbInput : m_keyboardKeys)
         {
             const char* keyName = nina::IInput::getInputName( kbInput.keyboardKey );
-            const char* keyState = kbInput.state == InputState::Pressed ? "PRESSED" : "RELEASED";
+            const char* keyState = kbInput.state == NinaInputButtonEvent::Pressed ? "PRESSED" : "RELEASED";
             gInternalLogger->info( formatString( "%s - %s", keyName, keyState ).c_str() );
         }
 
         for (const MouseButtonInput& mbInput : m_mouseButtons)
         {
             const char* buttonName = nina::IInput::getInputName( mbInput.mouseButton );
-            const char* buttonState = mbInput.state == InputState::Pressed ? "PRESSED" : "RELEASED";
+            const char* buttonState = mbInput.state == NinaInputButtonEvent::Pressed ? "PRESSED" : "RELEASED";
             gInternalLogger->info( formatString( "%s - %s", buttonName, buttonState ).c_str() );
         }
 
         for (const ControllerJoystickData& cjData : m_controllerJoysticks)
         {
             const ControllerJoystickInput& cjInput = cjData.input;
-            const char* joystickName = cjInput.controllerJoystick == ControllerJoystick::LEFT_STICK ? "LEFT" : "RIGHT";
+            const char* joystickName = cjInput.controllerJoystick == NinaControllerJoystick::CJ_LSTICK ? "LEFT" : "RIGHT";
             gInternalLogger->info( formatString( "Controller <%d> - %s Joystick - %.3f | %.3f", cjInput.controllerId, joystickName, cjData.extraInfo.x, cjData.extraInfo.y ).c_str() );
         }
     }

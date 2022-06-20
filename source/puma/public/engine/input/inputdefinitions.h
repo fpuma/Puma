@@ -27,18 +27,6 @@ namespace puma
         return (modifiersA == modifiersB) || (modifiersA & InputModifier_IGNORE) || (modifiersB & InputModifier_IGNORE);
     }
 
-    enum class ControllerJoystick : NinaInputId
-    {
-        LEFT_STICK,
-        RIGHT_STICK,
-    };
-
-    enum class InputState
-    {
-        Pressed,
-        Released,
-    };
-
     struct InputActionExtraInfo
     {
         float x = 0.0f;
@@ -79,7 +67,7 @@ namespace puma
 
         NinaMouseButton mouseButton = {};
         ModifierBitmask modifiers = {};
-        InputState state = InputState::Pressed;
+        NinaInputButtonEvent state = NinaInputButtonEvent::Pressed;
     };
 
     struct MouseWheelInput
@@ -119,7 +107,7 @@ namespace puma
 
         NinaKeyboardKey keyboardKey = {};
         ModifierBitmask modifiers = {};
-        InputState state = InputState::Pressed;
+        NinaInputButtonEvent state = NinaInputButtonEvent::Pressed;
     };
 
     struct ControllerButtonInput
@@ -139,7 +127,7 @@ namespace puma
 
         NinaControllerButton controllerButton = {};
         NinaControllerId controllerId = {};
-        InputState state = InputState::Pressed;
+        NinaInputButtonEvent state = NinaInputButtonEvent::Pressed;
     };
 
     struct ControllerTriggerInput
@@ -174,7 +162,7 @@ namespace puma
             return false;
         }
 
-        ControllerJoystick controllerJoystick = {};
+        NinaControllerJoystick controllerJoystick = {};
         NinaControllerId controllerId = {};
     };
 
