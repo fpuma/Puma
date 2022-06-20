@@ -21,8 +21,7 @@ namespace puma
         const InputBuffer* read() const { return m_toRead; }
         InputBuffer* write() { return m_toWrite; }
 
-        void updateModifiers();
-        ModifierBitmask getModifiers() const { return m_modifierBitmask; }
+        ModifierBitmask getModifiers() const;
 
         void printInputs();
 
@@ -36,8 +35,6 @@ namespace puma
         InputBuffer m_buffer0;
         InputBuffer m_buffer1;
         InputBuffer m_buffer2;
-
-        ModifierBitmask m_modifierBitmask;
 
         std::mutex m_bufferSyncMutex;
 

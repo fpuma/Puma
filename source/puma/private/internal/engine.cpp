@@ -126,11 +126,6 @@ namespace puma
     {
         m_deltaTime.update();
 
-        if (m_shouldQuit)
-        {
-            return;
-        }
-
         float currentDeltaTime = static_cast<float>(m_deltaTime.get());
         gInternalSystems->update( currentDeltaTime );
         gInternalSystems->prePhysicsUpdate( currentDeltaTime );
@@ -142,6 +137,8 @@ namespace puma
 
     void Engine::applicationUpdate()
     {
+        m_appDt.update();
+
         gInternalSystems->get<InputSystem>()->updateWriteBuffer();
         gInternalEngineApplication->getInput()->update();
 
@@ -152,17 +149,13 @@ namespace puma
 
     void Engine::render()
     {
-        if ( m_shouldQuit )
-        {
-            return;
-        }
-
         m_engineRenderer.beginRender();
 
         m_engineRenderer.render();
 
-        gInternalEngineApplication->getRenderer()->renderText( ScreenPos{ 0, 0 }, Color{ 255,0,255,255 }, formatString( "%.3f", 1.0f / m_deltaTime.getAverage() ).c_str() );
-        //gInternalEngineApplication->getRenderer()->renderText( ScreenPos{ 0, 25 }, Color{ 255,0,255,255 }, formatString( "%.3f", m_deltaTime.getDerivative() ).c_str() );
+        gInternalEngineApplication->getRenderer()->renderSolidPolygon( { {0,0}, {0,24}, {140,24}, {140,0} }, Color{ 0,0,0,255 } );
+        gInternalEngineApplication->getRenderer()->renderText( ScreenPos{ 2, 2 },  Color::White(), formatString( "SIM: %.2f fps", 1.0f / m_deltaTime.getAverage() ).c_str() );
+        gInternalEngineApplication->getRenderer()->renderText( ScreenPos{ 2, 14 }, Color::White(), formatString( "APP: %.2f fps", 1.0f / m_appDt.getAverage() ).c_str() );
 
         m_engineRenderer.endRender();
     }

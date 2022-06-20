@@ -32,6 +32,8 @@ namespace puma
 
         void evaluate( const InputBuffer& _inputBuffer );
 
+        void clearActiveActions();
+
     private:
 
         struct ExtraInfoData

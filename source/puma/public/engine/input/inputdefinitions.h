@@ -10,21 +10,21 @@ namespace puma
 
     enum InputModifier : size_t
     {
+        InputModifier_NONE    = 0x00,
         InputModifier_LCTRL   = 0x01, 
         InputModifier_RCTRL   = 0x02, 
         InputModifier_LSHIFT  = 0x04, 
         InputModifier_RSHIFT  = 0x08, 
         InputModifier_LALT    = 0x10, 
         InputModifier_RALT    = 0x20, 
-        InputModifier_NONE    = 0x40,
-        InputModifier_IGNORE  = 0x80,
+        InputModifier_IGNORE  = 0x40,
     };
 
     using ModifierBitmask = char;
 
     inline bool doModifiersMatch( const ModifierBitmask& modifiersA, const ModifierBitmask& modifiersB )
     {
-        return (modifiersA == modifiersB) || (modifiersA | InputModifier_IGNORE) || (modifiersB | InputModifier_IGNORE);
+        return (modifiersA == modifiersB) || (modifiersA & InputModifier_IGNORE) || (modifiersB & InputModifier_IGNORE);
     }
 
     enum class ControllerJoystick : NinaInputId

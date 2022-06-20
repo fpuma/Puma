@@ -67,38 +67,38 @@ namespace puma
 
         void onControllerButton( nina::ControllerId _id, nina::ControllerButton _buttonId ) const override
         {
+            const auto* input = gInternalEngineApplication->getInput();
+            const auto& controller = input->getController( _id );
+
             ControllerButtonInput cbInput;
             cbInput.controllerId = _id;
             cbInput.controllerButton = _buttonId;
-
+            cbInput.state = controller.buttonPressed( _buttonId ) ? InputState::Pressed : InputState::Released;
             m_queue->write()->addControllerButtonInput( std::move(cbInput) );
         }
 
         void onControllerJoystick( nina::ControllerId _id, nina::ControllerJoystickAxis _joystickId, float _joystickValue ) const override
         {
+            const auto* input = gInternalEngineApplication->getInput();
+            const auto& controller = input->getController( _id );
+
             ControllerJoystickInput cjInput;
+            InputActionExtraInfo extraInfo;
+            
             cjInput.controllerId = _id;
 
             if (_joystickId == nina::ControllerJoystickAxis::CJ_LSTICK_X ||
                 _joystickId == nina::ControllerJoystickAxis::CJ_LSTICK_Y)
             {
                 cjInput.controllerJoystick = ControllerJoystick::LEFT_STICK;
+                nina::JoystickPosition jPos = controller.getLeftJoystickPosition();
+                extraInfo = { jPos.x, jPos.y };
             }
             else
             {
-                cjInput.controllerJoystick = ControllerJoystick::RIGHT_STICK;;
-            }
-
-            InputActionExtraInfo extraInfo;
-
-            if (_joystickId == nina::ControllerJoystickAxis::CJ_LSTICK_X ||
-                _joystickId == nina::ControllerJoystickAxis::CJ_RSTICK_X)
-            {
-                extraInfo.x = _joystickValue;
-            }
-            else
-            {
-                extraInfo.y = _joystickValue;
+                cjInput.controllerJoystick = ControllerJoystick::RIGHT_STICK;
+                nina::JoystickPosition jPos = controller.getRightJoystickPosition();
+                extraInfo = { jPos.x, jPos.y };
             }
 
             m_queue->write()->setJoystickInput( std::move( cjInput ), std::move( extraInfo ) );
@@ -139,18 +139,20 @@ namespace puma
         gInternalEngineApplication->getInput()->clearInputListener();
     }
 
-    void InputQueue::updateModifiers()
+    ModifierBitmask InputQueue::getModifiers() const
     {
-        m_modifierBitmask = 0;
+        char result = 0;
         const auto* input = gInternalEngineApplication->getInput();
         const auto& keyboard = input->getKeyboard();
 
-        if (keyboard.keyState( NinaKeyboardKey::KB_LSHIFT )) m_modifierBitmask |= InputModifier_LSHIFT;
-        if (keyboard.keyState( NinaKeyboardKey::KB_RSHIFT )) m_modifierBitmask |= InputModifier_RSHIFT;
-        if (keyboard.keyState( NinaKeyboardKey::KB_LCTRL  )) m_modifierBitmask |= InputModifier_LCTRL;
-        if (keyboard.keyState( NinaKeyboardKey::KB_RCTRL  )) m_modifierBitmask |= InputModifier_RCTRL;
-        if (keyboard.keyState( NinaKeyboardKey::KB_LALT   )) m_modifierBitmask |= InputModifier_LALT;
-        if (keyboard.keyState( NinaKeyboardKey::KB_RALT   )) m_modifierBitmask |= InputModifier_RALT;
+        if (keyboard.keyState( NinaKeyboardKey::KB_LSHIFT )) result |= InputModifier_LSHIFT;
+        if (keyboard.keyState( NinaKeyboardKey::KB_RSHIFT )) result |= InputModifier_RSHIFT;
+        if (keyboard.keyState( NinaKeyboardKey::KB_LCTRL  )) result |= InputModifier_LCTRL;
+        if (keyboard.keyState( NinaKeyboardKey::KB_RCTRL  )) result |= InputModifier_RCTRL;
+        if (keyboard.keyState( NinaKeyboardKey::KB_LALT   )) result |= InputModifier_LALT;
+        if (keyboard.keyState( NinaKeyboardKey::KB_RALT   )) result |= InputModifier_RALT;
+
+        return result;
     }
 
     bool InputQueue::updateWriteBuffer()

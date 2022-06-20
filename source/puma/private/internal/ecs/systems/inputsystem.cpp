@@ -25,14 +25,20 @@ namespace puma
 
     void InputSystem::update( float _deltaTime )
     {
-        if (m_inputQueue.updateReadBuffer())
+        bool readBufferUpdated = m_inputQueue.updateReadBuffer();
+        
+        m_inputQueue.printInputs();
+        ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
+        for ( Entity entity : m_entities )
         {
-            m_inputQueue.printInputs();
-            ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
-            for ( Entity entity : m_entities )
+            InputComponent* inputComponent = componentProvider->get<InputComponent>( entity );
+            if (readBufferUpdated)
             {
-                InputComponent* inputComponent = componentProvider->get<InputComponent>( entity );
                 inputComponent->evaluate( *m_inputQueue.read() );
+            }
+            else
+            {
+                inputComponent->clearActiveActions();
             }
         }
     }

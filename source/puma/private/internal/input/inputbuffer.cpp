@@ -16,11 +16,11 @@ namespace puma
 
         if (m_mousePositions.end() != itFoundMousePos)
         {
-            m_mousePositions.push_back( { _input, _extraInfo } );
+            itFoundMousePos->extraInfo = _extraInfo;
         }
         else
         {
-            itFoundMousePos->extraInfo = _extraInfo;
+            m_mousePositions.push_back( { _input, _extraInfo } );
         }
     }
 
@@ -53,11 +53,11 @@ namespace puma
 
         if ( m_controllerTriggers.end() != itFoundTrigger )
         {
-            m_controllerTriggers.push_back( { _input, _extraInfo } );
+            itFoundTrigger->extraInfo = _extraInfo;
         }
         else
         {
-            itFoundTrigger->extraInfo = _extraInfo;
+            m_controllerTriggers.push_back( { _input, _extraInfo } );
         }
     }
 
@@ -69,10 +69,6 @@ namespace puma
             });
         if (m_controllerJoysticks.end() != itFoundJoystick)
         {
-            m_controllerJoysticks.push_back( { _input, _extraInfo } );
-        }
-        else
-        {
             if (_extraInfo.x > 0.0f)
             {
                 itFoundJoystick->extraInfo.x = _extraInfo.x;
@@ -81,6 +77,10 @@ namespace puma
             {
                 itFoundJoystick->extraInfo.y = _extraInfo.y;
             }
+        }
+        else
+        {
+            m_controllerJoysticks.push_back( { _input, _extraInfo } );
         }
     }
 
@@ -178,6 +178,20 @@ namespace puma
             const char* keyName = nina::IInput::getInputName( kbInput.keyboardKey );
             const char* keyState = kbInput.state == InputState::Pressed ? "PRESSED" : "RELEASED";
             gInternalLogger->info( formatString( "%s - %s", keyName, keyState ).c_str() );
+        }
+
+        for (const MouseButtonInput& mbInput : m_mouseButtons)
+        {
+            const char* buttonName = nina::IInput::getInputName( mbInput.mouseButton );
+            const char* buttonState = mbInput.state == InputState::Pressed ? "PRESSED" : "RELEASED";
+            gInternalLogger->info( formatString( "%s - %s", buttonName, buttonState ).c_str() );
+        }
+
+        for (const ControllerJoystickData& cjData : m_controllerJoysticks)
+        {
+            const ControllerJoystickInput& cjInput = cjData.input;
+            const char* joystickName = cjInput.controllerJoystick == ControllerJoystick::LEFT_STICK ? "LEFT" : "RIGHT";
+            gInternalLogger->info( formatString( "Controller <%d> - %s Joystick - %.3f | %.3f", cjInput.controllerId, joystickName, cjData.extraInfo.x, cjData.extraInfo.y ).c_str() );
         }
     }
 }
