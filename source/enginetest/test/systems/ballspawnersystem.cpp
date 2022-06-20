@@ -42,6 +42,12 @@ namespace test
         KeyboardInput keyboardInput;
         keyboardInput.keyboardKey = NinaKeyboardKey::KB_Y;
         inputComponent->addInputMap( TestInputActions::InvertGravity, keyboardInput );
+
+        ControllerButtonInput controllerInput;
+        controllerInput.controllerButton = NinaControllerButton::CB_Y;
+        controllerInput.controllerId = 0;
+        inputComponent->addInputMap( TestInputActions::InvertGravity, controllerInput );
+
         gSystems->get<IInputSystem>()->registerEntity( m_spawnerHandler );
     }
 

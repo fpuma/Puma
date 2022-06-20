@@ -27,7 +27,7 @@ namespace puma
     {
         bool readBufferUpdated = m_inputQueue.updateReadBuffer();
         
-        m_inputQueue.printInputs();
+        //m_inputQueue.printInputs();
         ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
         for ( Entity entity : m_entities )
         {
