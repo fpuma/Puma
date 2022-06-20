@@ -1,10 +1,7 @@
 #pragma once
 
-#include <input/devices/icontroller.h>
-#include <input/devices/ikeyboard.h>
-#include <input/devices/imouse.h>
-#include <input/inputids.h>
-#include <texturemanager/itexturemanager.h>
+#include <nina/input/inputids.h>
+#include <nina/texturemanager/itexturemanager.h>
 
 namespace puma
 {
@@ -22,8 +19,4 @@ namespace puma
     using NinaControllerButton = nina::ControllerButton;
     using NinaControllerTrigger = nina::ControllerTrigger;
     using NinaControllerId = nina::ControllerId;
-    
-    using NinaController = nina::IController;
-    using NinaKeyboard = nina::IKeyboard;
-    using NinaMouse = nina::IMouse;
 }

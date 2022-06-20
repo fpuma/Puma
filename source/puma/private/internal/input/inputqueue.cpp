@@ -1,9 +1,12 @@
 #include "precompiledengine.h"
 
 #include "inputqueue.h"
-#include <input/iinputlistener.h>
 #include <internal/services/engineapplicationservice.h>
-#include <input/iinput.h>
+#include <nina/input/iinput.h>
+#include <nina/input/iinputlistener.h>
+#include <nina/input/devices/icontroller.h>
+#include <nina/input/devices/imouse.h>
+#include <nina/input/devices/ikeyboard.h>
 #include <engine/input/inputdefinitions.h>
 
 namespace puma

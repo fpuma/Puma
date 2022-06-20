@@ -2,9 +2,8 @@
 
 #include "test.h"
 
-#include <input/devices/ikeyboard.h>
-#include <input/inputids.h>
-#include <texturemanager/itexturemanager.h>
+#include <nina/input/inputids.h>
+#include <nina/texturemanager/itexturemanager.h>
 
 #include <data/collisionindexes.h>
 
@@ -33,7 +32,7 @@
 #include <test/systems/staticstuffsystem.h>
 #include <test/components/movedirectioncomponent.h>
 
-#include <texturemanager/itexturemanager.h>
+#include <nina/texturemanager/itexturemanager.h>
 
 namespace test
 {

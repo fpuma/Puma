@@ -3,7 +3,7 @@
 #include "inputbuffer.h"
 
 #include <internal/services/loggerservice.h>
-#include <input/iinput.h>
+#include <nina/input/iinput.h>
 
 namespace puma
 {

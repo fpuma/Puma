@@ -4,7 +4,7 @@
 
 #include <engine/ecs/systems/irendersystem.h>
 
-#include <texturemanager/texture.h>
+#include <nina/texturemanager/texture.h>
 
 namespace puma
 {

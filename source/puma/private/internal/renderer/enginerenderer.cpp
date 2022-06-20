@@ -2,7 +2,7 @@
 
 #include "enginerenderer.h"
 
-#include <application/irenderer.h>
+#include <nina/application/irenderer.h>
 
 #include <engine/services/iprovidersservice.h>
 

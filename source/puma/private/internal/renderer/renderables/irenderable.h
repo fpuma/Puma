@@ -2,8 +2,8 @@
 
 #include <engine/utils/position.h>
 #include <engine/utils/renderdefinitions.h>
-#include <texturemanager/texture.h>
-#include <texturemanager/texturedefinitions.h>
+#include <nina/texturemanager/texture.h>
+#include <nina/texturemanager/texturedefinitions.h>
 #include <utils/graphics/dimensions.h>
 #include <utils/genericid.h>
 

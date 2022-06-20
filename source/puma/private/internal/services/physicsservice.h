@@ -3,7 +3,7 @@
 //#include <engine/services/iphysicsservice.h>
 
 #include <engine/services/base/iservice.h>
-#include <physics/iphysics.h>
+#include <leo/iphysics.h>
 
 namespace puma
 {

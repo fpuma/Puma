@@ -1,7 +1,7 @@
 #include <precompiledengine.h>
 
 #include "renderableshape.h"
-#include <application/irenderer.h>
+#include <nina/application/irenderer.h>
 #include <internal/renderer/enginerendererhelpers.h>
 #include <internal/services/engineapplicationservice.h>
 #include <utils/geometry/geometryhelpers.h>

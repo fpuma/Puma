@@ -2,8 +2,8 @@
 
 #include "rendersystem.h"
 
-#include <application/irenderer.h>
-#include <application/iwindow.h>
+#include <nina/application/irenderer.h>
+#include <nina/application/iwindow.h>
 
 #include <engine/ecs/base/entity.h>
 #include <engine/renderer/irenderqueue.h>

@@ -3,8 +3,8 @@
 #include <internal/ecs/components/collisioncomponent.h>
 #include <internal/services/physicsservice.h>
 
-#include <physics/simulation/frames/iframe.h>
-#include <physics/simulation/world/iworld.h>
+#include <leo/simulation/frames/iframe.h>
+#include <leo/simulation/world/iworld.h>
 
 namespace puma
 {
