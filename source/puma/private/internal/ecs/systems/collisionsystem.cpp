@@ -12,8 +12,8 @@
 
 #include <internal/renderer/renderqueue.h>
 
-#include <physics/simulation/frames/iframe.h>
-#include <physics/simulation/world/iworld.h>
+#include <leo/simulation/frames/iframe.h>
+#include <leo/simulation/world/iworld.h>
 
 #define PHYSICS_DEBUG_RENDER
 

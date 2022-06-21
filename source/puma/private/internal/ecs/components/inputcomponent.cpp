@@ -72,14 +72,13 @@ namespace puma
         return result;
     }
 
-    void InputComponent::evaluate()
+    void InputComponent::evaluate( const InputBuffer& _inputBuffer )
     {
-        m_activeAction.clear();
-        m_extraInfo.clear();
+        clearActiveActions();
 
         for ( const InputMap& inputMap : m_inputMaps )
         {
-            InputEvalResult result = inputMap.evaluate();
+            InputEvalResult result = inputMap.evaluate( _inputBuffer );
             if ( result.active )
             {
                 m_activeAction.insert( inputMap.getInputAction() );
@@ -89,5 +88,11 @@ namespace puma
                 }
             }
         }
+    }
+
+    void InputComponent::clearActiveActions()
+    {
+        m_activeAction.clear();
+        m_extraInfo.clear();
     }
 }

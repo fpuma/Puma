@@ -2,7 +2,7 @@
 
 #include "enginerendererhelpers.h"
 
-#include <application/iwindow.h>
+#include <nina/application/iwindow.h>
 #include <engine/services/iprovidersservice.h>
 #include <internal/ecs/base/providers/componentprovider.h>
 #include <internal/ecs/components/cameracomponent.h>
@@ -11,7 +11,7 @@
 #include <utils/graphics/dimensions.h>
 #include <utils/geometry/geometryhelpers.h>
 
-#include <physics/geometry/overlapcheck.h>
+#include <leo/geometry/overlapcheck.h>
 
 namespace puma::erh
 {

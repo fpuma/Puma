@@ -2,15 +2,15 @@
 
 #include "engineapplication.h"
 
-#include <application/iwindow.h>
-#include <application/irenderer.h>
+#include <nina/application/iwindow.h>
+#include <nina/application/irenderer.h>
 
-#include <input/iinput.h>
+#include <nina/input/iinput.h>
 
 #include <logger/logger.h>
 #include <logger/output/consolelogoutput.h>
 
-#include <texturemanager/itexturemanager.h>
+#include <nina/texturemanager/itexturemanager.h>
 
 #ifdef _DEBUG
 #include <engine/services/iprovidersservice.h>

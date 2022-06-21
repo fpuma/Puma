@@ -5,30 +5,27 @@
 
 namespace puma
 {
+
     DECLARE_GENERIC_ID( InputAction, s32, kMaxS32 )
 
-    enum class InputModifier : NinaInputId
+    enum InputModifier : size_t
     {
-        NONE = 0,
-        LCTRL = static_cast<NinaInputId>(NinaKeyboardKey::KB_LCTRL),
-        RCTRL = static_cast<NinaInputId>(NinaKeyboardKey::KB_RCTRL),
-        LSHIFT = static_cast<NinaInputId>(NinaKeyboardKey::KB_LSHIFT),
-        RSHIFT = static_cast<NinaInputId>(NinaKeyboardKey::KB_RSHIFT),
-        LALT = static_cast<NinaInputId>(NinaKeyboardKey::KB_LALT),
-        RALT = static_cast<NinaInputId>(NinaKeyboardKey::KB_RALT),
+        InputModifier_NONE    = 0x00,
+        InputModifier_LCTRL   = 0x01, 
+        InputModifier_RCTRL   = 0x02, 
+        InputModifier_LSHIFT  = 0x04, 
+        InputModifier_RSHIFT  = 0x08, 
+        InputModifier_LALT    = 0x10, 
+        InputModifier_RALT    = 0x20, 
+        InputModifier_IGNORE  = 0x40,
     };
 
-    enum class ControllerJoystick : NinaInputId
-    {
-        LEFT_STICK,
-        RIGHT_STICK,
-    };
+    using ModifierBitmask = char;
 
-    enum class InputState
+    inline bool doModifiersMatch( const ModifierBitmask& modifiersA, const ModifierBitmask& modifiersB )
     {
-        Pressed,
-        Released,
-    };
+        return (modifiersA == modifiersB) || (modifiersA & InputModifier_IGNORE) || (modifiersB & InputModifier_IGNORE);
+    }
 
     struct InputActionExtraInfo
     {
@@ -40,76 +37,77 @@ namespace puma
     {
         bool operator == ( const MousePositionInput& _other ) const
         {
-            return (modifier == _other.modifier) && (state == _other.state);
+            return doModifiersMatch( modifiers, _other.modifiers );
         }
 
         bool operator < ( const MousePositionInput& _other ) const
         {
-            if ( modifier != _other.modifier ) { return modifier < _other.modifier; }
-            if ( state != _other.state ) { return state < _other.state; }
+            if ( modifiers != _other.modifiers ) { return modifiers < _other.modifiers; }
             return false;
         }
 
-        InputModifier modifier = InputModifier::NONE;
-        InputState state = InputState::Pressed;
+        ModifierBitmask modifiers = {};
     };
 
     struct MouseButtonInput
     {
         bool operator == ( const MouseButtonInput& _other ) const
         {
-            return (mouseButton == _other.mouseButton) && (modifier == _other.modifier) && (state == _other.state);
+            bool modMatch = doModifiersMatch( modifiers, _other.modifiers );
+            return (mouseButton == _other.mouseButton) && modMatch && (state == _other.state);
         }
 
         bool operator < ( const MouseButtonInput& _other ) const
         {
             if ( mouseButton != _other.mouseButton ) { return mouseButton < _other.mouseButton; }
-            if ( modifier != _other.modifier ) { return modifier < _other.modifier; }
+            if ( modifiers != _other.modifiers ) { return modifiers < _other.modifiers; }
             if ( state != _other.state ) { return state < _other.state; }
             return false;
         }
 
-        NinaMouseButton mouseButton;
-        InputModifier modifier = InputModifier::NONE;
-        InputState state = InputState::Pressed;
+        NinaMouseButton mouseButton = {};
+        ModifierBitmask modifiers = {};
+        NinaInputButtonEvent state = NinaInputButtonEvent::Pressed;
     };
 
     struct MouseWheelInput
     {
         bool operator == ( const MouseWheelInput& _other ) const
         {
-            return (mouseWheel == _other.mouseWheel) && (modifier == _other.modifier);
+            bool modMatch = doModifiersMatch( modifiers, _other.modifiers );
+            return (mouseWheel == _other.mouseWheel) && modMatch;
         }
 
         bool operator < ( const MouseWheelInput& _other ) const
         {
             if ( mouseWheel != _other.mouseWheel ) { return mouseWheel < _other.mouseWheel; }
-            if ( modifier != _other.modifier ) { return modifier < _other.modifier; }
+            if ( modifiers != _other.modifiers ) { return modifiers < _other.modifiers; }
             return false;
         }
 
         NinaMouseWheel mouseWheel = NinaMouseWheel::MW_IDLE;
-        InputModifier modifier = InputModifier::NONE;
+        ModifierBitmask modifiers = {};
     };
 
     struct KeyboardInput
     {
         bool operator == ( const KeyboardInput& _other ) const
         {
-            return (keyboardKey == _other.keyboardKey) && (modifier == _other.modifier) && (state == _other.state);
+            bool modMatch = doModifiersMatch( modifiers, _other.modifiers );
+            return (keyboardKey == _other.keyboardKey) && modMatch && (state == _other.state);
         }
 
         bool operator < ( const KeyboardInput& _other ) const
         {
             if ( keyboardKey != _other.keyboardKey ) { return keyboardKey < _other.keyboardKey; }
-            if ( modifier != _other.modifier ) { return modifier < _other.modifier; }
+            if ( modifiers != _other.modifiers ) { return modifiers < _other.modifiers; }
             if ( state != _other.state ) { return state < _other.state; }
             return false;
         }
 
-        NinaKeyboardKey keyboardKey;
-        InputModifier modifier = InputModifier::NONE;
-        InputState state = InputState::Pressed;
+        NinaKeyboardKey keyboardKey = {};
+        ModifierBitmask modifiers = {};
+        NinaInputButtonEvent state = NinaInputButtonEvent::Pressed;
     };
 
     struct ControllerButtonInput
@@ -127,9 +125,9 @@ namespace puma
             return false;
         }
 
-        NinaControllerButton controllerButton;
-        NinaControllerId controllerId;
-        InputState state = InputState::Pressed;
+        NinaControllerButton controllerButton = {};
+        NinaControllerId controllerId = {};
+        NinaInputButtonEvent state = NinaInputButtonEvent::Pressed;
     };
 
     struct ControllerTriggerInput
@@ -146,8 +144,8 @@ namespace puma
             return false;
         }
 
-        NinaControllerTrigger controllerTrigger;
-        NinaControllerId controllerId;
+        NinaControllerTrigger controllerTrigger = {};
+        NinaControllerId controllerId = {};
     };
 
     struct ControllerJoystickInput
@@ -164,7 +162,14 @@ namespace puma
             return false;
         }
 
-        ControllerJoystick controllerJoystick;
-        NinaControllerId controllerId;
+        NinaControllerJoystick controllerJoystick = {};
+        NinaControllerId controllerId = {};
+    };
+
+    struct InputEvalResult
+    {
+        bool active = false;
+        bool hasExtraInfo = false;
+        InputActionExtraInfo extraInfo;
     };
 }

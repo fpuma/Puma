@@ -4,7 +4,7 @@ namespace Export
     class SDLgfx : Puma.Common.IExternBinaries
     {
         public SDLgfx()
-            : base("SDLgfx", @"nina\extern\SDL2_gfx-1.0.1")
+            : base("SDLgfx", @"nina\extern\SDL2_gfx-1.0.4")
         { }
 
         public override void ConfigureIncludes(Configuration conf, Sharpmake.Target target)

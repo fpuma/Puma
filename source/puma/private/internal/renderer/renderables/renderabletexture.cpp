@@ -3,7 +3,7 @@
 #include "renderabletexture.h"
 #include <internal/services/engineapplicationservice.h>
 
-#include <application/irenderer.h>
+#include <nina/application/irenderer.h>
 
 namespace puma
 {

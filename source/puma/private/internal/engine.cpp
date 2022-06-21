@@ -1,10 +1,10 @@
 #include <precompiledengine.h>
 #include <internal/engine.h>
 
-#include <application/irenderer.h>
+#include <nina/application/irenderer.h>
 #include <engine/utils/timerprovider.h>
 #include <engine/igame.h>
-#include <input/iinput.h>
+#include <nina/input/iinput.h>
 
 #include <internal/ecs/base/providers/componentprovider.h>
 #include <internal/ecs/base/providers/entityprovider.h>
@@ -103,7 +103,7 @@ namespace puma
 
         gInternalSystems->add<RenderSystem>();
         gInternalSystems->add<CollisionSystem>();
-        gInternalSystems->add<InputSystem>();
+        InputSystem* inputSystem = gInternalSystems->add<InputSystem>();
 
         gInternalSystems->updateSystemsProperties();
 
@@ -112,10 +112,12 @@ namespace puma
         gInternalLogger->info( "Puma engine initialized." );
 
         gInternalEngineApplication->init( _windowExtent, _windowName );
+        inputSystem->registerInputListener();
     }
 
     void Engine::uninit()
     {
+        gInternalSystems->get<InputSystem>()->unregisterInputListener();
         gInternalLogger->info( "Puma engine uninitializing." );
         m_services->uninit();
     }
@@ -123,11 +125,6 @@ namespace puma
     void Engine::simulationUpdate( IGame* _game )
     {
         m_deltaTime.update();
-
-        if (m_shouldQuit)
-        {
-            return;
-        }
 
         float currentDeltaTime = static_cast<float>(m_deltaTime.get());
         gInternalSystems->update( currentDeltaTime );
@@ -140,6 +137,9 @@ namespace puma
 
     void Engine::applicationUpdate()
     {
+        m_appDt.update();
+
+        gInternalSystems->get<InputSystem>()->updateWriteBuffer();
         gInternalEngineApplication->getInput()->update();
 
         gInternalEngineApplication->update();
@@ -149,16 +149,13 @@ namespace puma
 
     void Engine::render()
     {
-        if ( m_shouldQuit )
-        {
-            return;
-        }
-
         m_engineRenderer.beginRender();
 
         m_engineRenderer.render();
 
-        gInternalEngineApplication->getRenderer()->renderText( ScreenPos{ 0, 0 }, Color{255,0,255,255}, std::to_string( 1.0f / m_deltaTime.getAverage() ).c_str() );
+        gInternalEngineApplication->getRenderer()->renderSolidPolygon( { {0,0}, {0,24}, {140,24}, {140,0} }, Color{ 0,0,0,255 } );
+        gInternalEngineApplication->getRenderer()->renderText( ScreenPos{ 2, 2 },  {255,255,0,255}, formatString( "SIM: %.2f fps", 1.0f / m_deltaTime.getAverage() ).c_str() );
+        gInternalEngineApplication->getRenderer()->renderText( ScreenPos{ 2, 14 }, {255,255,0,255}, formatString( "APP: %.2f fps", 1.0f / m_appDt.getAverage() ).c_str() );
 
         m_engineRenderer.endRender();
     }

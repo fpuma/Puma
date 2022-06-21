@@ -2,7 +2,7 @@
 
 #include <engine/ecs/systems/icollisionsystem.h>
 
-#include <physics/debug/debugdraw.h>
+#include <leo/debug/debugdraw.h>
 
 namespace puma
 {

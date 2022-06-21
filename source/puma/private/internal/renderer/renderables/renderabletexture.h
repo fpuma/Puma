@@ -3,8 +3,8 @@
 #include <internal/renderer/renderables/irenderable.h>
 #include <engine/application/applicationdefinitions.h>
 #include <engine/utils/position.h>
-#include <texturemanager/texture.h>
-#include <texturemanager/texturedefinitions.h>
+#include <nina/texturemanager/texture.h>
+#include <nina/texturemanager/texturedefinitions.h>
 #include <utils/graphics/dimensions.h>
 
 namespace puma
