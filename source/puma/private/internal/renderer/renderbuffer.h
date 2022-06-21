@@ -6,6 +6,8 @@
 #include <internal/renderer/renderables/renderableshape.h>
 #include <internal/renderer/renderables/renderabletext.h>
 
+#include <utils/containers/containedvector.h>
+
 namespace puma
 {
 
@@ -35,14 +37,9 @@ namespace puma
         std::vector<IRenderable*> m_renderables;
         std::vector<IRenderable*> m_debugRenderables;
 
-        u32 m_renderableTexturesCount = 0;
-        std::array<RenderableTexture, kMaxRenderablesCount> m_textures;
-
-        u32 m_renderableTextsCount = 0;
-        std::array<RenderableText, kMaxRenderablesCount> m_texts;
-
-        u32 m_renderableShapesCount = 0;
-        std::array<RenderableShape, kMaxRenderablesCount> m_shapes;
+        ContainedVector<RenderableTexture, kMaxRenderablesCount> m_textures;
+        ContainedVector<RenderableText, kMaxRenderablesCount> m_texts;
+        ContainedVector<RenderableShape, kMaxRenderablesCount> m_shapes;
 
     };
 }

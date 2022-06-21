@@ -64,15 +64,15 @@ namespace puma
         if ( renderableShape.shouldRender() )
         {
             renderableShape.setRenderLayer( _renderLayer );
-            m_shapes[m_renderableShapesCount] = renderableShape;
-            addRenderable( &m_shapes[m_renderableShapesCount], _debug );
-            ++m_renderableShapesCount;
+            m_shapes.push_back( renderableShape );
+            addRenderable( &m_shapes.back(), _debug );
         }
     }
 
     void RenderBuffer::addScreenRenderableTexture( const NinaTexture& _texture, const NinaTextureSample& _textureSample, const Extent& _screenExtent, const RotationDegrees& _rotation, RenderLayer _renderLayer, bool _debug )
     {
-        RenderableTexture& renderable = m_textures[m_renderableTexturesCount];
+        m_textures.push_back( {} );
+        RenderableTexture& renderable = m_textures.back();
         renderable.setRenderLayer( _renderLayer );
         renderable.setTexture( _texture, _textureSample );
         renderable.setRotationDegrees( -_rotation );
@@ -80,19 +80,16 @@ namespace puma
         renderable.setScreenExtent( _screenExtent );
 
         addRenderable( &renderable, _debug );
-
-        ++m_renderableTexturesCount;
     }
     
     void RenderBuffer::addScreenRenderableText( const std::string& _textToRender, const Color& _color, const ScreenPos& _screenPos, RenderLayer _renderLayer, bool _debug )
     {
-        RenderableText& renderable = m_texts[m_renderableTextsCount];
+        m_texts.push_back( {} );
+        RenderableText& renderable = m_texts.back();
         renderable.setRenderLayer( _renderLayer );
         renderable.setText( _textToRender, _screenPos, _color );
 
         addRenderable( &renderable, _debug );
-
-        ++m_renderableTextsCount;
     }
     
     void RenderBuffer::sortByRenderLayer()
@@ -120,9 +117,9 @@ namespace puma
     {
         m_renderables.clear();
         m_debugRenderables.clear();
-        m_renderableTexturesCount = 0;
-        m_renderableTextsCount = 0;
-        m_renderableShapesCount = 0;
+        m_textures.clear();
+        m_texts.clear();
+        m_shapes.clear();
     }
 
     void RenderBuffer::addRenderable( IRenderable* _renderable, bool _debug )
