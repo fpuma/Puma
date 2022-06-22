@@ -21,6 +21,7 @@ namespace puma
         const InputBuffer* read() const { return m_toRead; }
         InputBuffer* write() { return m_toWrite; }
 
+        ModifierBitmask getModifiers( NinaKeyboardKey _key ) const;
         ModifierBitmask getModifiers() const;
 
         void printInputs();

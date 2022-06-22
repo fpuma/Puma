@@ -24,7 +24,7 @@ namespace puma
         {
             KeyboardInput kbInput;
             kbInput.keyboardKey = _key;
-            kbInput.modifiers = m_queue->getModifiers();
+            kbInput.modifiers = m_queue->getModifiers( _key );
             kbInput.state = _event;
 
             m_queue->write()->addKeyboardInput( std::move(kbInput) );
@@ -110,18 +110,34 @@ namespace puma
         gInternalEngineApplication->getInput()->clearInputListener();
     }
 
+    ModifierBitmask InputQueue::getModifiers( NinaKeyboardKey _key ) const
+    {
+        char result = 0;
+        const auto* input = gInternalEngineApplication->getInput();
+        const auto& keyboard = input->getKeyboard();
+
+        if ( !(NinaKeyboardKey::KB_LSHIFT == _key) && keyboard.keyState( NinaKeyboardKey::KB_LSHIFT )) result |= InputModifier_LSHIFT;
+        if ( !(NinaKeyboardKey::KB_RSHIFT == _key) && keyboard.keyState( NinaKeyboardKey::KB_RSHIFT )) result |= InputModifier_RSHIFT;
+        if ( !(NinaKeyboardKey::KB_LCTRL  == _key) && keyboard.keyState( NinaKeyboardKey::KB_LCTRL  )) result |= InputModifier_LCTRL;
+        if ( !(NinaKeyboardKey::KB_RCTRL  == _key) && keyboard.keyState( NinaKeyboardKey::KB_RCTRL  )) result |= InputModifier_RCTRL;
+        if ( !(NinaKeyboardKey::KB_LALT   == _key) && keyboard.keyState( NinaKeyboardKey::KB_LALT   )) result |= InputModifier_LALT;
+        if ( !(NinaKeyboardKey::KB_RALT   == _key) && keyboard.keyState( NinaKeyboardKey::KB_RALT   )) result |= InputModifier_RALT;
+
+        return result;
+    }
+
     ModifierBitmask InputQueue::getModifiers() const
     {
         char result = 0;
         const auto* input = gInternalEngineApplication->getInput();
         const auto& keyboard = input->getKeyboard();
 
-        if (keyboard.keyState( NinaKeyboardKey::KB_LSHIFT )) result |= InputModifier_LSHIFT;
-        if (keyboard.keyState( NinaKeyboardKey::KB_RSHIFT )) result |= InputModifier_RSHIFT;
-        if (keyboard.keyState( NinaKeyboardKey::KB_LCTRL  )) result |= InputModifier_LCTRL;
-        if (keyboard.keyState( NinaKeyboardKey::KB_RCTRL  )) result |= InputModifier_RCTRL;
-        if (keyboard.keyState( NinaKeyboardKey::KB_LALT   )) result |= InputModifier_LALT;
-        if (keyboard.keyState( NinaKeyboardKey::KB_RALT   )) result |= InputModifier_RALT;
+        if ( keyboard.keyState( NinaKeyboardKey::KB_LSHIFT )) result |= InputModifier_LSHIFT;
+        if ( keyboard.keyState( NinaKeyboardKey::KB_RSHIFT )) result |= InputModifier_RSHIFT;
+        if ( keyboard.keyState( NinaKeyboardKey::KB_LCTRL )) result |= InputModifier_LCTRL;
+        if ( keyboard.keyState( NinaKeyboardKey::KB_RCTRL )) result |= InputModifier_RCTRL;
+        if ( keyboard.keyState( NinaKeyboardKey::KB_LALT )) result |= InputModifier_LALT;
+        if ( keyboard.keyState( NinaKeyboardKey::KB_RALT )) result |= InputModifier_RALT;
 
         return result;
     }
