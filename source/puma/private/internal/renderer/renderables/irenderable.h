@@ -15,7 +15,7 @@ namespace puma
 
         virtual ~IRenderable() {}
 
-        virtual void render() = 0;
+        virtual void render() const = 0;
 
         void setRenderLayer( RenderLayer _value ) { m_renderLayer = _value; }
         RenderLayer getRenderLayer() const { return m_renderLayer; }

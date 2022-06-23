@@ -18,7 +18,7 @@ namespace puma
         m_sampledExtent.height = (s32)((float)m_texture.getOriginalSize().height * _textureSample.upperLimit.v);
     }
 
-    void RenderableTexture::render()
+    void RenderableTexture::render() const
     {
         gInternalEngineApplication->getRenderer()->renderTexture( m_texture,
             m_sampledExtent,

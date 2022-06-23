@@ -1,8 +1,7 @@
 #pragma once
 
 #include <internal/input/inputbuffer.h>
-#include <mutex>
-#include <bitset>
+#include <utils/multithreadbuffer.h>
 
 namespace puma
 {
@@ -16,28 +15,19 @@ namespace puma
         void unregisterInputListener();
 
         bool updateWriteBuffer();
-        bool updateReadBuffer();
+        bool updateReadBuffer() { return m_inputBuffer.updateReadBuffer(); }
 
-        const InputBuffer* read() const { return m_toRead; }
-        InputBuffer* write() { return m_toWrite; }
+        const InputBuffer* read() const { return m_inputBuffer.read(); }
+        InputBuffer* write() { return m_inputBuffer.write(); }
 
         ModifierBitmask getModifiers( NinaKeyboardKey _key ) const;
         ModifierBitmask getModifiers() const;
 
-        void printInputs();
+        void printInputs() const;
 
     private:
 
-        InputBuffer* m_toRead = nullptr;
-        InputBuffer* m_nextToRead = nullptr;
-        InputBuffer* m_toWrite = nullptr;
-        InputBuffer* m_nextToWrite = nullptr;
-
-        InputBuffer m_buffer0;
-        InputBuffer m_buffer1;
-        InputBuffer m_buffer2;
-
-        std::mutex m_bufferSyncMutex;
+        MultiThreadBuffer<InputBuffer> m_inputBuffer;
 
     };
 }

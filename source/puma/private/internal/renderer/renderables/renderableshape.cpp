@@ -132,7 +132,7 @@ namespace puma
         m_color = _color;
     }
 
-    void RenderableShape::render()
+    void RenderableShape::render() const
     {
         switch ( m_renderableShapeType )
         {

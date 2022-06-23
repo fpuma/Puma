@@ -46,7 +46,7 @@ namespace puma
 
         bool shouldRender() const { return m_shouldRender; }
 
-        void render() override;
+        void render() const override;
 
     private:
 

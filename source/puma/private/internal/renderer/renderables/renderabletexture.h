@@ -23,7 +23,7 @@ namespace puma
         Extent getScreenExtent() const { return m_screenExtent; }
         float getRotationDegrees() const { return m_rotationDegrees; }
 
-        void render() override;
+        void render() const override;
 
     private:
 

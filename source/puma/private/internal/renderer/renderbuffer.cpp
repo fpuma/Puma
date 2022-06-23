@@ -100,7 +100,7 @@ namespace puma
         } );
     }
 
-    void RenderBuffer::render()
+    void RenderBuffer::render() const
     {
         for ( IRenderable* renderable : m_renderables )
         {

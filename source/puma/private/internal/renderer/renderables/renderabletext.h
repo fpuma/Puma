@@ -10,7 +10,7 @@ namespace puma
 
         void setText( const std::string& _text, const ScreenPos& _position, const Color& _color );
 
-        void render() override;
+        void render() const override;
 
     private:
 

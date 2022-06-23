@@ -93,10 +93,6 @@ namespace puma
     };
 
     InputQueue::InputQueue()
-        : m_toRead( &m_buffer0 )
-        , m_nextToRead( nullptr )
-        , m_toWrite( &m_buffer1 )
-        , m_nextToWrite( &m_buffer2 )
     {
     }
 
@@ -108,6 +104,16 @@ namespace puma
     void InputQueue::unregisterInputListener()
     {
         gInternalEngineApplication->getInput()->clearInputListener();
+    }
+
+    bool InputQueue::updateWriteBuffer()
+    { 
+        bool result = m_inputBuffer.updateWriteBuffer();
+        if (result)
+        {
+            m_inputBuffer.write()->clear();
+        }
+        return result;
     }
 
     ModifierBitmask InputQueue::getModifiers( NinaKeyboardKey _key ) const
@@ -142,36 +148,9 @@ namespace puma
         return result;
     }
 
-    bool InputQueue::updateWriteBuffer()
+    void InputQueue::printInputs() const
     {
-        std::lock_guard<std::mutex> guard( m_bufferSyncMutex );
-        bool update = nullptr != m_nextToWrite;
-        if (update)
-        {
-            assert( nullptr == m_nextToRead ); //If nextToWrite is available, then nextToRead should be nullptr
-            std::swap( m_toWrite, m_nextToRead );
-            std::swap( m_toWrite, m_nextToWrite );
-            m_toWrite->clear();
-        }
-        return update;
-    }
-
-    bool InputQueue::updateReadBuffer()
-    {
-        std::lock_guard<std::mutex> guard( m_bufferSyncMutex );
-        bool update = nullptr != m_nextToRead;
-        if (update)
-        {
-            assert( nullptr == m_nextToWrite ); //If nextToRead is available, nextToWrite must be nullptr
-            std::swap( m_toRead, m_nextToWrite );
-            std::swap( m_toRead, m_nextToRead );
-        }
-        return update;
-    }
-
-    void InputQueue::printInputs()
-    {
-        m_toRead->printToLog();
+        m_inputBuffer.read()->printToLog();
     }
 
 

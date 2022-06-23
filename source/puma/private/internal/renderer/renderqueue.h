@@ -2,7 +2,7 @@
 
 #include <engine/renderer/irenderqueue.h>
 #include <internal/renderer/renderbuffer.h>
-#include <mutex>
+#include <utils/multithreadbuffer.h>
 
 namespace puma
 {
@@ -34,15 +34,6 @@ namespace puma
 
     private:
 
-        RenderBuffer* m_toRead = nullptr;
-        RenderBuffer* m_nextToRead = nullptr;
-        RenderBuffer* m_toWrite = nullptr;
-        RenderBuffer* m_nextToWrite = nullptr;
-
-        RenderBuffer m_buffer0;
-        RenderBuffer m_buffer1;
-        RenderBuffer m_buffer2;
-
-        std::mutex m_bufferSyncMutex;
+        MultiThreadBuffer<RenderBuffer> m_renderBuffer;
     };
 }

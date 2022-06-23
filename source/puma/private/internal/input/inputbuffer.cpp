@@ -171,7 +171,7 @@ namespace puma
         m_controllerJoysticks.clear();
     }
 
-    void InputBuffer::printToLog()
+    void InputBuffer::printToLog() const
     {
         for (const KeyboardInput& kbInput : m_keyboardKeys)
         {

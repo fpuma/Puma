@@ -27,7 +27,7 @@ namespace puma
 
         void clear();
 
-        void printToLog();
+        void printToLog() const;
 
     private:
 
