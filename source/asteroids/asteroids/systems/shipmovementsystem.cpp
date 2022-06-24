@@ -37,7 +37,7 @@ void ShipMovementSystem::postPhysicsUpdate( float _deltaTime )
     {
         ICollisionComponent* collisionComponent = componentProvider->get<ICollisionComponent>( m_shipEntity );
 
-        LeoDynamicFrame* frame = collisionComponent->getDynamicFrame();
+        leo::IDynamicFrame* frame = collisionComponent->getDynamicFrame();
 
         frame->applyForceToCenter( currentForce );
     }

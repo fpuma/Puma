@@ -24,7 +24,7 @@ namespace test
         constexpr float kBallRadius = 1.0f;
     }
 
-    puma::Entity spawnBall( puma::NinaTextureManager* _textureManager, const puma::Position& _pos )
+    puma::Entity spawnBall( puma::nina::ITextureManager* _textureManager, const puma::Position& _pos )
     {
         puma::Entity result = gProviders->get<puma::IEntityProvider>()->requestEntity();
         puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
@@ -38,7 +38,7 @@ namespace test
         locationComponent->setPosition( _pos );
 
         //Render
-        puma::NinaTexture tennisTexture = _textureManager->loadTexture( "../assets/tennisball.png" );
+        puma::nina::Texture tennisTexture = _textureManager->loadTexture( "../assets/tennisball.png" );
         puma::TextureInfo textureInfo;
         textureInfo.texture = tennisTexture;
         textureInfo.renderSize = { kBallRadius * 2.0f, kBallRadius * 2.0f };
@@ -50,13 +50,13 @@ namespace test
 
 
         //Physics
-        puma::LeoFrameInfo frameInfo;
+        puma::leo::FrameInfo frameInfo;
         frameInfo.position = { _pos.x, _pos.y };
-        gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::LeoFrameType::Dynamic );
+        gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::leo::FrameType::Dynamic );
 
         puma::Circle ballShape;
         ballShape.radius = kBallRadius;
-        puma::LeoBodyInfo ballBodyInfo;
+        puma::leo::BodyInfo ballBodyInfo;
         ballBodyInfo.density = 1.0f;
         ballBodyInfo.shape.setAsCircle( ballShape );
         ballBodyInfo.collisionIndex = TestCollisionIndexes::Ball;

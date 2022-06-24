@@ -8,7 +8,7 @@
 namespace puma
 {
     
-    void RenderableTexture::setTexture( NinaTexture _texture, NinaTextureSample _textureSample )
+    void RenderableTexture::setTexture( nina::Texture _texture, nina::TextureSample _textureSample )
     {
         m_texture = _texture;
 

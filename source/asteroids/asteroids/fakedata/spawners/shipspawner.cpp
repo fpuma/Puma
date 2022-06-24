@@ -36,11 +36,11 @@ Entity ShipSpawner::spawnShip( Position _pos )
     //Collision
     ICollisionComponent* collisionComponent = componentProvider->add<ICollisionComponent>( shipEntity );
 
-    LeoFrameInfo frameInfo;
+    leo::FrameInfo frameInfo;
     frameInfo.linearDamping = 0.1f;
-    gSystems->get<ICollisionSystem>()->registerEntity( shipEntity, frameInfo, LeoFrameType::Dynamic );
+    gSystems->get<ICollisionSystem>()->registerEntity( shipEntity, frameInfo, leo::FrameType::Dynamic );
 
-    LeoBodyInfo bodyInfo;
+    leo::BodyInfo bodyInfo;
     Circle circle = { Vec2(), 25.0f };
     bodyInfo.shape.setAsCircle( circle );
 

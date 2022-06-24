@@ -41,7 +41,7 @@ namespace puma
             m_textureManager = m_window->getRenderer()->getTextureManager();
         }
 
-        m_input = NinaInput::create();
+        m_input = nina::IInput::create();
         m_input->init();
     }
 

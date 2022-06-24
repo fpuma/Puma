@@ -15,7 +15,7 @@ namespace puma
         void init( Vec2 _gravity ) override;
         void uninit() override;
 
-        void registerEntity( Entity _entity, LeoFrameInfo _frameInfo, LeoFrameType _frameType ) override;
+        void registerEntity( Entity _entity, leo::FrameInfo _frameInfo, leo::FrameType _frameType ) override;
         void unregisterEntity( Entity _entity ) override;
 
         void update( float _deltaTime ) override {}
@@ -29,7 +29,7 @@ namespace puma
         void setGravity( Vec2 _gravity ) override;
         Vec2 getGravity() override;
 
-        void setCollisionCompatibility( const LeoCollisionCompatibility& _collisionCompatibility ) override;
+        void setCollisionCompatibility( const leo::CollisionCompatibility& _collisionCompatibility ) override;
 
         void enableDebugDraw() { m_debugDraw = true; }
         void disableDebugDraw() { m_debugDraw = false; }
@@ -41,7 +41,7 @@ namespace puma
 #endif
         std::set<Entity> m_entities;
         SystemProperties m_properties;
-        LeoWorldID m_worldId;
+        leo::WorldID m_worldId;
 
         struct PhysicsDebugShape
         {

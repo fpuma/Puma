@@ -40,11 +40,11 @@ namespace test
         IInputComponent* inputComponent = gProviders->get<IComponentProvider>()->add<IInputComponent>( m_spawnerHandler );
 
         KeyboardInput keyboardInput;
-        keyboardInput.keyboardKey = NinaKeyboardKey::KB_Y;
+        keyboardInput.keyboardKey = nina::KeyboardKey::KB_Y;
         inputComponent->addInputMap( TestInputActions::InvertGravity, keyboardInput );
 
         ControllerButtonInput controllerInput;
-        controllerInput.controllerButton = NinaControllerButton::CB_Y;
+        controllerInput.controllerButton = nina::ControllerButton::CB_Y;
         controllerInput.controllerId = 0;
         inputComponent->addInputMap( TestInputActions::InvertGravity, controllerInput );
 
@@ -127,7 +127,7 @@ namespace test
 
         moveDirectionComponent->setDirection( currentDir );
         puma::ICollisionComponent* collisionComponent = componentProvider->get<puma::ICollisionComponent>( _spawner );
-        LeoDynamicFrame* dynamicFrame = collisionComponent->getDynamicFrame();
+        leo::IDynamicFrame* dynamicFrame = collisionComponent->getDynamicFrame();
         dynamicFrame->setLinearVelocity( currentDir * m_spawnerSpeed );
     }
 

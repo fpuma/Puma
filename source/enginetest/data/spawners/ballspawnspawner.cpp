@@ -46,13 +46,13 @@ namespace test
             inputComponent->addInputMap( controllerInputPair.first, controllerInputPair.second );
         }
 
-        puma::LeoFrameInfo frameInfo;
+        puma::leo::FrameInfo frameInfo;
         frameInfo.position = { locationComponent->getPosition().x, locationComponent->getPosition().y };
         frameInfo.gravityScale = 0.0f;
         frameInfo.preventRotation = true;
-        gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::LeoFrameType::Dynamic );
+        gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::leo::FrameType::Dynamic );
 
-        puma::LeoBodyInfo bodyInfo;
+        puma::leo::BodyInfo bodyInfo;
         bodyInfo.collisionIndex = TestCollisionIndexes::BallSpawner;
 
         bodyInfo.shape.setAsCircle( { puma::Vec2(), 1.0f } );

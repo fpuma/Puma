@@ -9,7 +9,7 @@
 namespace puma
 {
 
-    void CollisionComponent::init( LeoFrameType _frameType, LeoFrameID _frameId )
+    void CollisionComponent::init( leo::FrameType _frameType, leo::FrameID _frameId )
     {
         assert( !isValid() );
 
@@ -20,12 +20,12 @@ namespace puma
     void CollisionComponent::uninit()
     { 
         leo::IFrame* frame = gPhysics->getFrame( m_frameId );
-        for ( const LeoFramePartID& framePartId : m_bodyIds )
+        for ( const leo::FramePartID& framePartId : m_bodyIds )
         {
             frame->removeFramePart( framePartId );
         }
 
-        for ( const LeoFramePartID framePartId : m_triggerIds )
+        for ( const leo::FramePartID framePartId : m_triggerIds )
         {
             frame->removeFramePart( framePartId );
         }
@@ -34,70 +34,70 @@ namespace puma
         m_triggerIds.clear();
 
         m_frameId.invalidate(); 
-        m_frameType = LeoFrameType::Invalid; 
+        m_frameType = leo::FrameType::Invalid; 
     }
     
-    const LeoDynamicFrame* CollisionComponent::getDynamicFrame() const
+    const leo::IDynamicFrame* CollisionComponent::getDynamicFrame() const
     {
-        assert( LeoFrameType::Dynamic == m_frameType );
-        if ( LeoFrameType::Dynamic == m_frameType )
+        assert( leo::FrameType::Dynamic == m_frameType );
+        if ( leo::FrameType::Dynamic == m_frameType )
         {
             return gPhysics->getDynamicFrame( m_frameId );
         }
         return nullptr;
     }
 
-    LeoDynamicFrame* CollisionComponent::getDynamicFrame()
+    leo::IDynamicFrame* CollisionComponent::getDynamicFrame()
     {
-        assert( LeoFrameType::Dynamic == m_frameType );
-        if ( LeoFrameType::Dynamic == m_frameType )
+        assert( leo::FrameType::Dynamic == m_frameType );
+        if ( leo::FrameType::Dynamic == m_frameType )
         {
             return gPhysics->getDynamicFrame( m_frameId );
         }
         return nullptr;
     }
 
-    const LeoKinematicFrame* CollisionComponent::getKinematicFrame() const
+    const leo::IKinematicFrame* CollisionComponent::getKinematicFrame() const
     {
-        assert( LeoFrameType::Kinematic == m_frameType );
-        if ( LeoFrameType::Kinematic == m_frameType )
+        assert( leo::FrameType::Kinematic == m_frameType );
+        if ( leo::FrameType::Kinematic == m_frameType )
         {
             return gPhysics->getKinematicFrame( m_frameId );
         }
         return nullptr;
     }
 
-    LeoKinematicFrame* CollisionComponent::getKinematicFrame()
+    leo::IKinematicFrame* CollisionComponent::getKinematicFrame()
     {
-        assert( LeoFrameType::Static == m_frameType );
-        assert( LeoFrameType::Kinematic == m_frameType );
-        if ( LeoFrameType::Kinematic == m_frameType )
+        assert( leo::FrameType::Static == m_frameType );
+        assert( leo::FrameType::Kinematic == m_frameType );
+        if ( leo::FrameType::Kinematic == m_frameType )
         {
             return gPhysics->getKinematicFrame( m_frameId );
         }
         return nullptr;
     }
 
-    const LeoStaticFrame* CollisionComponent::getStaticFrame() const
+    const leo::IStaticFrame* CollisionComponent::getStaticFrame() const
     {
-        assert( LeoFrameType::Static == m_frameType );
-        if ( LeoFrameType::Static == m_frameType )
+        assert( leo::FrameType::Static == m_frameType );
+        if ( leo::FrameType::Static == m_frameType )
         {
             return gPhysics->getStaticFrame( m_frameId );
         }
         return nullptr;
     }
-    LeoStaticFrame* CollisionComponent::getStaticFrame()
+    leo::IStaticFrame* CollisionComponent::getStaticFrame()
     {
-        assert( LeoFrameType::Static == m_frameType );
-        if ( LeoFrameType::Static == m_frameType )
+        assert( leo::FrameType::Static == m_frameType );
+        if ( leo::FrameType::Static == m_frameType )
         {
             return gPhysics->getStaticFrame( m_frameId );
         }
         return nullptr;
     }
 
-    void CollisionComponent::addBody( const LeoBodyInfo& _bodyInfo )
+    void CollisionComponent::addBody( const leo::BodyInfo& _bodyInfo )
     {
         assert( isValid() );
 
@@ -105,7 +105,7 @@ namespace puma
         m_bodyIds.emplace_back( frame->addBody( _bodyInfo ) );
     }
 
-    void CollisionComponent::addTrigger( const LeoTriggerInfo& _triggerInfo )
+    void CollisionComponent::addTrigger( const leo::TriggerInfo& _triggerInfo )
     {
         assert( isValid() );
 

@@ -19,47 +19,47 @@ namespace test
 
     static const InputActionKeyboardPairList kSpawner0KeyboardInput =
     {
-        {TestInputActions::SpawnBallAction,             {puma::NinaKeyboardKey::KB_LCTRL, puma::InputModifier_NONE, puma::NinaInputButtonEvent::Pressed}},
-        {TestInputActions::MoveBallSpawnerStartUp,      {puma::NinaKeyboardKey::KB_W, puma::InputModifier_NONE, puma::NinaInputButtonEvent::Pressed}},
-        {TestInputActions::MoveBallSpawnerStartDown,    {puma::NinaKeyboardKey::KB_S, puma::InputModifier_NONE, puma::NinaInputButtonEvent::Pressed}},
-        {TestInputActions::MoveBallSpawnerStartLeft,    {puma::NinaKeyboardKey::KB_A, puma::InputModifier_NONE, puma::NinaInputButtonEvent::Pressed}},
-        {TestInputActions::MoveBallSpawnerStartRight,   {puma::NinaKeyboardKey::KB_D, puma::InputModifier_NONE, puma::NinaInputButtonEvent::Pressed}},
-        {TestInputActions::MoveBallSpawnerStopUp,       {puma::NinaKeyboardKey::KB_W, puma::InputModifier_NONE, puma::NinaInputButtonEvent::Released}},
-        {TestInputActions::MoveBallSpawnerStopDown,     {puma::NinaKeyboardKey::KB_S, puma::InputModifier_NONE, puma::NinaInputButtonEvent::Released}},
-        {TestInputActions::MoveBallSpawnerStopLeft,     {puma::NinaKeyboardKey::KB_A, puma::InputModifier_NONE, puma::NinaInputButtonEvent::Released}},
-        {TestInputActions::MoveBallSpawnerStopRight,    {puma::NinaKeyboardKey::KB_D, puma::InputModifier_NONE, puma::NinaInputButtonEvent::Released}},
+        {TestInputActions::SpawnBallAction,             {puma::nina::KeyboardKey::KB_LCTRL, puma::InputModifier_NONE, puma::nina::InputButtonEvent::Pressed}},
+        {TestInputActions::MoveBallSpawnerStartUp,      {puma::nina::KeyboardKey::KB_W, puma::InputModifier_NONE, puma::nina::InputButtonEvent::Pressed}},
+        {TestInputActions::MoveBallSpawnerStartDown,    {puma::nina::KeyboardKey::KB_S, puma::InputModifier_NONE, puma::nina::InputButtonEvent::Pressed}},
+        {TestInputActions::MoveBallSpawnerStartLeft,    {puma::nina::KeyboardKey::KB_A, puma::InputModifier_NONE, puma::nina::InputButtonEvent::Pressed}},
+        {TestInputActions::MoveBallSpawnerStartRight,   {puma::nina::KeyboardKey::KB_D, puma::InputModifier_NONE, puma::nina::InputButtonEvent::Pressed}},
+        {TestInputActions::MoveBallSpawnerStopUp,       {puma::nina::KeyboardKey::KB_W, puma::InputModifier_NONE, puma::nina::InputButtonEvent::Released}},
+        {TestInputActions::MoveBallSpawnerStopDown,     {puma::nina::KeyboardKey::KB_S, puma::InputModifier_NONE, puma::nina::InputButtonEvent::Released}},
+        {TestInputActions::MoveBallSpawnerStopLeft,     {puma::nina::KeyboardKey::KB_A, puma::InputModifier_NONE, puma::nina::InputButtonEvent::Released}},
+        {TestInputActions::MoveBallSpawnerStopRight,    {puma::nina::KeyboardKey::KB_D, puma::InputModifier_NONE, puma::nina::InputButtonEvent::Released}},
     };
 
     static const InputActionKeyboardPairList kSpawner1KeyboardInput =
     {
-        {TestInputActions::SpawnBallAction,             {puma::NinaKeyboardKey::KB_RCTRL,    puma::InputModifier_IGNORE, puma::NinaInputButtonEvent::Pressed}},
-        {TestInputActions::MoveBallSpawnerStartUp,      {puma::NinaKeyboardKey::KB_UP,       puma::InputModifier_NONE, puma::NinaInputButtonEvent::Pressed}},
-        {TestInputActions::MoveBallSpawnerStartDown,    {puma::NinaKeyboardKey::KB_DOWN,     puma::InputModifier_NONE, puma::NinaInputButtonEvent::Pressed}},
-        {TestInputActions::MoveBallSpawnerStartLeft,    {puma::NinaKeyboardKey::KB_LEFT,     puma::InputModifier_NONE, puma::NinaInputButtonEvent::Pressed}},
-        {TestInputActions::MoveBallSpawnerStartRight,   {puma::NinaKeyboardKey::KB_RIGHT,    puma::InputModifier_NONE, puma::NinaInputButtonEvent::Pressed}},
-        {TestInputActions::MoveBallSpawnerStopUp,       {puma::NinaKeyboardKey::KB_UP,       puma::InputModifier_NONE, puma::NinaInputButtonEvent::Released}},
-        {TestInputActions::MoveBallSpawnerStopDown,     {puma::NinaKeyboardKey::KB_DOWN,     puma::InputModifier_NONE, puma::NinaInputButtonEvent::Released}},
-        {TestInputActions::MoveBallSpawnerStopLeft,     {puma::NinaKeyboardKey::KB_LEFT,     puma::InputModifier_NONE, puma::NinaInputButtonEvent::Released}},
-        {TestInputActions::MoveBallSpawnerStopRight,    {puma::NinaKeyboardKey::KB_RIGHT,    puma::InputModifier_NONE, puma::NinaInputButtonEvent::Released}},
+        {TestInputActions::SpawnBallAction,             {puma::nina::KeyboardKey::KB_RCTRL,    puma::InputModifier_IGNORE, puma::nina::InputButtonEvent::Pressed}},
+        {TestInputActions::MoveBallSpawnerStartUp,      {puma::nina::KeyboardKey::KB_UP,       puma::InputModifier_NONE, puma::nina::InputButtonEvent::Pressed}},
+        {TestInputActions::MoveBallSpawnerStartDown,    {puma::nina::KeyboardKey::KB_DOWN,     puma::InputModifier_NONE, puma::nina::InputButtonEvent::Pressed}},
+        {TestInputActions::MoveBallSpawnerStartLeft,    {puma::nina::KeyboardKey::KB_LEFT,     puma::InputModifier_NONE, puma::nina::InputButtonEvent::Pressed}},
+        {TestInputActions::MoveBallSpawnerStartRight,   {puma::nina::KeyboardKey::KB_RIGHT,    puma::InputModifier_NONE, puma::nina::InputButtonEvent::Pressed}},
+        {TestInputActions::MoveBallSpawnerStopUp,       {puma::nina::KeyboardKey::KB_UP,       puma::InputModifier_NONE, puma::nina::InputButtonEvent::Released}},
+        {TestInputActions::MoveBallSpawnerStopDown,     {puma::nina::KeyboardKey::KB_DOWN,     puma::InputModifier_NONE, puma::nina::InputButtonEvent::Released}},
+        {TestInputActions::MoveBallSpawnerStopLeft,     {puma::nina::KeyboardKey::KB_LEFT,     puma::InputModifier_NONE, puma::nina::InputButtonEvent::Released}},
+        {TestInputActions::MoveBallSpawnerStopRight,    {puma::nina::KeyboardKey::KB_RIGHT,    puma::InputModifier_NONE, puma::nina::InputButtonEvent::Released}},
     };
 
     static const InputActionControllerPairList kSpawner0ControllerJoystickInput =
     {
-        {TestInputActions::MoveBallSpawner,             {puma::NinaControllerJoystick::CJ_LSTICK, 0}},
+        {TestInputActions::MoveBallSpawner,             {puma::nina::ControllerJoystick::CJ_LSTICK, 0}},
     };
 
     static const InputActionControllerPairList kSpawner1ControllerJoystickInput =
     {
-        {TestInputActions::MoveBallSpawner,             {puma::NinaControllerJoystick::CJ_RSTICK, 0}},
+        {TestInputActions::MoveBallSpawner,             {puma::nina::ControllerJoystick::CJ_RSTICK, 0}},
     };
 
     static const InputActionControllerButtonPairList kSpawner0ControllerButtonInput =
     {
-        {TestInputActions::SpawnBallAction,             {puma::NinaControllerButton::CB_LB, 0, puma::NinaInputButtonEvent::Pressed}},
+        {TestInputActions::SpawnBallAction,             {puma::nina::ControllerButton::CB_LB, 0, puma::nina::InputButtonEvent::Pressed}},
     };
 
     static const InputActionControllerButtonPairList kSpawner1ControllerButtonInput =
     {
-        {TestInputActions::SpawnBallAction,             {puma::NinaControllerButton::CB_RB, 0, puma::NinaInputButtonEvent::Pressed}},
+        {TestInputActions::SpawnBallAction,             {puma::nina::ControllerButton::CB_RB, 0, puma::nina::InputButtonEvent::Pressed}},
     };
 }

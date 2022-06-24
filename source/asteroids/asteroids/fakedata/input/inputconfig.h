@@ -11,5 +11,5 @@ using InputActionControllerJoystickPairList = std::initializer_list<std::pair<pu
 
 static const InputActionControllerJoystickPairList kShipControllerJoystickInput =
 {
-    {AsteroidsInputActions::MoveShip, {puma::NinaControllerJoystick::CJ_LSTICK, 0}},
+    {AsteroidsInputActions::MoveShip, {puma::nina::ControllerJoystick::CJ_LSTICK, 0}},
 };

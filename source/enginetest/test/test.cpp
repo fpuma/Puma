@@ -75,7 +75,7 @@ namespace test
     void setCamera();
     void initPhysics();
 
-    puma::Entity spawnFloor( NinaTextureManager* _textureManager, const puma::Position& _pos, float _angle );
+    puma::Entity spawnFloor( nina::ITextureManager* _textureManager, const puma::Position& _pos, float _angle );
     void unspawnFloor( puma::Entity _floorEntity );
 
     void setCamera()
@@ -139,7 +139,7 @@ namespace test
         collisitonSystemPtr->setCollisionCompatibility( kCollisionCompatibility );
     }
 
-    puma::Entity spawnFloor( NinaTextureManager* _textureManager, const puma::Position& _pos, float _angle )
+    puma::Entity spawnFloor( nina::ITextureManager* _textureManager, const puma::Position& _pos, float _angle )
     {
         puma::Entity result = gProviders->get<puma::IEntityProvider>()->requestEntity();
         puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
@@ -151,7 +151,7 @@ namespace test
         locationComponent->setPosition( _pos );
 
         //Render
-        puma::NinaTexture greenTexture = _textureManager->loadTexture( "../assets/green.png" );
+        puma::nina::Texture greenTexture = _textureManager->loadTexture( "../assets/green.png" );
         puma::TextureInfo textureInfo;
         textureInfo.texture = greenTexture;
         textureInfo.renderSize = { 40.0f, 8.0f };
@@ -161,16 +161,16 @@ namespace test
         gSystems->get<puma::IRenderSystem>()->registerEntity( result );
 
         //Physics
-        puma::LeoFrameInfo frameInfo;
+        puma::leo::FrameInfo frameInfo;
         frameInfo.position = { _pos.x, _pos.y };
         frameInfo.angle = _angle;
 
-        gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::LeoFrameType::Static );
+        gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::leo::FrameType::Static );
 
         puma::Rectangle floorShape;
         floorShape.lowerBoundary = { -20.0f, -4.0f };
         floorShape.upperBoundary = { 20.0f, 4.0f };
-        puma::LeoBodyInfo floorBodyInfo;
+        puma::leo::BodyInfo floorBodyInfo;
         floorBodyInfo.collisionIndex = TestCollisionIndexes::Floor;
         floorBodyInfo.shape.setAsPolygon( floorShape );
         floorBodyInfo.restitution = 0.0f;

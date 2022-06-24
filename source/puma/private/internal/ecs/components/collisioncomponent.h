@@ -15,36 +15,36 @@ namespace puma
         void disable() override { m_enabled = false; };
         bool isEnabled() const override { return m_enabled; }
 
-        LeoFrameID getFrameID() const { return m_frameId; }
-        LeoFrameType getFrameType() const override { return m_frameType; }
+        leo::FrameID getFrameID() const { return m_frameId; }
+        leo::FrameType getFrameType() const override { return m_frameType; }
         
-        const LeoDynamicFrame* getDynamicFrame() const override;
-        LeoDynamicFrame* getDynamicFrame() override;
+        const leo::IDynamicFrame* getDynamicFrame() const override;
+        leo::IDynamicFrame* getDynamicFrame() override;
 
-        const LeoKinematicFrame* getKinematicFrame() const override;
-        LeoKinematicFrame* getKinematicFrame() override;
+        const leo::IKinematicFrame* getKinematicFrame() const override;
+        leo::IKinematicFrame* getKinematicFrame() override;
 
-        const LeoStaticFrame* getStaticFrame() const override;
-        LeoStaticFrame* getStaticFrame() override;
+        const leo::IStaticFrame* getStaticFrame() const override;
+        leo::IStaticFrame* getStaticFrame() override;
 
-        void addBody( const LeoBodyInfo& _bodyInfo ) override;
-        void addTrigger( const LeoTriggerInfo& _triggerInfo ) override;
+        void addBody( const leo::BodyInfo& _bodyInfo ) override;
+        void addTrigger( const leo::TriggerInfo& _triggerInfo ) override;
 
-        bool isValid() const override { return (LeoFrameType::Invalid != m_frameType) && (m_frameId.value() != leo::kInvalidPhysicsID); }
+        bool isValid() const override { return (leo::FrameType::Invalid != m_frameType) && (m_frameId.value() != leo::kInvalidPhysicsID); }
 
     private:
 
-        friend void CollisionSystem::registerEntity( Entity _entity, LeoFrameInfo _frameInfo, LeoFrameType _frameType );
+        friend void CollisionSystem::registerEntity( Entity _entity, leo::FrameInfo _frameInfo, leo::FrameType _frameType );
         friend void CollisionSystem::unregisterEntity( Entity _entity );
 
-        void init( LeoFrameType _frameType, LeoFrameID _frameId );
+        void init( leo::FrameType _frameType, leo::FrameID _frameId );
         void uninit();
 
-        std::vector<LeoFramePartID> m_bodyIds;
-        std::vector<LeoFramePartID> m_triggerIds;
+        std::vector<leo::FramePartID> m_bodyIds;
+        std::vector<leo::FramePartID> m_triggerIds;
 
-        LeoFrameType m_frameType = LeoFrameType::Invalid;
-        LeoFrameID m_frameId;
+        leo::FrameType m_frameType = leo::FrameType::Invalid;
+        leo::FrameID m_frameId;
         bool m_enabled = true;
     };
 }

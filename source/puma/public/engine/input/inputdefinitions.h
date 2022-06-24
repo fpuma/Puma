@@ -65,9 +65,9 @@ namespace puma
             return false;
         }
 
-        NinaMouseButton mouseButton = {};
+        nina::MouseButton mouseButton = {};
         ModifierBitmask modifiers = {};
-        NinaInputButtonEvent state = NinaInputButtonEvent::Pressed;
+        nina::InputButtonEvent state = nina::InputButtonEvent::Pressed;
     };
 
     struct MouseWheelInput
@@ -85,7 +85,7 @@ namespace puma
             return false;
         }
 
-        NinaMouseWheel mouseWheel = NinaMouseWheel::MW_IDLE;
+        nina::MouseWheelState mouseWheel = nina::MouseWheelState::MW_IDLE;
         ModifierBitmask modifiers = {};
     };
 
@@ -105,9 +105,9 @@ namespace puma
             return false;
         }
 
-        NinaKeyboardKey keyboardKey = {};
+        nina::KeyboardKey keyboardKey = {};
         ModifierBitmask modifiers = {};
-        NinaInputButtonEvent state = NinaInputButtonEvent::Pressed;
+        nina::InputButtonEvent state = nina::InputButtonEvent::Pressed;
     };
 
     struct ControllerButtonInput
@@ -125,9 +125,9 @@ namespace puma
             return false;
         }
 
-        NinaControllerButton controllerButton = {};
-        NinaControllerId controllerId = {};
-        NinaInputButtonEvent state = NinaInputButtonEvent::Pressed;
+        nina::ControllerButton controllerButton = {};
+        nina::ControllerId controllerId = {};
+        nina::InputButtonEvent state = nina::InputButtonEvent::Pressed;
     };
 
     struct ControllerTriggerInput
@@ -144,8 +144,8 @@ namespace puma
             return false;
         }
 
-        NinaControllerTrigger controllerTrigger = {};
-        NinaControllerId controllerId = {};
+        nina::ControllerTrigger controllerTrigger = {};
+        nina::ControllerId controllerId = {};
     };
 
     struct ControllerJoystickInput
@@ -162,8 +162,8 @@ namespace puma
             return false;
         }
 
-        NinaControllerJoystick controllerJoystick = {};
-        NinaControllerId controllerId = {};
+        nina::ControllerJoystick controllerJoystick = {};
+        nina::ControllerId controllerId = {};
     };
 
     struct InputEvalResult

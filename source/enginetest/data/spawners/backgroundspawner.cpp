@@ -20,7 +20,7 @@
 
 namespace test
 {
-    puma::Entity spawnBackground( puma::NinaTextureManager* _textureManager, const puma::Position& _pos )
+    puma::Entity spawnBackground( puma::nina::ITextureManager* _textureManager, const puma::Position& _pos )
     {
         puma::Entity result = gProviders->get<puma::IEntityProvider>()->requestEntity();
         puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
@@ -33,7 +33,7 @@ namespace test
         locationComponent->setPosition( _pos );
 
         //Render
-        puma::NinaTexture bricksTexture = _textureManager->loadTexture( "../assets/bricks.jpg" );
+        puma::nina::Texture bricksTexture = _textureManager->loadTexture( "../assets/bricks.jpg" );
         puma::TextureInfo textureInfo;
         textureInfo.texture = bricksTexture;
         textureInfo.renderSize = { 100.0f, 100.0f };

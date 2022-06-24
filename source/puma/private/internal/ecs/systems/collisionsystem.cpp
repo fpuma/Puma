@@ -45,7 +45,7 @@ namespace puma
         }
     }
 
-    void CollisionSystem::registerEntity( Entity _entity, LeoFrameInfo _frameInfo, LeoFrameType _frameType )
+    void CollisionSystem::registerEntity( Entity _entity, leo::FrameInfo _frameInfo, leo::FrameType _frameType )
     {
         assert( entityComponentCheck( _entity ) ); //This entity does not have the necessary components to be registered into this system
 
@@ -55,13 +55,13 @@ namespace puma
 
         leo::IWorld* world = gPhysics->getWorld( m_worldId );
 
-        LeoFrameID frameId;
+        leo::FrameID frameId;
 
         switch ( _frameType )
         {
-        case LeoFrameType::Dynamic:    frameId = world->addDynamicFrame( _frameInfo ); break;
-        case LeoFrameType::Static:     frameId = world->addStaticFrame( _frameInfo ); break;
-        case LeoFrameType::Kinematic:  frameId = world->addKinematicFrame( _frameInfo ); break;
+        case leo::FrameType::Dynamic:    frameId = world->addDynamicFrame( _frameInfo ); break;
+        case leo::FrameType::Static:     frameId = world->addStaticFrame( _frameInfo ); break;
+        case leo::FrameType::Kinematic:  frameId = world->addKinematicFrame( _frameInfo ); break;
         default: assert( false ); break;
         }
 
@@ -79,7 +79,7 @@ namespace puma
         ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
         CollisionComponent* collisionComponent = componentProvider->get<CollisionComponent>( _entity );
 
-        LeoFrameID frameToRemove = collisionComponent->getFrameID();
+        leo::FrameID frameToRemove = collisionComponent->getFrameID();
 
         assert( nullptr != collisionComponent );
 
@@ -146,8 +146,8 @@ namespace puma
                 Vec2 lv;
                 switch ( collisionComponent->getFrameType() )
                 {
-                case LeoFrameType::Dynamic: lv = collisionComponent->getDynamicFrame()->getLinearVelocity(); break;
-                case LeoFrameType::Kinematic: lv = collisionComponent->getKinematicFrame()->getLinearVelocity(); break;
+                case leo::FrameType::Dynamic: lv = collisionComponent->getDynamicFrame()->getLinearVelocity(); break;
+                case leo::FrameType::Kinematic: lv = collisionComponent->getKinematicFrame()->getLinearVelocity(); break;
                 default: break;
                 }
 
@@ -170,7 +170,7 @@ namespace puma
         return gPhysics->getWorld( m_worldId )->getGravity();
     }
 
-    void CollisionSystem::setCollisionCompatibility( const LeoCollisionCompatibility& _collisionCompatibility )
+    void CollisionSystem::setCollisionCompatibility( const leo::CollisionCompatibility& _collisionCompatibility )
     {
         gPhysics->getWorld( m_worldId )->setCollisionCompatibility( _collisionCompatibility );
     }
