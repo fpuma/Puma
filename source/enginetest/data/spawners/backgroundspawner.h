@@ -1,7 +1,7 @@
 #pragma once
 
 #include <engine/ecs/base/entity.h>
-#include <engine/application/applicationdefinitions.h>
+#include <engine/external/ninadefinitions.h>
 #include <engine/utils/position.h>
 
 namespace test

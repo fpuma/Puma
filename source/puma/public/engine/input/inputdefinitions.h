@@ -1,6 +1,6 @@
 #pragma once
 
-#include <engine/application/applicationdefinitions.h>
+#include <engine/external/ninadefinitions.h>
 #include <utils/genericid.h>
 
 namespace puma

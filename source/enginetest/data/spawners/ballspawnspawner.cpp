@@ -11,7 +11,7 @@
 #include <engine/ecs/components/icollisioncomponent.h>
 #include <engine/ecs/systems/iinputsystem.h>
 #include <engine/ecs/systems/icollisionsystem.h>
-#include <engine/physics/physicsdefinitions.h>
+#include <engine/external/leodefinitions.h>
 #include <engine/services/isystemsservice.h>
 #include <engine/services/iprovidersservice.h>
 

@@ -17,12 +17,12 @@ namespace puma
 {
     void EngineRenderer::beginRender()
     {
-        gInternalEngineApplication->getRenderer()->beginRender();
+        gInternalEngineApplication->getWindowRenderer()->beginRender();
     }
 
     void EngineRenderer::endRender()
     {
-        gInternalEngineApplication->getRenderer()->endRender();
+        gInternalEngineApplication->getWindowRenderer()->endRender();
     }
 
     void EngineRenderer::render()

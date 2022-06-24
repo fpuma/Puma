@@ -15,7 +15,7 @@ namespace puma
 
     void RenderableText::render() const
     {
-        gInternalEngineApplication->getRenderer()->renderText( m_position, m_textColor, m_textToRender.c_str() );
+        gInternalEngineApplication->getWindowRenderer()->renderText( m_position, m_textColor, m_textToRender.c_str() );
     }
 
 

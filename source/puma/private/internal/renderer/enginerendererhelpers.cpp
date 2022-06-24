@@ -25,7 +25,7 @@ namespace puma::erh
 
         assert( (nullptr != locationComponent) && (nullptr != cameraComponent) );
 
-        Extent windowExtent = gInternalEngineApplication->getWindow()->getExtent();
+        Extent windowExtent = gInternalEngineApplication->getWindowExtent();
 
         _outMetersPerPixel = cameraComponent->getMetersPerPixel();
 

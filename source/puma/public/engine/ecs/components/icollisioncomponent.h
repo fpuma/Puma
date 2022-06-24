@@ -2,7 +2,7 @@
 
 #include <engine/ecs/base/icomponent.h>
 
-#include <engine/physics/physicsdefinitions.h>
+#include <engine/external/leodefinitions.h>
 
 namespace puma
 {

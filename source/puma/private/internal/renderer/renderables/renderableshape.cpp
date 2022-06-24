@@ -141,11 +141,11 @@ namespace puma
             const RenderableCircle& circle = m_renderableShape.circle;
             if ( circle.solid )
             {
-                gInternalEngineApplication->getRenderer()->renderSolidCircle( circle.center, circle.radius, m_color );
+                gInternalEngineApplication->getWindowRenderer()->renderSolidCircle( circle.center, circle.radius, m_color );
             }
             else
             {
-                gInternalEngineApplication->getRenderer()->renderCircle( circle.center, circle.radius, m_color );
+                gInternalEngineApplication->getWindowRenderer()->renderCircle( circle.center, circle.radius, m_color );
             }
             break;
         }
@@ -159,11 +159,11 @@ namespace puma
 
             if ( polygon.solid )
             {
-                gInternalEngineApplication->getRenderer()->renderSolidPolygon( screenPointsList, m_color );
+                gInternalEngineApplication->getWindowRenderer()->renderSolidPolygon( screenPointsList, m_color );
             }
             else
             {
-                gInternalEngineApplication->getRenderer()->renderPolygon( screenPointsList, m_color );
+                gInternalEngineApplication->getWindowRenderer()->renderPolygon( screenPointsList, m_color );
             }
             break;
         }
@@ -173,7 +173,7 @@ namespace puma
 
             for ( int pointIndex = 0; pointIndex < chain.points.size() - 1; ++pointIndex )
             {
-                gInternalEngineApplication->getRenderer()->renderSegment( chain.points[pointIndex], chain.points[pointIndex + 1], m_color );
+                gInternalEngineApplication->getWindowRenderer()->renderSegment( chain.points[pointIndex], chain.points[pointIndex + 1], m_color );
             }
             break;
         }

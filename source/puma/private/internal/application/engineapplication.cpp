@@ -80,4 +80,9 @@ namespace puma
     {
         m_window->setWindowTitle( _title );
     }
+
+    Extent EngineApplication::getWindowExtent() const
+    {
+        return m_window->getExtent();
+    }
 }

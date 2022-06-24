@@ -20,7 +20,7 @@ namespace puma
 
     void RenderableTexture::render() const
     {
-        gInternalEngineApplication->getRenderer()->renderTexture( m_texture,
+        gInternalEngineApplication->getWindowRenderer()->renderTexture( m_texture,
             m_sampledExtent,
             m_screenExtent,
             m_rotationDegrees);
