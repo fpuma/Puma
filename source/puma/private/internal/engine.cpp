@@ -64,7 +64,7 @@ namespace puma
         engine->init();
         _game->init();
         
-        //*
+        /*
         while (!engine->shouldQuit())
         {
             engine->simulationUpdate( _game.get() );

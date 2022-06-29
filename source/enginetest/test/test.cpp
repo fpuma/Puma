@@ -2,8 +2,6 @@
 
 #include "test.h"
 
-#include <nina/input/inputids.h>
-#include <nina/texturemanager/itexturemanager.h>
 
 #include <data/collisionindexes.h>
 
@@ -19,6 +17,7 @@
 #include <engine/ecs/systems/irendersystem.h>
 #include <engine/ecs/systems/iinputsystem.h>
 #include <engine/external/leodefinitions.h>
+#include <engine/external/ninadefinitions.h>
 
 #include <engine/services/iengineapplicationservice.h>
 #include <engine/services/iloggerservice.h>
@@ -32,10 +31,9 @@
 #include <test/systems/staticstuffsystem.h>
 #include <test/components/movedirectioncomponent.h>
 
-#include <nina/texturemanager/itexturemanager.h>
-
 namespace test
 {
+
     namespace
     {
         puma::Entity MyDefaultCamera;
@@ -115,6 +113,13 @@ namespace test
 
         Floor2 = spawnFloor( gEngineApplication->getTextureManager(), { 15.0f, 15.0f, 0.0f }, -45.0f );
         Floor3 = spawnFloor( gEngineApplication->getTextureManager(), { -15.0f, 15.0f, 0.0f }, 45.0f );
+
+        //[fpuma] TODO Loading all assets now to prevent a race condition later.
+        // I need to create a ResourceManager that supports multithreading
+        auto textureManager = gEngineApplication->getTextureManager();
+        textureManager->loadTexture( "../assets/green.png" );
+        textureManager->loadTexture( "../assets/bricks.jpg" );
+        textureManager->loadTexture( "../assets/tennisball.png" );
     }
 
     void Test::update( float _deltaTime )
