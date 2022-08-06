@@ -13,3 +13,6 @@
 [submodule "extern/leo"]
 	path = extern/leo
 	url = https://github.com/fpuma/Leo.git
+[submodule "extern/pina"]
+	path = extern/pina
+	url = https://github.com/fpuma/Pina.git
