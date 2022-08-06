@@ -67,7 +67,7 @@ namespace puma
     bool InputSystem::entityComponentCheck( Entity _entity )
     {
         ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
-        return  componentProvider->exists<InputComponent>( _entity );
+        return  componentProvider->contains<InputComponent>( _entity );
     }
 #endif
 

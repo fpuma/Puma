@@ -48,8 +48,8 @@ namespace test
             puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
 
             puma::Entity result = entityProvider->requestEntity();
-            puma::ILocationComponent* locationComponent = componentProvider->add<puma::ILocationComponent>( result );
-            puma::ICameraComponent* cameraComponent = componentProvider->add<puma::ICameraComponent>( result );
+            auto locationComponent = componentProvider->add<puma::ILocationComponent>( result );
+            auto cameraComponent = componentProvider->add<puma::ICameraComponent>( result );
 
             locationComponent->setPosition( { 0.0f, 0.0f } );
             cameraComponent->setMetersPerPixel( 0.2f );
@@ -95,11 +95,11 @@ namespace test
 
         //Register systems
         gSystems->registerClass<BallSpawnerSystem>();
-        BallSpawnerSystem* ballSpawnerSystem = gSystems->add<BallSpawnerSystem>();
+        auto ballSpawnerSystem = gSystems->add<BallSpawnerSystem>();
         assert( nullptr != ballSpawnerSystem );
 
         gSystems->registerClass<StaticStuffSystem>();
-        StaticStuffSystem* staticStuffSystem = gSystems->add<StaticStuffSystem>();
+        auto staticStuffSystem = gSystems->add<StaticStuffSystem>();
         assert( nullptr != staticStuffSystem );
 
         //Init systems
@@ -149,9 +149,9 @@ namespace test
         puma::Entity result = gProviders->get<puma::IEntityProvider>()->requestEntity();
         puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
 
-        puma::ILocationComponent* locationComponent = componentProvider->add<puma::ILocationComponent>( result );
-        puma::IRenderComponent* renderComponent = componentProvider->add<puma::IRenderComponent>( result );
-        puma::ICollisionComponent* collisionComponent = componentProvider->add<puma::ICollisionComponent>( result );
+        auto locationComponent = componentProvider->add<puma::ILocationComponent>( result );
+        auto renderComponent = componentProvider->add<puma::IRenderComponent>( result );
+        auto collisionComponent = componentProvider->add<puma::ICollisionComponent>( result );
 
         locationComponent->setPosition( _pos );
 

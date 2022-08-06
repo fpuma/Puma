@@ -88,8 +88,8 @@ namespace puma
     bool RenderSystem::entityComponentCheck( Entity _entity )
     {
         ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
-        bool hasRenderComponent = componentProvider->exists<RenderComponent>( _entity );
-        bool hasLocationComponent = componentProvider->exists<LocationComponent>( _entity );
+        bool hasRenderComponent = componentProvider->contains<RenderComponent>( _entity );
+        bool hasLocationComponent = componentProvider->contains<LocationComponent>( _entity );
         return (hasRenderComponent && hasLocationComponent);
     }
 #endif

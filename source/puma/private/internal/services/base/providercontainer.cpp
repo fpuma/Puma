@@ -6,10 +6,10 @@ namespace puma
 {
     void ProviderContainer::uninit()
     {
-        traverse( [](IProvider* _ptr)
-        {
-            _ptr->uninit();
-        } );
+        visit( []( std::shared_ptr<IProvider> _ptr )
+            {
+                _ptr->uninit();
+            } );
 
         clear();
     }

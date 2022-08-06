@@ -103,7 +103,7 @@ namespace puma
 
         gInternalSystems->add<RenderSystem>();
         gInternalSystems->add<CollisionSystem>();
-        InputSystem* inputSystem = gInternalSystems->add<InputSystem>();
+        auto inputSystem = gInternalSystems->add<InputSystem>();
 
         gInternalSystems->updateSystemsProperties();
 

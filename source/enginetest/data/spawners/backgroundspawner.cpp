@@ -25,8 +25,8 @@ namespace test
         puma::Entity result = gProviders->get<puma::IEntityProvider>()->requestEntity();
         puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
 
-        puma::ILocationComponent* locationComponent = componentProvider->add<puma::ILocationComponent>( result );
-        puma::IRenderComponent* renderComponent = componentProvider->add<puma::IRenderComponent>( result );
+        auto locationComponent = componentProvider->add<puma::ILocationComponent>( result );
+        auto renderComponent = componentProvider->add<puma::IRenderComponent>( result );
 
         puma::IRenderSystem* renderSystem = gSystems->get<puma::IRenderSystem>();
 

@@ -37,7 +37,7 @@ namespace test
 
         m_spawnerHandler = gProviders->get<IEntityProvider>()->requestEntity();
 
-        IInputComponent* inputComponent = gProviders->get<IComponentProvider>()->add<IInputComponent>( m_spawnerHandler );
+        auto inputComponent = gProviders->get<IComponentProvider>()->add<IInputComponent>( m_spawnerHandler );
 
         KeyboardInput keyboardInput;
         keyboardInput.keyboardKey = nina::KeyboardKey::KB_Y;

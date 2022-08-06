@@ -179,8 +179,8 @@ namespace puma
     bool CollisionSystem::entityComponentCheck( Entity _entity )
     {
         ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
-        bool hasCollisionComponent = componentProvider->exists<CollisionComponent>( _entity );
-        bool hasLocationComponent = componentProvider->exists<LocationComponent>( _entity );
+        bool hasCollisionComponent = componentProvider->contains<CollisionComponent>( _entity );
+        bool hasLocationComponent = componentProvider->contains<LocationComponent>( _entity );
         return ( hasCollisionComponent && hasLocationComponent );
     }
 #endif

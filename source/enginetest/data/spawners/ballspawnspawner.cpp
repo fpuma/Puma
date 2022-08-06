@@ -24,9 +24,9 @@ namespace test
         puma::Entity result = gProviders->get<puma::IEntityProvider>()->requestEntity();
         puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
 
-        puma::ILocationComponent* locationComponent = componentProvider->add<puma::ILocationComponent>( result );
-        puma::IInputComponent* inputComponent = componentProvider->add<puma::IInputComponent>( result );
-        puma::ICollisionComponent* collisionComponent = componentProvider->add<puma::ICollisionComponent>( result );
+        auto locationComponent = componentProvider->add<puma::ILocationComponent>( result );
+        auto inputComponent = componentProvider->add<puma::IInputComponent>( result );
+        auto collisionComponent = componentProvider->add<puma::ICollisionComponent>( result );
         componentProvider->add<test::MoveDirectionComponent>( result );
 
         locationComponent->setPosition( _position );

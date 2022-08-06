@@ -5,7 +5,7 @@
 namespace puma
 {
 
-    void SystemContainer::onAdded( Key _key, ISystem* _system )
+    void SystemContainer::onAdded( std::shared_ptr<ISystem> _system )
     {
         SystemProperties properties = _system->getProperties();
 
@@ -16,38 +16,38 @@ namespace puma
 
         if ( properties.updateBitMask & SystemUpdateFlag_Update )
         {
-            m_systemsToUpdate.push_back( _system );
+            m_systemsToUpdate.push_back( _system.get() );
             std::sort( m_systemsToUpdate.begin(), m_systemsToUpdate.end(), sortCallback );
         }
 
         if ( properties.updateBitMask & SystemUpdateFlag_PrePhysicsUpdate )
         {
-            m_systemsToUpdatePrePhysics.push_back( _system );
+            m_systemsToUpdatePrePhysics.push_back( _system.get() );
             std::sort( m_systemsToUpdatePrePhysics.begin(), m_systemsToUpdatePrePhysics.end(), sortCallback );
         }
 
         if ( properties.updateBitMask & SystemUpdateFlag_PostPhysicsUpdate )
         {
-            m_systemsToUpdatePostPhysics.push_back( _system );
+            m_systemsToUpdatePostPhysics.push_back( _system.get() );
             std::sort( m_systemsToUpdatePostPhysics.begin(), m_systemsToUpdatePostPhysics.end(), sortCallback );
         }
 
         if ( properties.updateBitMask & SystemUpdateFlag_QueueRenderables )
         {
-            m_systemsToQueueRenderables.push_back( _system );
+            m_systemsToQueueRenderables.push_back( _system.get() );
         }
     }
 
-    void SystemContainer::onRemoved( Key _key, ISystem* _system )
+    void SystemContainer::onRemoved( std::shared_ptr<ISystem> _system )
     {
-        m_systemsToUpdate.erase( std::remove( m_systemsToUpdate.begin(), m_systemsToUpdate.end(), _system ), m_systemsToUpdate.end() );
-        m_systemsToUpdatePrePhysics.erase( std::remove( m_systemsToUpdatePrePhysics.begin(), m_systemsToUpdatePrePhysics.end(), _system ), m_systemsToUpdatePrePhysics.end() );
-        m_systemsToUpdatePostPhysics.erase( std::remove( m_systemsToUpdatePostPhysics.begin(), m_systemsToUpdatePostPhysics.end(), _system ), m_systemsToUpdatePostPhysics.end() );
+        m_systemsToUpdate.erase( std::remove( m_systemsToUpdate.begin(), m_systemsToUpdate.end(), _system.get() ), m_systemsToUpdate.end() );
+        m_systemsToUpdatePrePhysics.erase( std::remove( m_systemsToUpdatePrePhysics.begin(), m_systemsToUpdatePrePhysics.end(), _system.get() ), m_systemsToUpdatePrePhysics.end() );
+        m_systemsToUpdatePostPhysics.erase( std::remove( m_systemsToUpdatePostPhysics.begin(), m_systemsToUpdatePostPhysics.end(), _system.get() ), m_systemsToUpdatePostPhysics.end() );
     }
 
     void SystemContainer::uninit()
     {
-        traverse( []( ISystem* _ptr ) 
+        visit( []( std::shared_ptr<ISystem> _ptr )
         {
             _ptr->uninit();
         } );
@@ -96,28 +96,28 @@ namespace puma
         m_systemsToUpdatePostPhysics.clear();
         m_systemsToQueueRenderables.clear();
 
-        traverse( [&]( ISystem* _system )
+        visit( [&]( std::shared_ptr<ISystem> _system )
         {
             SystemProperties properties = _system->getProperties();
 
             if ( properties.updateBitMask & SystemUpdateFlag_Update )
             {
-                m_systemsToUpdate.push_back( _system );
+                m_systemsToUpdate.push_back( _system.get() );
             }
 
             if ( properties.updateBitMask & SystemUpdateFlag_PrePhysicsUpdate )
             {
-                m_systemsToUpdatePrePhysics.push_back( _system );
+                m_systemsToUpdatePrePhysics.push_back( _system.get() );
             }
 
             if ( properties.updateBitMask & SystemUpdateFlag_PostPhysicsUpdate )
             {
-                m_systemsToUpdatePostPhysics.push_back( _system );
+                m_systemsToUpdatePostPhysics.push_back( _system.get() );
             }
 
             if ( properties.updateBitMask & SystemUpdateFlag_QueueRenderables )
             {
-                m_systemsToQueueRenderables.push_back( _system );
+                m_systemsToQueueRenderables.push_back( _system.get() );
             }
         } );
 

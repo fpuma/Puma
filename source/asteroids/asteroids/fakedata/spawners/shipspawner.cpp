@@ -26,7 +26,7 @@ Entity ShipSpawner::spawnShip( Position _pos )
     componentProvider->add<ILocationComponent>( shipEntity );
 
     //Input
-    IInputComponent* inputComponent = componentProvider->add<IInputComponent>( shipEntity );
+    auto inputComponent = componentProvider->add<IInputComponent>( shipEntity );
     for ( const auto& inputMap : kShipControllerJoystickInput )
     {
         inputComponent->addInputMap( inputMap.first, inputMap.second );
@@ -34,7 +34,7 @@ Entity ShipSpawner::spawnShip( Position _pos )
     gSystems->get<IInputSystem>()->registerEntity( shipEntity );
 
     //Collision
-    ICollisionComponent* collisionComponent = componentProvider->add<ICollisionComponent>( shipEntity );
+    auto collisionComponent = componentProvider->add<ICollisionComponent>( shipEntity );
 
     leo::FrameInfo frameInfo;
     frameInfo.linearDamping = 0.1f;

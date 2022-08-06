@@ -62,8 +62,8 @@ void Asteroids::initCamera()
 
     m_cameraEntity = entityProvider->requestEntity();
 
-    ICameraComponent* cameraComponent = componentProvider->add<ICameraComponent>( m_cameraEntity );
-    ILocationComponent* locationComponent = componentProvider->add<ILocationComponent>( m_cameraEntity );
+    auto cameraComponent = componentProvider->add<ICameraComponent>( m_cameraEntity );
+    auto locationComponent = componentProvider->add<ILocationComponent>( m_cameraEntity );
 
     cameraComponent->setMetersPerPixel( 1.0f );
     gEngineApplication->setCameraEntity( m_cameraEntity );

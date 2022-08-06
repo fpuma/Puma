@@ -15,6 +15,7 @@ namespace Puma
 
             conf.AddPrivateDependency<Puma.Nina>(target);
             conf.AddPrivateDependency<Puma.Leo>(target);
+            conf.AddPublicDependency<Puma.Pina>(target);
             conf.AddPublicDependency<Puma.Time>(target);
             conf.AddPublicDependency<Puma.Utils>(target);
             conf.AddPublicDependency<Puma.Logger>(target);

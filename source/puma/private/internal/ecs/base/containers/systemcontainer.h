@@ -22,8 +22,8 @@ namespace puma
 
     protected:
 
-        void onAdded( Key _key, ISystem* _system ) override;
-        void onRemoved( Key _key, ISystem* _system ) override;
+        void onAdded( std::shared_ptr<ISystem> _system ) override;
+        void onRemoved( std::shared_ptr<ISystem> _system ) override;
 
     private:
 
