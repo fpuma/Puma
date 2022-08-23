@@ -1,7 +1,7 @@
 #pragma once
 
 #include <internal/renderer/renderables/irenderable.h>
-#include <engine/external/ninadefinitions.h>
+#include <modules/nina/ninadefinitions.h>
 #include <engine/utils/position.h>
 #include <nina/texturemanager/texture.h>
 #include <nina/texturemanager/texturedefinitions.h>

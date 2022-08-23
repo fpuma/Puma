@@ -1,7 +1,7 @@
 #include "precompiledengine.h"
 #include "inputmap.h"
 
-#include <engine/external/ninadefinitions.h>
+#include <modules/nina/ninadefinitions.h>
 #include <engine/services/iloggerservice.h>
 #include <internal/input/inputbuffer.h>
 

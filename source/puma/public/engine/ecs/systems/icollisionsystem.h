@@ -3,7 +3,7 @@
 #include <engine/ecs/base/entity.h>
 #include <engine/ecs/base/isystem.h>
 
-#include <engine/external/leodefinitions.h>
+#include <modules/leo/leodefinitions.h>
 
 namespace puma
 {

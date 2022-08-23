@@ -16,7 +16,7 @@
 
 #include <engine/ecs/systems/irendersystem.h>
 
-#include <engine/external/leodefinitions.h>
+#include <modules/leo/leodefinitions.h>
 
 #include <engine/services/base/iprovider.h>
 #include <engine/services/base/iprovidercontainer.h>

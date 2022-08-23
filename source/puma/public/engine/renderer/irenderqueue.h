@@ -1,6 +1,6 @@
 #pragma once
 
-#include <engine/external/ninadefinitions.h>
+#include <modules/nina/ninadefinitions.h>
 #include <engine/utils/position.h>
 #include <engine/utils/renderdefinitions.h>
 

@@ -1,5 +1,5 @@
 #pragma once
-#include <engine/external/ninadefinitions.h>
+#include <modules/nina/ninadefinitions.h>
 #include <engine/ecs/components/irendercomponent.h>
 #include <internal/renderer/renderables/irenderable.h>
 

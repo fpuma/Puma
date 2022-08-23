@@ -1,6 +1,6 @@
 #pragma once
 
-#include <engine/external/ninadefinitions.h>
+#include <modules/nina/ninadefinitions.h>
 #include <engine/ecs/base/entity.h>
 
 namespace puma
