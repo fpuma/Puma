@@ -6,8 +6,7 @@
 #include <engine/igame.h>
 #include <nina/input/iinput.h>
 
-#include <internal/ecs/base/providers/componentprovider.h>
-#include <internal/ecs/base/providers/entityprovider.h>
+#include <engine/services/ecsservice.h>
 #include <internal/ecs/components/cameracomponent.h>
 #include <internal/ecs/components/collisioncomponent.h>
 #include <internal/ecs/components/inputcomponent.h>
@@ -20,8 +19,7 @@
 #include <internal/services/engineapplicationservice.h>
 #include <internal/services/loggerservice.h>
 #include <internal/services/physicsservice.h>
-#include <internal/services/providersservice.h>
-#include <internal/services/systemsservice.h>
+
 
 #include <logger/output/consolelogoutput.h>
 
@@ -31,29 +29,23 @@ namespace puma
 {
     namespace
     {
-        void registerServices()
-        {
-            gProviders->registerInterface<IEntityProvider, EntityProvider>();
-            gProviders->registerInterface<IComponentProvider, ComponentProvider>();
-            gProviders->registerClass<TimerProvider>( );
-        }
 
         void registerSystems()
         {
-            gInternalSystems->registerInterface<IRenderSystem, RenderSystem>();
-            gInternalSystems->registerInterface<ICollisionSystem, CollisionSystem>();
-            gInternalSystems->registerInterface<IInputSystem, InputSystem>();
+            gSystems->registerSystem<IRenderSystem, RenderSystem>();
+            gSystems->registerSystem<ICollisionSystem, CollisionSystem>();
+            gSystems->registerSystem<IInputSystem, InputSystem>();
         }
 
         void registerComponents()
         {
-            ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
+            ComponentProvider* componentProvider = gComponents;
 
-            componentProvider->registerInterface<ICameraComponent, CameraComponent>();
-            componentProvider->registerInterface<ICollisionComponent, CollisionComponent>();
-            componentProvider->registerInterface<ILocationComponent, LocationComponent>();
-            componentProvider->registerInterface<IRenderComponent, RenderComponent>();
-            componentProvider->registerInterface<IInputComponent, InputComponent>();
+            componentProvider->registerComponent<ICameraComponent, CameraComponent>();
+            componentProvider->registerComponent<ICollisionComponent, CollisionComponent>();
+            componentProvider->registerComponent<ILocationComponent, LocationComponent>();
+            componentProvider->registerComponent<IRenderComponent, RenderComponent>();
+            componentProvider->registerComponent<IInputComponent, InputComponent>();
         }
     }
 
@@ -92,33 +84,32 @@ namespace puma
         m_services->init();
         DefaultInstance<IServiceContainer>::setInstance( m_services.get() );
         
-        registerServices();
-        registerSystems();
+        gInternalLogger->getLogger()->addOutput<ConsoleLogOutput>();
+        gInternalLogger->info( "Puma engine initializing." );
 
-        gProviders->add<EntityProvider>();
-        gProviders->add<ComponentProvider>();
-        gProviders->add<TimerProvider>();
+        registerSystems();
 
         registerComponents();
 
-        gInternalSystems->add<RenderSystem>();
-        gInternalSystems->add<CollisionSystem>();
-        auto inputSystem = gInternalSystems->add<InputSystem>();
-
-        gInternalSystems->updateSystemsProperties();
-
-        gInternalLogger->getLogger()->addOutput<ConsoleLogOutput>();
-
-        gInternalLogger->info( "Puma engine initialized." );
+        gSystems->addSystem<RenderSystem>();
+        gSystems->addSystem<CollisionSystem>();
+        auto inputSystem = gSystems->addSystem<InputSystem>();
 
         gInternalEngineApplication->init( _windowExtent, _windowName );
         inputSystem->registerInputListener();
+        gInternalLogger->info( "Puma engine initialized." );
     }
 
     void Engine::uninit()
     {
-        gInternalSystems->get<InputSystem>()->unregisterInputListener();
         gInternalLogger->info( "Puma engine uninitializing." );
+        SystemProvider* systemProvider = gSystems;
+        InputSystem* inputSystem = systemProvider->getSystem<InputSystem>();
+        inputSystem->unregisterInputListener();
+        inputSystem->uninit();
+        systemProvider->getSystem<CollisionSystem>()->uninit();
+        
+        gInternalLogger->info( "Puma engine uninitialized." );
         m_services->uninit();
     }
 
@@ -127,10 +118,10 @@ namespace puma
         m_deltaTime.update();
 
         float currentDeltaTime = static_cast<float>(m_deltaTime.get());
-        gInternalSystems->update( currentDeltaTime );
-        gInternalSystems->prePhysicsUpdate( currentDeltaTime );
+        gSystems->update( *gEntities, *gComponents );
+        gSystems->prePhysicsUpdate( *gEntities, *gComponents );
         gPhysics->update( currentDeltaTime );
-        gInternalSystems->postPhysicsUpdate( currentDeltaTime );
+        gSystems->postPhysicsUpdate( *gEntities, *gComponents );
         _game->update(currentDeltaTime);
         m_engineRenderer.queueRenderables();
     }
@@ -139,7 +130,7 @@ namespace puma
     {
         m_appDt.update();
 
-        gInternalSystems->get<InputSystem>()->updateWriteBuffer();
+        gSystems->getSystem<InputSystem>()->updateWriteBuffer();
         gInternalEngineApplication->getInput()->update();
 
         gInternalEngineApplication->update();

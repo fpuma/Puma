@@ -11,10 +11,6 @@ namespace puma
     {
     public:
 
-        void enable() override { m_enabled = true; }
-        void disable() override { m_enabled = false; }
-        bool isEnabled() const override { return m_enabled; }
-
         void addInputMap( InputAction _inputAction, MousePositionInput _mousePositionInput ) override;
         void addInputMap( InputAction _inputAction, MouseButtonInput _mouseButtonInput ) override;
         void addInputMap( InputAction _inputAction, MouseWheelInput _mouseWheelInput ) override;
@@ -52,6 +48,5 @@ namespace puma
         std::set<InputAction> m_disabledActions;
         std::set<ExtraInfoData> m_extraInfo;
 
-        bool m_enabled = true;
     };
 }

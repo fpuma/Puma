@@ -1,7 +1,7 @@
 #pragma once
 
-#include <engine/ecs/base/entity.h>
-#include <engine/ecs/base/isystem.h>
+#include <modules/pina/entity.h>
+#include <modules/pina/system.h>
 
 #include <utils/graphics/dimensions.h>
 
@@ -12,13 +12,11 @@ namespace puma
         class IRenderer;
     }
 
-    class IRenderSystem : public ISystem
+    class IRenderSystem : public System
     {
     public:
 
         virtual ~IRenderSystem() {}
-
-        virtual void init() = 0;
 
         virtual void registerEntity( Entity _entity ) = 0;
         virtual void unregisterEntity( Entity _entity ) = 0;

@@ -15,8 +15,6 @@ namespace puma
 
         EngineLogger* get() override { return m_engineLogger.get(); }
 
-        void uninit() override {}
-
     private:
 
         std::unique_ptr<EngineLogger> m_engineLogger;

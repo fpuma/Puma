@@ -1,12 +1,12 @@
 #pragma once
 
-#include <engine/ecs/base/icomponent.h>
+#include <modules/pina/component.h>
 
 #include <modules/leo/leodefinitions.h>
 
 namespace puma
 {
-    class ICollisionComponent : public IComponent
+    class ICollisionComponent : public Component
     {
     public:
 

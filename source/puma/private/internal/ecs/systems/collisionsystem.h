@@ -13,18 +13,13 @@ namespace puma
     public:
 
         void init( Vec2 _gravity ) override;
-        void uninit() override;
+        void uninit();
 
         void registerEntity( Entity _entity, leo::FrameInfo _frameInfo, leo::FrameType _frameType ) override;
         void unregisterEntity( Entity _entity ) override;
 
-        void update( float _deltaTime ) override {}
-        void prePhysicsUpdate( float _deltaTime ) override {}
-        void postPhysicsUpdate( float _deltaTime ) override;
+        void postPhysicsUpdate( EntityProvider& _entityProvider, ComponentProvider& _componentProvider ) override;
         void queueRenderables( IRenderQueue& _renderQueue ) override;
-
-        void setProperties( SystemProperties _properties ) override { m_properties = _properties; }
-        SystemProperties getProperties() const override { return m_properties; }
 
         void setGravity( Vec2 _gravity ) override;
         Vec2 getGravity() override;
@@ -40,7 +35,6 @@ namespace puma
         bool entityComponentCheck( Entity _entity );
 #endif
         std::set<Entity> m_entities;
-        SystemProperties m_properties;
         leo::WorldID m_worldId;
 
         struct PhysicsDebugShape

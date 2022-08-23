@@ -1,5 +1,5 @@
 #pragma once
-#include <engine/ecs/base/icomponent.h>
+#include <modules/pina/component.h>
 #include <engine/utils/renderdefinitions.h>
 
 namespace puma
@@ -7,7 +7,7 @@ namespace puma
     
     using TextureInfoContainer = std::vector<TextureInfo>;
 
-    class IRenderComponent : public IComponent
+    class IRenderComponent : public Component
     {
     public:
 

@@ -1,11 +1,11 @@
 #pragma once
 
-#include <engine/ecs/base/entity.h>
-#include <engine/ecs/base/isystem.h>
+#include <modules/pina/entity.h>
+#include <modules/pina/system.h>
 
 namespace puma
 {
-    class IInputSystem : public ISystem
+    class IInputSystem : public System
     {
     public:
 

@@ -6,13 +6,10 @@
 #include <asteroids/fakedata/spawners/shipspawner.h>
 #include <asteroids/systems/shipmovementsystem.h>
 
-#include <engine/ecs/base/providers/ientityprovider.h>
-#include <engine/ecs/base/providers/icomponentprovider.h>
 #include <engine/ecs/components/icameracomponent.h>
 #include <engine/ecs/components/ilocationcomponent.h>
-#include <engine/services/iprovidersservice.h>
 #include <engine/services/iengineapplicationservice.h>
-#include <engine/services/isystemsservice.h>
+#include <engine/services/ecsservice.h>
 #include <engine/ecs/systems/icollisionsystem.h>
 
 using namespace puma;
@@ -24,14 +21,13 @@ void Asteroids::init()
     gEngineApplication->setWindowPosition( 200, 200 );
 
     //Register classes
-    gSystems->registerClass<ShipMovementSystem>();
-    gSystems->add<ShipMovementSystem>();
-    gProviders->get<IComponentProvider>()->registerClass<ShipComponent>();
+    gSystems->registerSystem<ShipMovementSystem>();
+    gSystems->addSystem<ShipMovementSystem>();
+    gComponents->registerComponent<ShipComponent>();
 
     //Inits
     initCamera();
     initPhysics();
-    gSystems->updateSystemsProperties();
     
     //Spawn
     m_shipEntity = ShipSpawner::spawnShip( Position() );
@@ -50,20 +46,20 @@ void Asteroids::update( float _deltaTime )
 
 void Asteroids::initPhysics()
 {
-    ICollisionSystem* collisionSystem = gSystems->get<ICollisionSystem>();
+    ICollisionSystem* collisionSystem = gSystems->getSystem<ICollisionSystem>();
     collisionSystem->init( { 0.0f, 0.0f } );
     collisionSystem->enableDebugDraw();
 }
 
 void Asteroids::initCamera()
 {
-    IEntityProvider* entityProvider = gProviders->get<IEntityProvider>();
-    IComponentProvider* componentProvider = gProviders->get<IComponentProvider>();
+    EntityProvider* entityProvider = gEntities;
+    ComponentProvider* componentProvider = gComponents;
 
     m_cameraEntity = entityProvider->requestEntity();
 
-    auto cameraComponent = componentProvider->add<ICameraComponent>( m_cameraEntity );
-    auto locationComponent = componentProvider->add<ILocationComponent>( m_cameraEntity );
+    auto cameraComponent = componentProvider->addComponent<ICameraComponent>( m_cameraEntity );
+    auto locationComponent = componentProvider->addComponent<ILocationComponent>( m_cameraEntity );
 
     cameraComponent->setMetersPerPixel( 1.0f );
     gEngineApplication->setCameraEntity( m_cameraEntity );
@@ -73,11 +69,11 @@ void Asteroids::initCamera()
 
 void Asteroids::uninitCamera()
 {
-    IEntityProvider* entityProvider = gProviders->get<IEntityProvider>();
-    IComponentProvider* componentProvider = gProviders->get<IComponentProvider>();
+    EntityProvider* entityProvider = gEntities;
+    ComponentProvider* componentProvider = gComponents;
 
-    componentProvider->remove<ICameraComponent>( m_cameraEntity );
-    componentProvider->remove<ILocationComponent>( m_cameraEntity );
+    componentProvider->removeComponent<ICameraComponent>( m_cameraEntity );
+    componentProvider->removeComponent<ILocationComponent>( m_cameraEntity );
 
     entityProvider->disposeEntity( m_cameraEntity );
 }

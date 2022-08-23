@@ -4,11 +4,7 @@
 
 #include <data/collisionindexes.h>
 
-#include <engine/ecs/base/providers/ientityprovider.h>
-#include <engine/ecs/base/providers/icomponentprovider.h>
-
-#include <engine/services/iprovidersservice.h>
-#include <engine/services/isystemsservice.h>
+#include <engine/services/ecsservice.h>
 
 #include <engine/ecs/components/icollisioncomponent.h>
 #include <engine/ecs/components/irendercomponent.h>
@@ -22,13 +18,13 @@ namespace test
 {
     puma::Entity spawnBackground( puma::nina::ITextureManager* _textureManager, const puma::Position& _pos )
     {
-        puma::Entity result = gProviders->get<puma::IEntityProvider>()->requestEntity();
-        puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
+        puma::Entity result = gEntities->requestEntity();
+        puma::ComponentProvider* componentProvider = gComponents;
 
-        auto locationComponent = componentProvider->add<puma::ILocationComponent>( result );
-        auto renderComponent = componentProvider->add<puma::IRenderComponent>( result );
+        auto locationComponent = componentProvider->addComponent<puma::ILocationComponent>( result );
+        auto renderComponent = componentProvider->addComponent<puma::IRenderComponent>( result );
 
-        puma::IRenderSystem* renderSystem = gSystems->get<puma::IRenderSystem>();
+        puma::IRenderSystem* renderSystem = gSystems->getSystem<puma::IRenderSystem>();
 
         locationComponent->setPosition( _pos );
 
@@ -48,13 +44,13 @@ namespace test
 
     void unspawnBackground( puma::Entity _ballEntity )
     {
-        gSystems->get<puma::IRenderSystem>()->unregisterEntity( _ballEntity );
+        gSystems->getSystem<puma::IRenderSystem>()->unregisterEntity( _ballEntity );
 
-        puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
+        puma::ComponentProvider* componentProvider = gComponents;
 
-        componentProvider->remove<puma::ILocationComponent>( _ballEntity );
-        componentProvider->remove<puma::IRenderComponent>( _ballEntity );
+        componentProvider->removeComponent<puma::ILocationComponent>( _ballEntity );
+        componentProvider->removeComponent<puma::IRenderComponent>( _ballEntity );
 
-        gProviders->get<puma::IEntityProvider>()->disposeEntity( _ballEntity );
+        gEntities->disposeEntity( _ballEntity );
     }
 }
