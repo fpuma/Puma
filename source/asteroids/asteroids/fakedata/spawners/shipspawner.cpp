@@ -5,40 +5,37 @@
 #include <asteroids/fakedata/input/inputconfig.h>
 #include <asteroids/systems/shipmovementsystem.h>
 
-#include <engine/ecs/base/providers/ientityprovider.h>
-#include <engine/ecs/base/providers/icomponentprovider.h>
 #include <engine/ecs/components/ilocationcomponent.h>
 #include <engine/ecs/components/icollisioncomponent.h>
 #include <engine/ecs/components/iinputcomponent.h>
-#include <engine/services/iprovidersservice.h>
-#include <engine/services/isystemsservice.h>
+#include <engine/services/ecsservice.h>
 #include <engine/ecs/systems/icollisionsystem.h>
 #include <engine/ecs/systems/iinputsystem.h>
 
 Entity ShipSpawner::spawnShip( Position _pos )
 {
-    IEntityProvider* entityProvider = gProviders->get<IEntityProvider>();
-    IComponentProvider* componentProvider = gProviders->get<IComponentProvider>();
+    EntityProvider* entityProvider = gEntities;
+    ComponentProvider* componentProvider = gComponents;
 
     Entity shipEntity = entityProvider->requestEntity();
 
     //Location
-    componentProvider->add<ILocationComponent>( shipEntity );
+    componentProvider->addComponent<ILocationComponent>( shipEntity );
 
     //Input
-    auto inputComponent = componentProvider->add<IInputComponent>( shipEntity );
+    auto inputComponent = componentProvider->addComponent<IInputComponent>( shipEntity );
     for ( const auto& inputMap : kShipControllerJoystickInput )
     {
         inputComponent->addInputMap( inputMap.first, inputMap.second );
     }
-    gSystems->get<IInputSystem>()->registerEntity( shipEntity );
+    gSystems->getSystem<IInputSystem>()->registerEntity( shipEntity );
 
     //Collision
-    auto collisionComponent = componentProvider->add<ICollisionComponent>( shipEntity );
+    auto collisionComponent = componentProvider->addComponent<ICollisionComponent>( shipEntity );
 
     leo::FrameInfo frameInfo;
     frameInfo.linearDamping = 0.1f;
-    gSystems->get<ICollisionSystem>()->registerEntity( shipEntity, frameInfo, leo::FrameType::Dynamic );
+    gSystems->getSystem<ICollisionSystem>()->registerEntity( shipEntity, frameInfo, leo::FrameType::Dynamic );
 
     leo::BodyInfo bodyInfo;
     Circle circle = { Vec2(), 25.0f };
@@ -47,24 +44,24 @@ Entity ShipSpawner::spawnShip( Position _pos )
     collisionComponent->addBody( bodyInfo );
     
     //Ship
-    componentProvider->add<ShipComponent>( shipEntity );
-    gSystems->get<ShipMovementSystem>()->setShipEntity(shipEntity);
+    componentProvider->addComponent<ShipComponent>( shipEntity );
+    gSystems->getSystem<ShipMovementSystem>()->setShipEntity(shipEntity);
 
     return shipEntity;
 }
 
 void ShipSpawner::unspawnShip( Entity _entity )
 {
-    IEntityProvider* entityProvider = gProviders->get<IEntityProvider>();
-    IComponentProvider* componentProvider = gProviders->get<IComponentProvider>();
+    EntityProvider* entityProvider = gEntities;
+    ComponentProvider* componentProvider = gComponents;
 
-    gSystems->get<ICollisionSystem>()->unregisterEntity( _entity );
+    gSystems->getSystem<ICollisionSystem>()->unregisterEntity( _entity );
 
-    componentProvider->remove<ILocationComponent>( _entity );
-    componentProvider->remove<IInputComponent>( _entity );
-    componentProvider->remove<ICollisionComponent>( _entity );
+    componentProvider->removeComponent<ILocationComponent>( _entity );
+    componentProvider->removeComponent<IInputComponent>( _entity );
+    componentProvider->removeComponent<ICollisionComponent>( _entity );
 
-    gSystems->get<IInputSystem>()->unregisterEntity( _entity );
+    gSystems->getSystem<IInputSystem>()->unregisterEntity( _entity );
 
     entityProvider->disposeEntity( _entity );
 }

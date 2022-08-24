@@ -17,8 +17,6 @@ namespace puma
 
         leo::IPhysics* get() { return m_physics.get(); }
 
-        void uninit() {}
-
     private:
 
         std::unique_ptr<leo::IPhysics> m_physics;

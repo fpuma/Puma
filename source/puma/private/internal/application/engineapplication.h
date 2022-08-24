@@ -2,7 +2,7 @@
 
 #include <nina/application/iapplication.h>
 #include <engine/application/iengineapplication.h>
-#include <engine/external/ninadefinitions.h>
+#include <modules/nina/ninadefinitions.h>
 
 
 namespace puma

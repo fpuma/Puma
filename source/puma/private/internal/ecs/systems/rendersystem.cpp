@@ -5,18 +5,14 @@
 #include <nina/application/irenderer.h>
 #include <nina/application/iwindow.h>
 
-#include <engine/ecs/base/entity.h>
+#include <modules/pina/entity.h>
 #include <engine/renderer/irenderqueue.h>
-
-#include <internal/ecs/base/providers/componentprovider.h>
-#include <internal/ecs/base/providers/entityprovider.h>
+#include <engine/services/ecsservice.h>
 
 #include <internal/ecs/components/cameracomponent.h>
 #include <internal/ecs/components/collisioncomponent.h>
 #include <internal/ecs/components/locationcomponent.h>
 #include <internal/ecs/components/rendercomponent.h>
-
-#include <internal/services/providersservice.h>
 
 #include <utils/geometry/shapes/shape.h>
 
@@ -26,27 +22,16 @@ namespace puma
 {
 
     RenderSystem::RenderSystem()
-    {
-        init();
-    }
-
-    void RenderSystem::init()
-    {
-        m_properties.updateBitMask = SystemUpdateFlag_QueueRenderables;
-    }
-
-    void RenderSystem::uninit()
-    {
-    }
+    {}
 
     void RenderSystem::queueRenderables( IRenderQueue& _renderQueue )
     {
-        ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
+        ComponentProvider* componentProvider = gComponents;
 
         for ( const Entity& entity : m_entities )
         {
-            RenderComponent* renderComponent = componentProvider->get<RenderComponent>( entity );
-            LocationComponent* locationComponent = componentProvider->get<LocationComponent>( entity );
+            RenderComponent* renderComponent = componentProvider->getComponent<RenderComponent>( entity );
+            LocationComponent* locationComponent = componentProvider->getComponent<LocationComponent>( entity );
 
             for ( const TextureInfo& textureInfo : renderComponent->getTextureInfoContainer() )
             {
@@ -87,9 +72,9 @@ namespace puma
 #ifdef _DEBUG
     bool RenderSystem::entityComponentCheck( Entity _entity )
     {
-        ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
-        bool hasRenderComponent = componentProvider->contains<RenderComponent>( _entity );
-        bool hasLocationComponent = componentProvider->contains<LocationComponent>( _entity );
+        ComponentProvider* componentProvider = gComponents;
+        bool hasRenderComponent = componentProvider->containsComponent<RenderComponent>( _entity );
+        bool hasLocationComponent = componentProvider->containsComponent<LocationComponent>( _entity );
         return (hasRenderComponent && hasLocationComponent);
     }
 #endif

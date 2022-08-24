@@ -5,9 +5,7 @@
 
 #include <data/collisionindexes.h>
 
-#include <engine/ecs/base/entity.h>
-#include <engine/ecs/base/providers/icomponentprovider.h>
-#include <engine/ecs/base/providers/ientityprovider.h>
+#include <modules/pina/entity.h>
 #include <engine/ecs/components/icameracomponent.h>
 #include <engine/ecs/components/icollisioncomponent.h>
 #include <engine/ecs/components/ilocationcomponent.h>
@@ -16,13 +14,12 @@
 #include <engine/ecs/systems/icollisionsystem.h>
 #include <engine/ecs/systems/irendersystem.h>
 #include <engine/ecs/systems/iinputsystem.h>
-#include <engine/external/leodefinitions.h>
-#include <engine/external/ninadefinitions.h>
+#include <modules/leo/leodefinitions.h>
+#include <modules/nina/ninadefinitions.h>
 
 #include <engine/services/iengineapplicationservice.h>
 #include <engine/services/iloggerservice.h>
-#include <engine/services/iprovidersservice.h>
-#include <engine/services/isystemsservice.h>
+#include <engine/services/ecsservice.h>
 
 #include <utils/graphics/dimensions.h>
 #include <utils/formatstring.h>
@@ -44,12 +41,12 @@ namespace test
 
         puma::Entity buildDefaultCamera()
         {
-            puma::IEntityProvider* entityProvider = gProviders->get<puma::IEntityProvider>();
-            puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
+            puma::EntityProvider* entityProvider = gEntities;
+            puma::ComponentProvider* componentProvider = gComponents;
 
             puma::Entity result = entityProvider->requestEntity();
-            auto locationComponent = componentProvider->add<puma::ILocationComponent>( result );
-            auto cameraComponent = componentProvider->add<puma::ICameraComponent>( result );
+            auto locationComponent = componentProvider->addComponent<puma::ILocationComponent>( result );
+            auto cameraComponent = componentProvider->addComponent<puma::ICameraComponent>( result );
 
             locationComponent->setPosition( { 0.0f, 0.0f } );
             cameraComponent->setMetersPerPixel( 0.2f );
@@ -59,11 +56,11 @@ namespace test
 
         void destroyDefaultCamera( puma::Entity _entity )
         {
-            puma::IEntityProvider* entityProvider = gProviders->get<puma::IEntityProvider>();
-            puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
+            puma::EntityProvider* entityProvider = gEntities;
+            puma::ComponentProvider* componentProvider = gComponents;
 
-            componentProvider->remove<puma::ICameraComponent>( _entity );
-            componentProvider->remove<puma::ILocationComponent>( _entity );
+            componentProvider->removeComponent<puma::ICameraComponent>( _entity );
+            componentProvider->removeComponent<puma::ILocationComponent>( _entity );
 
             entityProvider->disposeEntity( _entity );
         }
@@ -90,22 +87,23 @@ namespace test
         initPhysics();
         setCamera();
 
+        SystemProvider* sysProvider = gSystems;
+
         //Register components
-        gProviders->get<IComponentProvider>()->registerClass<MoveDirectionComponent>();
+        gComponents->registerComponent<MoveDirectionComponent>();
 
         //Register systems
-        gSystems->registerClass<BallSpawnerSystem>();
-        auto ballSpawnerSystem = gSystems->add<BallSpawnerSystem>();
+        sysProvider->registerSystem<BallSpawnerSystem>();
+        auto ballSpawnerSystem = sysProvider->addSystem<BallSpawnerSystem>();
         assert( nullptr != ballSpawnerSystem );
 
-        gSystems->registerClass<StaticStuffSystem>();
-        auto staticStuffSystem = gSystems->add<StaticStuffSystem>();
+        sysProvider->registerSystem<StaticStuffSystem>();
+        auto staticStuffSystem = sysProvider->addSystem<StaticStuffSystem>();
         assert( nullptr != staticStuffSystem );
 
         //Init systems
         ballSpawnerSystem->init();
         staticStuffSystem->init();
-        gSystems->updateSystemsProperties();
 
         //Spawn
         Floor0 = spawnFloor( gEngineApplication->getTextureManager(), { 15.0f, -15.0f, 0.0f }, 45.0f );
@@ -120,6 +118,10 @@ namespace test
         textureManager->loadTexture( "../assets/green.png" );
         textureManager->loadTexture( "../assets/bricks.jpg" );
         textureManager->loadTexture( "../assets/tennisball.png" );
+
+        sysProvider->subscribeSystemUpdate<StaticStuffSystem>( SystemUpdateId::QueueRenderables );
+        sysProvider->subscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::QueueRenderables );
+        sysProvider->subscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::Update );
     }
 
     void Test::update( float _deltaTime )
@@ -135,23 +137,32 @@ namespace test
         unspawnFloor( Floor1 );
         unspawnFloor( Floor2 );
         unspawnFloor( Floor3 );
+
+        SystemProvider* sysProvider = gSystems;
+
+        sysProvider->unsubscribeSystemUpdate<StaticStuffSystem>( SystemUpdateId::QueueRenderables );
+        sysProvider->unsubscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::QueueRenderables );
+        sysProvider->unsubscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::Update );
+
+        gSystems->getSystem<StaticStuffSystem>()->uninit();
+        gSystems->getSystem <BallSpawnerSystem>()->uninit();
     }
 
     void initPhysics()
     {
-        auto collisitonSystemPtr = gSystems->get<puma::ICollisionSystem>();
+        auto collisitonSystemPtr = gSystems->getSystem<puma::ICollisionSystem>();
         collisitonSystemPtr->init( { 0.0f, -10.0f } );
         collisitonSystemPtr->setCollisionCompatibility( kCollisionCompatibility );
     }
 
     puma::Entity spawnFloor( nina::ITextureManager* _textureManager, const puma::Position& _pos, float _angle )
     {
-        puma::Entity result = gProviders->get<puma::IEntityProvider>()->requestEntity();
-        puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
+        puma::Entity result = gEntities->requestEntity();
+        puma::ComponentProvider* componentProvider = gComponents;
 
-        auto locationComponent = componentProvider->add<puma::ILocationComponent>( result );
-        auto renderComponent = componentProvider->add<puma::IRenderComponent>( result );
-        auto collisionComponent = componentProvider->add<puma::ICollisionComponent>( result );
+        auto locationComponent = componentProvider->addComponent<puma::ILocationComponent>( result );
+        auto renderComponent = componentProvider->addComponent<puma::IRenderComponent>( result );
+        auto collisionComponent = componentProvider->addComponent<puma::ICollisionComponent>( result );
 
         locationComponent->setPosition( _pos );
 
@@ -163,14 +174,14 @@ namespace test
 
         renderComponent->addTextureInfo( textureInfo );
 
-        gSystems->get<puma::IRenderSystem>()->registerEntity( result );
+        gSystems->getSystem<puma::IRenderSystem>()->registerEntity( result );
 
         //Physics
         puma::leo::FrameInfo frameInfo;
         frameInfo.position = { _pos.x, _pos.y };
         frameInfo.angle = _angle;
 
-        gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::leo::FrameType::Static );
+        gSystems->getSystem<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::leo::FrameType::Static );
 
         puma::Rectangle floorShape;
         floorShape.lowerBoundary = { -20.0f, -4.0f };
@@ -187,16 +198,16 @@ namespace test
 
     void unspawnFloor( puma::Entity _floorEntity )
     {
-        gSystems->get<puma::IRenderSystem>()->unregisterEntity( _floorEntity );
-        gSystems->get<puma::ICollisionSystem>()->unregisterEntity( _floorEntity );
+        gSystems->getSystem<puma::IRenderSystem>()->unregisterEntity( _floorEntity );
+        gSystems->getSystem<puma::ICollisionSystem>()->unregisterEntity( _floorEntity );
 
-        puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
+        puma::ComponentProvider* componentProvider = gComponents;
 
-        componentProvider->remove<puma::ILocationComponent>( _floorEntity );
-        componentProvider->remove<puma::IRenderComponent>( _floorEntity );
-        componentProvider->remove<puma::ICollisionComponent>( _floorEntity );
+        componentProvider->removeComponent<puma::ILocationComponent>( _floorEntity );
+        componentProvider->removeComponent<puma::IRenderComponent>( _floorEntity );
+        componentProvider->removeComponent<puma::ICollisionComponent>( _floorEntity );
 
-        gProviders->get<puma::IEntityProvider>()->disposeEntity( _floorEntity );
+        gEntities->disposeEntity( _floorEntity );
 
     }
 }

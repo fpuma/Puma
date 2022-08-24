@@ -7,7 +7,5 @@ namespace puma
     public:
 
         virtual ~IService() {}
-
-        virtual void uninit() = 0;
     };
 }

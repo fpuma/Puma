@@ -1,11 +1,11 @@
 #pragma once
 
-#include <engine/ecs/base/icomponent.h>
+#include <modules/pina/component.h>
 #include <engine/input/inputdefinitions.h>
 
 namespace puma
 {
-    class IInputComponent : public IComponent
+    class IInputComponent : public Component
     {
     public:
 

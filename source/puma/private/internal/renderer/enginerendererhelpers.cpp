@@ -3,8 +3,7 @@
 #include "enginerendererhelpers.h"
 
 #include <nina/application/iwindow.h>
-#include <engine/services/iprovidersservice.h>
-#include <internal/ecs/base/providers/componentprovider.h>
+#include <engine/services/ecsservice.h>
 #include <internal/ecs/components/cameracomponent.h>
 #include <internal/ecs/components/locationcomponent.h>
 #include <internal/services/engineapplicationservice.h>
@@ -18,10 +17,10 @@ namespace puma::erh
     void getCameraInfo( Rectangle& _outFrustum, float& _outMetersPerPixel )
     {
         Entity cameraEntity = gInternalEngineApplication->getCameraEntity();
-        ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
+        ComponentProvider* componentProvider = gComponents;
 
-        const LocationComponent* locationComponent = componentProvider->get<LocationComponent>( cameraEntity );
-        const CameraComponent* cameraComponent = componentProvider->get<CameraComponent>( cameraEntity );
+        const LocationComponent* locationComponent = componentProvider->getComponent<LocationComponent>( cameraEntity );
+        const CameraComponent* cameraComponent = componentProvider->getComponent<CameraComponent>( cameraEntity );
 
         assert( (nullptr != locationComponent) && (nullptr != cameraComponent) );
 

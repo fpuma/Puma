@@ -7,10 +7,6 @@ namespace puma
     {
     public:
 
-        void enable() override { m_enabled = true; };
-        void disable() override { m_enabled = false; };
-        bool isEnabled() const override { return m_enabled; }
-
         Position getPosition() const override { return m_position; }
         void setPosition( const Position& _pos ) override { m_position = _pos; }
 
@@ -20,6 +16,5 @@ namespace puma
     private:
         Position m_position;
         float m_degreesRotation = 0.0f;
-        bool m_enabled = true;
     };
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <engine/ecs/base/entity.h>
+#include <modules/pina/entity.h>
 #include <engine/utils/position.h>
 
 using namespace puma;

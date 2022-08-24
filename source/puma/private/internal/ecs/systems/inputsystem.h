@@ -12,14 +12,7 @@ namespace puma
         InputSystem();
 
         void uninit();
-        void update( float _deltaTime );
-        void prePhysicsUpdate( float _deltaTime ) {}
-        void postPhysicsUpdate( float _deltaTime ) {}
-
-        void queueRenderables( IRenderQueue& _renderQueue ) {}
-
-        virtual void setProperties( SystemProperties _properties ) { m_systemProperties = _properties; }
-        virtual SystemProperties getProperties() const { return m_systemProperties; }
+        void update( EntityProvider& _entityProvider, ComponentProvider& _componentProvider ) override;
 
         void registerEntity( Entity _entity ) override;
         void unregisterEntity( Entity _entity ) override;
@@ -32,11 +25,8 @@ namespace puma
 #ifdef _DEBUG
         bool entityComponentCheck( Entity _entity );
 #endif
-        void init();
-
 
         std::set<Entity> m_entities;
-        SystemProperties m_systemProperties;
 
         InputQueue m_inputQueue;
     };

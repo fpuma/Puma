@@ -13,8 +13,7 @@
 #include <nina/texturemanager/itexturemanager.h>
 
 #ifdef _DEBUG
-#include <engine/services/iprovidersservice.h>
-#include <internal/ecs/base/providers/componentprovider.h>
+#include <engine/services/ecsservice.h>
 #include <internal/ecs/components/cameracomponent.h>
 #include <internal/ecs/components/locationcomponent.h>
 #endif
@@ -58,9 +57,9 @@ namespace puma
     void EngineApplication::setCameraEntity( Entity _cameraEntity )
     {
 #ifdef _DEBUG
-        ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
-        CameraComponent* cameraComponent = componentProvider->get<CameraComponent>( _cameraEntity );
-        LocationComponent* locationComponent = componentProvider->get<LocationComponent>( _cameraEntity );
+        ComponentProvider* componentProvider = gComponents;
+        CameraComponent* cameraComponent = componentProvider->getComponent<CameraComponent>( _cameraEntity );
+        LocationComponent* locationComponent = componentProvider->getComponent<LocationComponent>( _cameraEntity );
         assert( (nullptr != cameraComponent) && (nullptr != locationComponent) );
 #endif
         m_cameraEntity = _cameraEntity;

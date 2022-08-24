@@ -1,7 +1,7 @@
 #pragma once
 
-#include <engine/external/ninadefinitions.h>
-#include <engine/ecs/base/entity.h>
+#include <modules/nina/ninadefinitions.h>
+#include <modules/pina/entity.h>
 
 namespace puma
 {

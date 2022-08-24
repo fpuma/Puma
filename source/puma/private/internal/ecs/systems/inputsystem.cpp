@@ -3,8 +3,7 @@
 #include "inputsystem.h"
 
 #include <engine/input/inputdefinitions.h>
-#include <engine/services/iprovidersservice.h>
-#include <internal/ecs/base/providers/componentprovider.h>
+#include <engine/services/ecsservice.h>
 #include <internal/ecs/components/inputcomponent.h>
 #include <internal/services/loggerservice.h>
 #include <utils/formatstring.h>
@@ -13,9 +12,7 @@ namespace puma
 {
 
     InputSystem::InputSystem()
-    {
-        init();
-    }
+    {}
 
     void InputSystem::uninit()
     {
@@ -23,15 +20,14 @@ namespace puma
         m_entities.clear();
     }
 
-    void InputSystem::update( float _deltaTime )
+    void InputSystem::update( EntityProvider& _entityProvider, ComponentProvider& _componentProvider )
     {
         bool readBufferUpdated = m_inputQueue.updateReadBuffer();
         
         //m_inputQueue.printInputs();
-        ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
         for ( Entity entity : m_entities )
         {
-            InputComponent* inputComponent = componentProvider->get<InputComponent>( entity );
+            InputComponent* inputComponent = _componentProvider.getComponent<InputComponent>( entity );
             if (readBufferUpdated)
             {
                 inputComponent->evaluate( *m_inputQueue.read() );
@@ -66,15 +62,9 @@ namespace puma
 #ifdef _DEBUG
     bool InputSystem::entityComponentCheck( Entity _entity )
     {
-        ComponentProvider* componentProvider = gProviders->get<ComponentProvider>();
-        return  componentProvider->contains<InputComponent>( _entity );
+        ComponentProvider* componentProvider = gComponents;
+        return  componentProvider->containsComponent<InputComponent>( _entity );
     }
 #endif
-
-    void InputSystem::init()
-    {
-        m_systemProperties.priority = 0;
-        m_systemProperties.updateBitMask = SystemUpdateFlag_Update;
-    }
 
 }

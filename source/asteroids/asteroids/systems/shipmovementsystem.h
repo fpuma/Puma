@@ -1,31 +1,21 @@
 #pragma once
 
-#include <engine/ecs/base/entity.h>
-#include <engine/ecs/base/isystem.h>
+#include <modules/pina/entity.h>
+#include <modules/pina/system.h>
 
 using namespace puma;
 
-class ShipMovementSystem : public ISystem
+class ShipMovementSystem : public System
 {
 public:
 
     ShipMovementSystem();
     
-    void uninit() override {}
-    void update( float _deltaTime ) {}
-    void prePhysicsUpdate( float _deltaTime ) {}
-    void postPhysicsUpdate( float _deltaTime );
-
-    void queueRenderables( IRenderQueue& _renderQueue ) {};
-
-    void setProperties( SystemProperties _properties ) { m_systemProperties = _properties; }
-    SystemProperties getProperties() const { return m_systemProperties; }
-
+    void postPhysicsUpdate( EntityProvider& _entityProvider, ComponentProvider& _componentProvider ) override;
 
     void setShipEntity( Entity _entity ) { m_shipEntity = _entity; }
 
 private:
 
-    SystemProperties m_systemProperties;
     Entity m_shipEntity;
 };

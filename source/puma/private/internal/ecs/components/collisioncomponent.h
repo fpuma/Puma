@@ -11,10 +11,6 @@ namespace puma
     {
     public:
 
-        void enable() override { m_enabled = true; };
-        void disable() override { m_enabled = false; };
-        bool isEnabled() const override { return m_enabled; }
-
         leo::FrameID getFrameID() const { return m_frameId; }
         leo::FrameType getFrameType() const override { return m_frameType; }
         
@@ -45,6 +41,5 @@ namespace puma
 
         leo::FrameType m_frameType = leo::FrameType::Invalid;
         leo::FrameID m_frameId;
-        bool m_enabled = true;
     };
 }

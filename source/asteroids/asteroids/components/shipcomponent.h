@@ -1,11 +1,11 @@
 #pragma once
 
-#include <engine/ecs/base/icomponent.h>
+#include <modules/pina/component.h>
 #include <utils/geometry/vec2.h>
 
 using namespace puma;
 
-class ShipComponent : public IComponent
+class ShipComponent : public Component
 {
 public:
 
@@ -15,13 +15,7 @@ public:
     void setThrust( float _thrust ) { m_thrust = _thrust; }
     float getThrust() const { return m_thrust; }
 
-    void enable() override { m_enabled = true; }
-    void disable() override { m_enabled = false; }
-    bool isEnabled() const override { return m_enabled; }
-
 private:
-
-    bool m_enabled = true;
 
     float m_thrust = 5000.0f;
 

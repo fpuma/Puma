@@ -4,16 +4,13 @@
 
 #include <data/collisionindexes.h>
 
-#include <engine/ecs/base/providers/icomponentprovider.h>
-#include <engine/ecs/base/providers/ientityprovider.h>
 #include <engine/ecs/components/ilocationcomponent.h>
 #include <engine/ecs/components/iinputcomponent.h>
 #include <engine/ecs/components/icollisioncomponent.h>
 #include <engine/ecs/systems/iinputsystem.h>
 #include <engine/ecs/systems/icollisionsystem.h>
-#include <engine/external/leodefinitions.h>
-#include <engine/services/isystemsservice.h>
-#include <engine/services/iprovidersservice.h>
+#include <modules/leo/leodefinitions.h>
+#include <engine/services/ecsservice.h>
 
 #include <test/components/movedirectioncomponent.h>
 
@@ -21,13 +18,13 @@ namespace test
 {
     puma::Entity spawnBallSpawner( const InputActionKeyboardPairList& _keyboardInputList, const InputActionControllerPairList& _controllerInputList, const InputActionControllerButtonPairList& _controllerButtonInputList, const puma::Position& _position )
     {
-        puma::Entity result = gProviders->get<puma::IEntityProvider>()->requestEntity();
-        puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
+        puma::Entity result = gEntities->requestEntity();
+        puma::ComponentProvider* componentProvider = gComponents;
 
-        auto locationComponent = componentProvider->add<puma::ILocationComponent>( result );
-        auto inputComponent = componentProvider->add<puma::IInputComponent>( result );
-        auto collisionComponent = componentProvider->add<puma::ICollisionComponent>( result );
-        componentProvider->add<test::MoveDirectionComponent>( result );
+        auto locationComponent = componentProvider->addComponent<puma::ILocationComponent>( result );
+        auto inputComponent = componentProvider->addComponent<puma::IInputComponent>( result );
+        auto collisionComponent = componentProvider->addComponent<puma::ICollisionComponent>( result );
+        componentProvider->addComponent<test::MoveDirectionComponent>( result );
 
         locationComponent->setPosition( _position );
 
@@ -50,7 +47,7 @@ namespace test
         frameInfo.position = { locationComponent->getPosition().x, locationComponent->getPosition().y };
         frameInfo.gravityScale = 0.0f;
         frameInfo.preventRotation = true;
-        gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::leo::FrameType::Dynamic );
+        gSystems->getSystem<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::leo::FrameType::Dynamic );
 
         puma::leo::BodyInfo bodyInfo;
         bodyInfo.collisionIndex = TestCollisionIndexes::BallSpawner;
@@ -60,23 +57,23 @@ namespace test
 
         collisionComponent->addBody( bodyInfo );
 
-        gSystems->get<puma::IInputSystem>()->registerEntity( result );
+        gSystems->getSystem<puma::IInputSystem>()->registerEntity( result );
 
         return result;
     }
 
     void unspawnBallSpawner( puma::Entity _spawnerEntity )
     {
-        gSystems->get<puma::IInputSystem>()->unregisterEntity( _spawnerEntity );
-        gSystems->get<puma::ICollisionSystem>()->unregisterEntity( _spawnerEntity );
+        gSystems->getSystem<puma::IInputSystem>()->unregisterEntity( _spawnerEntity );
+        gSystems->getSystem<puma::ICollisionSystem>()->unregisterEntity( _spawnerEntity );
 
-        puma::IComponentProvider* componentProvider = gProviders->get<puma::IComponentProvider>();
+        puma::ComponentProvider* componentProvider = gComponents;
 
-        componentProvider->remove<puma::ILocationComponent>( _spawnerEntity );
-        componentProvider->remove<puma::IInputComponent>( _spawnerEntity );
-        componentProvider->remove<puma::ICollisionComponent>( _spawnerEntity );
-        componentProvider->remove<test::MoveDirectionComponent>( _spawnerEntity );
+        componentProvider->removeComponent<puma::ILocationComponent>( _spawnerEntity );
+        componentProvider->removeComponent<puma::IInputComponent>( _spawnerEntity );
+        componentProvider->removeComponent<puma::ICollisionComponent>( _spawnerEntity );
+        componentProvider->removeComponent<test::MoveDirectionComponent>( _spawnerEntity );
 
-        gProviders->get<puma::IEntityProvider>()->disposeEntity( _spawnerEntity );
+        gEntities->disposeEntity( _spawnerEntity );
     }
 }

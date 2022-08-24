@@ -1,10 +1,10 @@
 #include <precompiledengine.h>
 #include <internal/services/base/servicecontainer.h>
 
+#include <engine/services/ecsservice.h>
+#include <engine/services/timerservice.h>
 #include <internal/services/engineapplicationservice.h>
 #include <internal/services/loggerservice.h>
-#include <internal/services/systemsservice.h>
-#include <internal/services/providersservice.h>
 #include <internal/services/physicsservice.h>
 
 namespace puma
@@ -15,25 +15,21 @@ namespace puma
     void ServiceContainer::init()
     {
         registerInterface<ILoggerService, LoggerService>();
-        registerInterface<IProvidersService, ProvidersService>();
-        registerInterface<ISystemsService, SystemsService>();
         registerInterface<IEngineApplicationService, EngineApplicationService>();
         registerClass<PhysicsService>();
+        registerClass<EcsService>();
+        registerClass<TimerService>();
 
         add<LoggerService>();
-        add<ProvidersService>();
+        add<EcsService>();
         add<EngineApplicationService>();
         add<PhysicsService>();
-        add<SystemsService>();
+        add<TimerService>();
     }
 
     void ServiceContainer::uninit()
     {
-        get<SystemsService>()->uninit();
-        get<PhysicsService>()->uninit();
         get<EngineApplicationService>()->uninit();
-        get<ProvidersService>()->uninit();
-        get<LoggerService>()->uninit();
         clear();
     }
 }

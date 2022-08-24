@@ -9,7 +9,6 @@ namespace test
 {
     StaticStuffSystem::StaticStuffSystem()
     {
-        m_systemProperties.updateBitMask = SystemUpdateFlag_QueueRenderables;
     }
 
     void StaticStuffSystem::init()

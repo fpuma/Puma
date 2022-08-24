@@ -4,12 +4,10 @@
 
 #include <nina/application/irenderer.h>
 
-#include <engine/services/iprovidersservice.h>
+#include <engine/services/ecsservice.h>
 
-#include <internal/ecs/base/providers/componentprovider.h>
 #include <internal/ecs/components/cameracomponent.h>
 #include <internal/ecs/components/locationcomponent.h>
-#include <internal/services/systemsservice.h>
 #include <internal/services/engineapplicationservice.h>
 
 
@@ -33,7 +31,7 @@ namespace puma
     void EngineRenderer::queueRenderables()
     {
         m_renderQueue.startQueue();
-        gInternalSystems->queueRenderables( m_renderQueue );
+        gSystems->queueRenderables( m_renderQueue );
         m_renderQueue.endQueue();
     }
 }
