@@ -28,6 +28,14 @@ namespace puma
         for ( Entity entity : m_entities )
         {
             InputComponent* inputComponent = _componentProvider.getComponent<InputComponent>( entity );
+            
+            if (!_entityProvider.isEntityEnabled( entity ) ||
+                !inputComponent->isEnabled())
+            {
+                inputComponent->clearActiveActions();
+                continue;
+            }
+
             if (readBufferUpdated)
             {
                 inputComponent->evaluate( *m_inputQueue.read() );

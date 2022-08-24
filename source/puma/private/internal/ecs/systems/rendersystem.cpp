@@ -30,7 +30,12 @@ namespace puma
 
         for ( const Entity& entity : m_entities )
         {
+            if (!gEntities->isEntityEnabled( entity )) continue;
+
             RenderComponent* renderComponent = componentProvider->getComponent<RenderComponent>( entity );
+
+            if (!renderComponent->isEnabled()) continue;
+
             LocationComponent* locationComponent = componentProvider->getComponent<LocationComponent>( entity );
 
             for ( const TextureInfo& textureInfo : renderComponent->getTextureInfoContainer() )

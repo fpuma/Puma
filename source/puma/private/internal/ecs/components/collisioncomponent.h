@@ -11,6 +11,9 @@ namespace puma
     {
     public:
 
+        void onEnabled() override;
+        void onDisabled() override;
+
         leo::FrameID getFrameID() const { return m_frameId; }
         leo::FrameType getFrameType() const override { return m_frameType; }
         

@@ -27,6 +27,8 @@
 #include <test/systems/ballspawnersystem.h>
 #include <test/systems/staticstuffsystem.h>
 #include <test/components/movedirectioncomponent.h>
+#include <data/spawners/floorspawner.h>
+#include <data/inputactions.h>
 
 namespace test
 {
@@ -38,6 +40,9 @@ namespace test
         puma::Entity Floor1;
         puma::Entity Floor2;
         puma::Entity Floor3;
+        puma::Entity FloorController;
+
+        puma::ContainedVector<Entity, 4> FloorList;
 
         puma::Entity buildDefaultCamera()
         {
@@ -69,9 +74,6 @@ namespace test
 
     void setCamera();
     void initPhysics();
-
-    puma::Entity spawnFloor( nina::ITextureManager* _textureManager, const puma::Position& _pos, float _angle );
-    void unspawnFloor( puma::Entity _floorEntity );
 
     void setCamera()
     {
@@ -112,6 +114,20 @@ namespace test
         Floor2 = spawnFloor( gEngineApplication->getTextureManager(), { 15.0f, 15.0f, 0.0f }, -45.0f );
         Floor3 = spawnFloor( gEngineApplication->getTextureManager(), { -15.0f, 15.0f, 0.0f }, 45.0f );
 
+        FloorList.push_back( Floor0 );
+        FloorList.push_back( Floor1 );
+        FloorList.push_back( Floor2 );
+        FloorList.push_back( Floor3 );
+
+        //Floor controller
+        FloorController = gEntities->requestEntity();
+
+        puma::IInputComponent* ic = gComponents->addComponent<IInputComponent>( FloorController ).get();
+        ic->addInputMap( TestInputActions::ToggleFloorEntity, { puma::nina::KeyboardKey::KB_I, puma::InputModifier_IGNORE, puma::nina::InputButtonEvent::Pressed } );
+        ic->addInputMap( TestInputActions::ToggleFloorPhysics, { puma::nina::KeyboardKey::KB_K, puma::InputModifier_IGNORE, puma::nina::InputButtonEvent::Pressed } );
+
+        gSystems->getSystem<IInputSystem>()->registerEntity( FloorController );
+
         //[fpuma] TODO Loading all assets now to prevent a race condition later.
         // I need to create a ResourceManager that supports multithreading
         auto textureManager = gEngineApplication->getTextureManager();
@@ -126,7 +142,39 @@ namespace test
 
     void Test::update( float _deltaTime )
     {
+        puma::ComponentProvider* cp = gComponents;
+        puma::EntityProvider* ep = gEntities;
+        
+        puma::IInputComponent* inputComp = cp->getComponent<IInputComponent>( FloorController );
+        bool toggleFloorEntity = inputComp->isActionActive( TestInputActions::ToggleFloorEntity );
+        bool toggleFloorPhysics = inputComp->isActionActive( TestInputActions::ToggleFloorPhysics );
 
+
+        if (toggleFloorEntity)
+        {
+            if (ep->isEntityEnabled( Floor2 ))
+            {
+                ep->disableEntity( Floor2 );
+            }
+            else
+            {
+                ep->enableEntity( Floor2 );
+            }
+        }
+
+        if (toggleFloorPhysics)
+        {
+            puma::ICollisionComponent* colComp = cp->getComponent<ICollisionComponent>( Floor2 );
+
+            if (colComp->isEnabled())
+            {
+                colComp->disable();
+            }
+            else
+            {
+                colComp->enable();
+            }
+        }
     }
 
     void Test::uninit()
@@ -146,6 +194,10 @@ namespace test
 
         gSystems->getSystem<StaticStuffSystem>()->uninit();
         gSystems->getSystem <BallSpawnerSystem>()->uninit();
+
+        gSystems->getSystem<IInputSystem>()->unregisterEntity( FloorController );
+        gComponents->removeComponent<IInputComponent>( FloorController );
+        gEntities->disposeEntity( FloorController );
     }
 
     void initPhysics()
@@ -153,61 +205,5 @@ namespace test
         auto collisitonSystemPtr = gSystems->getSystem<puma::ICollisionSystem>();
         collisitonSystemPtr->init( { 0.0f, -10.0f } );
         collisitonSystemPtr->setCollisionCompatibility( kCollisionCompatibility );
-    }
-
-    puma::Entity spawnFloor( nina::ITextureManager* _textureManager, const puma::Position& _pos, float _angle )
-    {
-        puma::Entity result = gEntities->requestEntity();
-        puma::ComponentProvider* componentProvider = gComponents;
-
-        auto locationComponent = componentProvider->addComponent<puma::ILocationComponent>( result );
-        auto renderComponent = componentProvider->addComponent<puma::IRenderComponent>( result );
-        auto collisionComponent = componentProvider->addComponent<puma::ICollisionComponent>( result );
-
-        locationComponent->setPosition( _pos );
-
-        //Render
-        puma::nina::Texture greenTexture = _textureManager->loadTexture( "../assets/green.png" );
-        puma::TextureInfo textureInfo;
-        textureInfo.texture = greenTexture;
-        textureInfo.renderSize = { 40.0f, 8.0f };
-
-        renderComponent->addTextureInfo( textureInfo );
-
-        gSystems->getSystem<puma::IRenderSystem>()->registerEntity( result );
-
-        //Physics
-        puma::leo::FrameInfo frameInfo;
-        frameInfo.position = { _pos.x, _pos.y };
-        frameInfo.angle = _angle;
-
-        gSystems->getSystem<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::leo::FrameType::Static );
-
-        puma::Rectangle floorShape;
-        floorShape.lowerBoundary = { -20.0f, -4.0f };
-        floorShape.upperBoundary = { 20.0f, 4.0f };
-        puma::leo::BodyInfo floorBodyInfo;
-        floorBodyInfo.collisionIndex = TestCollisionIndexes::Floor;
-        floorBodyInfo.shape.setAsPolygon( floorShape );
-        floorBodyInfo.restitution = 0.0f;
-
-        collisionComponent->addBody( floorBodyInfo );
-
-        return result;
-    }
-
-    void unspawnFloor( puma::Entity _floorEntity )
-    {
-        gSystems->getSystem<puma::IRenderSystem>()->unregisterEntity( _floorEntity );
-        gSystems->getSystem<puma::ICollisionSystem>()->unregisterEntity( _floorEntity );
-
-        puma::ComponentProvider* componentProvider = gComponents;
-
-        componentProvider->removeComponent<puma::ILocationComponent>( _floorEntity );
-        componentProvider->removeComponent<puma::IRenderComponent>( _floorEntity );
-        componentProvider->removeComponent<puma::ICollisionComponent>( _floorEntity );
-
-        gEntities->disposeEntity( _floorEntity );
-
     }
 }

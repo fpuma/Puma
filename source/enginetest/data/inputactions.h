@@ -18,5 +18,8 @@ namespace test
         static const puma::InputAction MoveBallSpawnerStopRight;
 
         static const puma::InputAction InvertGravity;
+
+        static const puma::InputAction ToggleFloorEntity;
+        static const puma::InputAction ToggleFloorPhysics;
     }; 
 }

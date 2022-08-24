@@ -30,5 +30,6 @@ namespace test
         _renderQueue.addScreenRenderableText( "Spawner B:", Color::White(), { 20, yOffset + 39 } );
         _renderQueue.addScreenRenderableText( "    Move: UP,DOWN,LEFT,RIGHT or R_STICK", Color::White(), { 20, yOffset + 52 } );
         _renderQueue.addScreenRenderableText( "    Spawn: RCTRL or RB", Color::White(), { 20, yOffset + 65 } );
+        _renderQueue.addScreenRenderableText( "Toggle Floor: I | Toggle Floor Physics: K", Color::White(), { 20, yOffset + 78 } );
     }
 }

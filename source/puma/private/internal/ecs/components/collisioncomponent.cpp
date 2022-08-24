@@ -37,6 +37,18 @@ namespace puma
         m_frameType = leo::FrameType::Invalid; 
     }
     
+    void CollisionComponent::onEnabled()
+    {
+        leo::IFrame* frame = gPhysics->getFrame( m_frameId );
+        frame->enable();
+    }
+    
+    void CollisionComponent::onDisabled()
+    {
+        leo::IFrame* frame = gPhysics->getFrame( m_frameId );
+        frame->disable();
+    }
+
     const leo::IDynamicFrame* CollisionComponent::getDynamicFrame() const
     {
         assert( leo::FrameType::Dynamic == m_frameType );

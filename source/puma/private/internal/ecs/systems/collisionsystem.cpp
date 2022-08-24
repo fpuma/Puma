@@ -92,19 +92,14 @@ namespace puma
             CollisionComponent* collisionComponent = _componentProvider.getComponent<CollisionComponent>( entity );
             shouldUpdate = shouldUpdate && collisionComponent->isEnabled();
 
-            leo::IFrame* physicsFrame = gPhysics->getFrame( collisionComponent->getFrameID() );
-
             if ( shouldUpdate )
             {
+                leo::IFrame* physicsFrame = gPhysics->getFrame( collisionComponent->getFrameID() );
                 LocationComponent* locationComponent = _componentProvider.getComponent<LocationComponent>( entity );
 
                 Position pos = { physicsFrame->getPosition().x, physicsFrame->getPosition().y, 0.0f };
                 locationComponent->setPosition( pos );
                 locationComponent->setDegreesRotation( physicsFrame->getAngle() );
-            }
-            else
-            {
-                physicsFrame->disable();
             }
         }
 
