@@ -47,6 +47,34 @@ namespace puma
             componentProvider->registerComponent<IRenderComponent, RenderComponent>();
             componentProvider->registerComponent<IInputComponent, InputComponent>();
         }
+
+        void initSystems()
+        {
+            gSystems->addSystem<RenderSystem>();
+            gSystems->addSystem<CollisionSystem>();
+            auto inputSystem = gSystems->addSystem<InputSystem>();
+            inputSystem->registerInputListener();
+
+
+            gSystems->subscribeSystemUpdate<RenderSystem>( SystemUpdateId::QueueRenderables );
+            gSystems->subscribeSystemUpdate<InputSystem>( SystemUpdateId::Update );
+            gSystems->subscribeSystemUpdate<CollisionSystem>( SystemUpdateId::PostPhysics );
+            gSystems->subscribeSystemUpdate<CollisionSystem>( SystemUpdateId::QueueRenderables );
+        }
+
+        void uninitSystems()
+        {
+            gSystems->unsubscribeSystemUpdate<RenderSystem>( SystemUpdateId::QueueRenderables );
+            gSystems->unsubscribeSystemUpdate<InputSystem>( SystemUpdateId::Update );
+            gSystems->unsubscribeSystemUpdate<CollisionSystem>( SystemUpdateId::PostPhysics );
+            gSystems->unsubscribeSystemUpdate<CollisionSystem>( SystemUpdateId::QueueRenderables );
+
+            SystemProvider* systemProvider = gSystems;
+            InputSystem* inputSystem = systemProvider->getSystem<InputSystem>();
+            inputSystem->unregisterInputListener();
+            inputSystem->uninit();
+            systemProvider->getSystem<CollisionSystem>()->uninit();
+        }
     }
 
     void IEngine::run( std::unique_ptr<IGame>&& _game )
@@ -84,30 +112,24 @@ namespace puma
         m_services->init();
         DefaultInstance<IServiceContainer>::setInstance( m_services.get() );
         
+        gInternalEngineApplication->init( _windowExtent, _windowName );
+
         gInternalLogger->getLogger()->addOutput<ConsoleLogOutput>();
         gInternalLogger->info( "Puma engine initializing." );
 
         registerSystems();
-
         registerComponents();
 
-        gSystems->addSystem<RenderSystem>();
-        gSystems->addSystem<CollisionSystem>();
-        auto inputSystem = gSystems->addSystem<InputSystem>();
+        initSystems();
 
-        gInternalEngineApplication->init( _windowExtent, _windowName );
-        inputSystem->registerInputListener();
         gInternalLogger->info( "Puma engine initialized." );
     }
 
     void Engine::uninit()
     {
         gInternalLogger->info( "Puma engine uninitializing." );
-        SystemProvider* systemProvider = gSystems;
-        InputSystem* inputSystem = systemProvider->getSystem<InputSystem>();
-        inputSystem->unregisterInputListener();
-        inputSystem->uninit();
-        systemProvider->getSystem<CollisionSystem>()->uninit();
+
+        uninitSystems();
         
         gInternalLogger->info( "Puma engine uninitialized." );
         m_services->uninit();

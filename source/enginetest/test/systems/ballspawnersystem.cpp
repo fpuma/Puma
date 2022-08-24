@@ -68,7 +68,7 @@ namespace test
         updateSpawner( m_spawner0 );
         updateSpawner( m_spawner1 );
 
-        IInputComponent* inputComponent = gComponents->getComponent<IInputComponent>(m_spawnerHandler);
+        IInputComponent* inputComponent = _componentProvider.getComponent<IInputComponent>(m_spawnerHandler);
         if ( inputComponent->isActionActive( TestInputActions::InvertGravity ) )
         {
             ICollisionSystem* collisionSystem = gSystems->getSystem<ICollisionSystem>();

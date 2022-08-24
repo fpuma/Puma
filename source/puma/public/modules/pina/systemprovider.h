@@ -48,7 +48,7 @@ namespace puma
             SystemClassId sysClassId = SystemClassId( typeid(T) );
 
             auto& sysCfgList = m_systemUpdates.at( _id );
-            auto itSysCfg = std::find_if( sysCfgList.begin(), sysCfgList.end(), []( auto sysCfg )
+            auto itSysCfg = std::find_if( sysCfgList.begin(), sysCfgList.end(), [&sysClassId]( auto sysCfg )
                 {
                     return sysCfg.classId == sysClassId;
                 } );
@@ -81,7 +81,7 @@ namespace puma
             SystemClassId sysClassId = SystemClassId( typeid(T) );
 
             auto& sysCfgList = m_systemUpdates.at( _id );
-            auto itSysCfg = std::find_if( sysCfgList.begin(), sysCfgList.end(), []( auto sysCfg )
+            auto itSysCfg = std::find_if( sysCfgList.begin(), sysCfgList.end(), [&sysClassId]( auto sysCfg )
                 {
                     return sysCfg.classId == sysClassId;
                 } );
@@ -108,15 +108,38 @@ namespace puma
 
         void prePhysicsUpdate( EntityProvider& _entityProvider, ComponentProvider& _componentProvider )
         {
+            assert( m_systemUpdates.contains( SystemUpdateId::PrePhysics ) ); // The update vector has not been initialized
+
+            auto& sysCfgList = m_systemUpdates.at( SystemUpdateId::PrePhysics );
+
+            for (SystemConfig& sysCfg : sysCfgList)
+            {
+                static_cast<System*>(getSystem( sysCfg.classId ))->prePhysicsUpdate( _entityProvider, _componentProvider );
+            }
         }
 
         void postPhysicsUpdate( EntityProvider& _entityProvider, ComponentProvider& _componentProvider )
         {
+            assert( m_systemUpdates.contains( SystemUpdateId::PostPhysics ) ); // The update vector has not been initialized
+
+            auto& sysCfgList = m_systemUpdates.at( SystemUpdateId::PostPhysics );
+
+            for (SystemConfig& sysCfg : sysCfgList)
+            {
+                static_cast<System*>(getSystem( sysCfg.classId ))->postPhysicsUpdate( _entityProvider, _componentProvider );
+            }
         }
         
-        void queueRenderables( IRenderQueue& )
+        void queueRenderables( IRenderQueue& _renderQueue )
         {
+            assert( m_systemUpdates.contains( SystemUpdateId::QueueRenderables ) ); // The update vector has not been initialized
 
+            auto& sysCfgList = m_systemUpdates.at( SystemUpdateId::QueueRenderables );
+
+            for (SystemConfig& sysCfg : sysCfgList)
+            {
+                static_cast<System*>(getSystem( sysCfg.classId ))->queueRenderables( _renderQueue );
+            }
         }
 
     private:

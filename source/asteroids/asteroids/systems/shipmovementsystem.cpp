@@ -13,14 +13,12 @@
 
 ShipMovementSystem::ShipMovementSystem()
 {
-    //m_systemProperties.updateBitMask = SystemUpdateFlag_PostPhysicsUpdate;
 }
 
-void ShipMovementSystem::postPhysicsUpdate( float _deltaTime )
+void ShipMovementSystem::postPhysicsUpdate( EntityProvider& _entityProvider, ComponentProvider& _componentProvider )
 {
-    ComponentProvider* componentProvider = gComponents;
-    IInputComponent* inputComponent = componentProvider->getComponent<IInputComponent>( m_shipEntity );
-    ShipComponent* shipComponent = componentProvider->getComponent<ShipComponent>( m_shipEntity );
+    IInputComponent* inputComponent = _componentProvider.getComponent<IInputComponent>( m_shipEntity );
+    ShipComponent* shipComponent = _componentProvider.getComponent<ShipComponent>( m_shipEntity );
     
     if ( inputComponent->isActionActive( AsteroidsInputActions::MoveShip ) )
     {
@@ -34,7 +32,7 @@ void ShipMovementSystem::postPhysicsUpdate( float _deltaTime )
     Vec2 currentForce = shipComponent->getCurrentForce();
     if ( currentForce.length() > 0.0f )
     {
-        ICollisionComponent* collisionComponent = componentProvider->getComponent<ICollisionComponent>( m_shipEntity );
+        ICollisionComponent* collisionComponent = _componentProvider.getComponent<ICollisionComponent>( m_shipEntity );
 
         leo::IDynamicFrame* frame = collisionComponent->getDynamicFrame();
 

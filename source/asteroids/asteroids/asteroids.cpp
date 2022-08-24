@@ -25,6 +25,8 @@ void Asteroids::init()
     gSystems->addSystem<ShipMovementSystem>();
     gComponents->registerComponent<ShipComponent>();
 
+    gSystems->subscribeSystemUpdate<ShipMovementSystem>( SystemUpdateId::PostPhysics );
+
     //Inits
     initCamera();
     initPhysics();
@@ -37,6 +39,9 @@ void Asteroids::uninit()
 {
     uninitCamera();
     ShipSpawner::unspawnShip( m_shipEntity );
+
+    gSystems->unsubscribeSystemUpdate<ShipMovementSystem>( SystemUpdateId::PostPhysics );
+    gSystems->removeSystem<ShipMovementSystem>();
 }
 
 void Asteroids::update( float _deltaTime )

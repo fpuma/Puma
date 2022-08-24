@@ -87,16 +87,18 @@ namespace test
         initPhysics();
         setCamera();
 
+        SystemProvider* sysProvider = gSystems;
+
         //Register components
         gComponents->registerComponent<MoveDirectionComponent>();
 
         //Register systems
-        gSystems->registerSystem<BallSpawnerSystem>();
-        auto ballSpawnerSystem = gSystems->addSystem<BallSpawnerSystem>();
+        sysProvider->registerSystem<BallSpawnerSystem>();
+        auto ballSpawnerSystem = sysProvider->addSystem<BallSpawnerSystem>();
         assert( nullptr != ballSpawnerSystem );
 
-        gSystems->registerSystem<StaticStuffSystem>();
-        auto staticStuffSystem = gSystems->addSystem<StaticStuffSystem>();
+        sysProvider->registerSystem<StaticStuffSystem>();
+        auto staticStuffSystem = sysProvider->addSystem<StaticStuffSystem>();
         assert( nullptr != staticStuffSystem );
 
         //Init systems
@@ -116,6 +118,10 @@ namespace test
         textureManager->loadTexture( "../assets/green.png" );
         textureManager->loadTexture( "../assets/bricks.jpg" );
         textureManager->loadTexture( "../assets/tennisball.png" );
+
+        sysProvider->subscribeSystemUpdate<StaticStuffSystem>( SystemUpdateId::QueueRenderables );
+        sysProvider->subscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::QueueRenderables );
+        sysProvider->subscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::Update );
     }
 
     void Test::update( float _deltaTime )
@@ -131,6 +137,12 @@ namespace test
         unspawnFloor( Floor1 );
         unspawnFloor( Floor2 );
         unspawnFloor( Floor3 );
+
+        SystemProvider* sysProvider = gSystems;
+
+        sysProvider->unsubscribeSystemUpdate<StaticStuffSystem>( SystemUpdateId::QueueRenderables );
+        sysProvider->unsubscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::QueueRenderables );
+        sysProvider->unsubscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::Update );
 
         gSystems->getSystem<StaticStuffSystem>()->uninit();
         gSystems->getSystem <BallSpawnerSystem>()->uninit();

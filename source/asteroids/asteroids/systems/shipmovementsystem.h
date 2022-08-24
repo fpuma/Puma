@@ -11,11 +11,7 @@ public:
 
     ShipMovementSystem();
     
-    void update( float _deltaTime ) {}
-    void prePhysicsUpdate( float _deltaTime ) {}
-    void postPhysicsUpdate( float _deltaTime );
-
-    void queueRenderables( IRenderQueue& _renderQueue ) {};
+    void postPhysicsUpdate( EntityProvider& _entityProvider, ComponentProvider& _componentProvider ) override;
 
     void setShipEntity( Entity _entity ) { m_shipEntity = _entity; }
 

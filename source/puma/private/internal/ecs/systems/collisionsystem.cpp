@@ -86,19 +86,17 @@ namespace puma
 
     void CollisionSystem::postPhysicsUpdate( EntityProvider& _entityProvider, ComponentProvider& _componentProvider )
     {
-        ComponentProvider* componentProvider = gComponents;
-
         for ( Entity entity : m_entities )
         {
-            bool shouldUpdate = gEntities->isEntityEnabled( entity );
-            CollisionComponent* collisionComponent = componentProvider->getComponent<CollisionComponent>( entity );
+            bool shouldUpdate = _entityProvider.isEntityEnabled( entity );
+            CollisionComponent* collisionComponent = _componentProvider.getComponent<CollisionComponent>( entity );
             shouldUpdate = shouldUpdate && collisionComponent->isEnabled();
 
             leo::IFrame* physicsFrame = gPhysics->getFrame( collisionComponent->getFrameID() );
 
             if ( shouldUpdate )
             {
-                LocationComponent* locationComponent = componentProvider->getComponent<LocationComponent>( entity );
+                LocationComponent* locationComponent = _componentProvider.getComponent<LocationComponent>( entity );
 
                 Position pos = { physicsFrame->getPosition().x, physicsFrame->getPosition().y, 0.0f };
                 locationComponent->setPosition( pos );
