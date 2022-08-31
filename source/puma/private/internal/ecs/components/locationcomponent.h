@@ -10,11 +10,11 @@ namespace puma
         Position getPosition() const override { return m_position; }
         void setPosition( const Position& _pos ) override { m_position = _pos; }
 
-        void setDegreesRotation( float _angle ) override { m_degreesRotation = _angle; }
-        float getDegreesRotation() const override { return m_degreesRotation; }
+        void setRadiansRotation( float _angle ) override { m_radiansRotation = _angle; }
+        float getRadiansRotation() const override { return m_radiansRotation; }
 
     private:
         Position m_position;
-        float m_degreesRotation = 0.0f;
+        float m_radiansRotation = 0.0f;
     };
 }

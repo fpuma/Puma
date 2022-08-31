@@ -20,7 +20,7 @@ namespace puma
         m_renderBuffer.updateWriteBuffer( true );
     }
 
-    void RenderQueue::addRenderableTexture( const nina::Texture& _texture, const nina::TextureSample& _textureSample, const RenderSize& _renderSize, const Position& _position, const RotationDegrees& _rotation, RenderLayer _renderLayer )
+    void RenderQueue::addRenderableTexture( const nina::Texture& _texture, const nina::TextureSample& _textureSample, const RenderSize& _renderSize, const Position& _position, const RotationRadians& _rotation, RenderLayer _renderLayer )
     {
         m_renderBuffer.write()->addRenderableTexture( _texture, _textureSample, _renderSize, _position, _rotation, _renderLayer, false );
     }
@@ -30,12 +30,12 @@ namespace puma
         m_renderBuffer.write()->addRenderableText( _textToRender, _color, _position, _renderLayer, false );
     }
 
-    void RenderQueue::addRenderableShape( const Shape& _shape, const Color& _color, bool _solid, const Position& _position, const RotationDegrees& _rotation, RenderLayer _renderLayer )
+    void RenderQueue::addRenderableShape( const Shape& _shape, const Color& _color, bool _solid, const Position& _position, const RotationRadians& _rotation, RenderLayer _renderLayer )
     {
         m_renderBuffer.write()->addRenderableShape( _shape, _color, _solid, _position, _rotation, _renderLayer, false );
     }
 
-    void RenderQueue::addScreenRenderableTexture( const nina::Texture& _texture, const nina::TextureSample& _textureSample, const Extent& _screenExtent, const RotationDegrees& _rotation, RenderLayer _renderLayer )
+    void RenderQueue::addScreenRenderableTexture( const nina::Texture& _texture, const nina::TextureSample& _textureSample, const Extent& _screenExtent, const RotationRadians& _rotation, RenderLayer _renderLayer )
     {
         m_renderBuffer.write()->addScreenRenderableTexture( _texture, _textureSample, _screenExtent, _rotation, _renderLayer, false );
     }
@@ -45,7 +45,7 @@ namespace puma
         m_renderBuffer.write()->addScreenRenderableText( _textToRender, _color, _screenPos, _renderLayer, false );
     }
 
-    void RenderQueue::addDebugRenderableTexture( const nina::Texture& _texture, const nina::TextureSample& _textureSample, const RenderSize& _renderSize, const Position& _position, const RotationDegrees& _rotation, RenderLayer _renderLayer )
+    void RenderQueue::addDebugRenderableTexture( const nina::Texture& _texture, const nina::TextureSample& _textureSample, const RenderSize& _renderSize, const Position& _position, const RotationRadians& _rotation, RenderLayer _renderLayer )
     {
         m_renderBuffer.write()->addRenderableTexture( _texture, _textureSample, _renderSize, _position, _rotation, _renderLayer, true );
     }
@@ -55,12 +55,12 @@ namespace puma
         m_renderBuffer.write()->addRenderableText( _textToRender, _color, _position, _renderLayer, true );
     }
 
-    void RenderQueue::addDebugRenderableShape( const Shape& _shape, const Color& _color, bool _solid, const Position& _position, const RotationDegrees& _rotation, RenderLayer _renderLayer )
+    void RenderQueue::addDebugRenderableShape( const Shape& _shape, const Color& _color, bool _solid, const Position& _position, const RotationRadians& _rotation, RenderLayer _renderLayer )
     {
         m_renderBuffer.write()->addRenderableShape( _shape, _color, _solid, _position, _rotation, _renderLayer, true );
     }
 
-    void RenderQueue::addDebugScreenRenderableTexture( const nina::Texture& _texture, const nina::TextureSample& _textureSample, const Extent& _screenExtent, const RotationDegrees& _rotation, RenderLayer _renderLayer )
+    void RenderQueue::addDebugScreenRenderableTexture( const nina::Texture& _texture, const nina::TextureSample& _textureSample, const Extent& _screenExtent, const RotationRadians& _rotation, RenderLayer _renderLayer )
     {
         m_renderBuffer.write()->addScreenRenderableTexture( _texture, _textureSample, _screenExtent, _rotation, _renderLayer, true );
     }

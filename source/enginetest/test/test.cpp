@@ -23,6 +23,7 @@
 
 #include <utils/graphics/dimensions.h>
 #include <utils/formatstring.h>
+#include <utils/geometry/geometryhelpers.h>
 
 #include <test/systems/ballspawnersystem.h>
 #include <test/systems/staticstuffsystem.h>
@@ -108,11 +109,11 @@ namespace test
         staticStuffSystem->init();
 
         //Spawn
-        Floor0 = spawnFloor( gEngineApplication->getTextureManager(), { 15.0f, -15.0f, 0.0f }, 45.0f );
-        Floor1 = spawnFloor( gEngineApplication->getTextureManager(), { -15.0f, -15.0f, 0.0f }, -45.0f );
+        Floor0 = spawnFloor( gEngineApplication->getTextureManager(), { 15.0f, -15.0f, 0.0f }, GeometryHelpers::degreesToRadians( 45.0f ) );
+        Floor1 = spawnFloor( gEngineApplication->getTextureManager(), { -15.0f, -15.0f, 0.0f }, GeometryHelpers::degreesToRadians( -45.0f ) );
 
-        Floor2 = spawnFloor( gEngineApplication->getTextureManager(), { 15.0f, 15.0f, 0.0f }, -45.0f );
-        Floor3 = spawnFloor( gEngineApplication->getTextureManager(), { -15.0f, 15.0f, 0.0f }, 45.0f );
+        Floor2 = spawnFloor( gEngineApplication->getTextureManager(), { 15.0f, 15.0f, 0.0f }, GeometryHelpers::degreesToRadians( -45.0f ) );
+        Floor3 = spawnFloor( gEngineApplication->getTextureManager(), { -15.0f, 15.0f, 0.0f }, GeometryHelpers::degreesToRadians( 45.0f ) );
 
         FloorList.push_back( Floor0 );
         FloorList.push_back( Floor1 );

@@ -11,7 +11,7 @@ namespace puma
         m_debugRenderables.reserve( kMaxRenderablesCount * 3 );
     }
 
-    void RenderBuffer::addRenderableTexture( const nina::Texture& _texture, const nina::TextureSample& _textureSample, const RenderSize& _renderSize, const Position& _position, const RotationDegrees& _rotation, RenderLayer _renderLayer, bool _debug )
+    void RenderBuffer::addRenderableTexture( const nina::Texture& _texture, const nina::TextureSample& _textureSample, const RenderSize& _renderSize, const Position& _position, const RotationRadians& _rotation, RenderLayer _renderLayer, bool _debug )
     {
         Rectangle frustum;
         float metersPerPixel;
@@ -51,7 +51,7 @@ namespace puma
         }
     }
     
-    void RenderBuffer::addRenderableShape( const Shape& _shape, const Color& _color, bool _solid, const Position& _position, const RotationDegrees& _rotation, RenderLayer _renderLayer, bool _debug )
+    void RenderBuffer::addRenderableShape( const Shape& _shape, const Color& _color, bool _solid, const Position& _position, const RotationRadians& _rotation, RenderLayer _renderLayer, bool _debug )
     {
         Rectangle frustum;
         float metersPerPixel;
@@ -69,13 +69,13 @@ namespace puma
         }
     }
 
-    void RenderBuffer::addScreenRenderableTexture( const nina::Texture& _texture, const nina::TextureSample& _textureSample, const Extent& _screenExtent, const RotationDegrees& _rotation, RenderLayer _renderLayer, bool _debug )
+    void RenderBuffer::addScreenRenderableTexture( const nina::Texture& _texture, const nina::TextureSample& _textureSample, const Extent& _screenExtent, const RotationRadians& _rotation, RenderLayer _renderLayer, bool _debug )
     {
         m_textures.push_back( {} );
         RenderableTexture& renderable = m_textures.back();
         renderable.setRenderLayer( _renderLayer );
         renderable.setTexture( _texture, _textureSample );
-        renderable.setRotationDegrees( -_rotation );
+        renderable.setRotationRadians( -_rotation );
 
         renderable.setScreenExtent( _screenExtent );
 

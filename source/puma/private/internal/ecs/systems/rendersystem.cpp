@@ -47,7 +47,7 @@ namespace puma
                     textureInfo.textureSample,
                     textureInfo.renderSize,
                     offsetPosition,
-                    locationComponent->getDegreesRotation(),
+                    locationComponent->getRadiansRotation(),
                     textureInfo.renderLayer );
                 
 #ifdef RENDER_SYSTEM_DEBUG

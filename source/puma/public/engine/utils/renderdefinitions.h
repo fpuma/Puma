@@ -22,5 +22,5 @@ namespace puma
         RenderLayer renderLayer;
     };
 
-    using RotationDegrees = float;
+    using RotationRadians = float;
 }

@@ -12,10 +12,15 @@ namespace puma
     {
         m_texture = _texture;
 
-        m_sampledExtent.xPos = (s32)((float)m_texture.getOriginalSize().width * _textureSample.lowerLimit.u);
-        m_sampledExtent.yPos = (s32)((float)m_texture.getOriginalSize().height * _textureSample.lowerLimit.v);
-        m_sampledExtent.width = (s32)((float)m_texture.getOriginalSize().width * _textureSample.upperLimit.u);
-        m_sampledExtent.height = (s32)((float)m_texture.getOriginalSize().height * _textureSample.upperLimit.v);
+        s32 lowerX = (s32)((float)m_texture.getOriginalSize().width * _textureSample.lowerLimit.u);
+        s32 lowerY = (s32)((float)m_texture.getOriginalSize().height * _textureSample.lowerLimit.v);
+        s32 upperX = (s32)((float)m_texture.getOriginalSize().width * _textureSample.upperLimit.u);
+        s32 upperY = (s32)((float)m_texture.getOriginalSize().height * _textureSample.upperLimit.v);
+
+        m_sampledExtent.xPos = lowerX;
+        m_sampledExtent.yPos = lowerY;
+        m_sampledExtent.width = upperX - lowerX;
+        m_sampledExtent.height = upperY - lowerY;
     }
 
     void RenderableTexture::render() const
@@ -23,7 +28,7 @@ namespace puma
         gInternalEngineApplication->getWindowRenderer()->renderTexture( m_texture,
             m_sampledExtent,
             m_screenExtent,
-            m_rotationDegrees);
+            m_rotationRadians);
     }
 
 

@@ -9,7 +9,7 @@
 namespace puma
 {
 
-    void RenderableShape::fromWorldShape( const Shape& _shape, const Color& _color, bool _solid, const Position& _position, const RotationDegrees& _rotation )
+    void RenderableShape::fromWorldShape( const Shape& _shape, const Color& _color, bool _solid, const Position& _position, const RotationRadians& _rotation )
     {
         Vec2 flattenedPos = { _position.x, _position.y };
         Rectangle frustum; 

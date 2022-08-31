@@ -38,7 +38,7 @@ namespace puma
     {
     public:
 
-        void fromWorldShape( const Shape& _shape, const Color& _color, bool _solid, const Position& _position, const RotationDegrees& _rotation );
+        void fromWorldShape( const Shape& _shape, const Color& _color, bool _solid, const Position& _position, const RotationRadians& _rotation );
 
         void setAsCircle( s32 _radius, const ScreenPos& _center, const Color& _color, bool _solid );
         void setAsChain( const ShapeScreenPointsList& _points, const Color& _color );
