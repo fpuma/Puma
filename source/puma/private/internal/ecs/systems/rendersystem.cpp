@@ -41,13 +41,14 @@ namespace puma
             for ( const TextureInfo& textureInfo : renderComponent->getTextureInfoContainer() )
             {
 
-                Position offsetPosition = locationComponent->getPosition() + textureInfo.offset;
+                Position offsetPosition = locationComponent->getPosition() + textureInfo.offset.position;
+                RotationRadians offsetRadians = locationComponent->getRadiansRotation() + textureInfo.offset.radians;
 
                 _renderQueue.addRenderableTexture( textureInfo.texture,
                     textureInfo.textureSample,
                     textureInfo.renderSize,
                     offsetPosition,
-                    locationComponent->getRadiansRotation(),
+                    offsetRadians,
                     textureInfo.renderLayer );
                 
 #ifdef RENDER_SYSTEM_DEBUG

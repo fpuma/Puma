@@ -7,20 +7,27 @@ namespace puma
 {
     DECLARE_GENERIC_ID( RenderLayer, u32, kMaxU32 )
 
+    using RotationRadians = float;
+    
     struct RenderSize
     {
         float x = 0.0f;
         float y = 0.0f;
     };
 
+    struct RenderOffset
+    {
+        Position position;
+        RotationRadians radians;
+    };
+
     struct TextureInfo
     {
         nina::Texture texture;
         nina::TextureSample textureSample;
-        Position offset;
+        RenderOffset offset;
         RenderSize renderSize;
         RenderLayer renderLayer;
     };
 
-    using RotationRadians = float;
 }
