@@ -25,14 +25,19 @@ void Asteroids::init()
     gSystems->addSystem<ShipMovementSystem>();
     gComponents->registerComponent<ShipComponent>();
 
-    gSystems->subscribeSystemUpdate<ShipMovementSystem>( SystemUpdateId::PostPhysics );
+    gSystems->subscribeSystemUpdate<ShipMovementSystem>( SystemUpdateId::PrePhysics );
+    gSystems->subscribeSystemUpdate<ShipMovementSystem>( SystemUpdateId::QueueRenderables );
 
     //Inits
     initCamera();
     initPhysics();
     
+    nina::Texture shipTexture = gEngineApplication->getTextureManager()->loadTexture( "../assets/asteroids/FighterPlaneV2.png" );
+
     //Spawn
-    m_shipEntity = ShipSpawner::spawnShip( Position() );
+    m_shipEntity = ShipSpawner::spawnShip( shipTexture, Position() );
+
+    gSystems->getSystem<ICollisionSystem>()->disableDebugDraw();
 }
 
 void Asteroids::uninit()
@@ -40,7 +45,8 @@ void Asteroids::uninit()
     uninitCamera();
     ShipSpawner::unspawnShip( m_shipEntity );
 
-    gSystems->unsubscribeSystemUpdate<ShipMovementSystem>( SystemUpdateId::PostPhysics );
+    gSystems->unsubscribeSystemUpdate<ShipMovementSystem>( SystemUpdateId::PrePhysics );
+    gSystems->unsubscribeSystemUpdate<ShipMovementSystem>( SystemUpdateId::QueueRenderables );
     gSystems->removeSystem<ShipMovementSystem>();
 }
 

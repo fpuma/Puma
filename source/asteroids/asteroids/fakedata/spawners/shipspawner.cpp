@@ -7,12 +7,15 @@
 
 #include <engine/ecs/components/ilocationcomponent.h>
 #include <engine/ecs/components/icollisioncomponent.h>
+#include <engine/ecs/components/irendercomponent.h>
 #include <engine/ecs/components/iinputcomponent.h>
 #include <engine/services/ecsservice.h>
 #include <engine/ecs/systems/icollisionsystem.h>
 #include <engine/ecs/systems/iinputsystem.h>
+#include <engine/ecs/systems/irendersystem.h>
+#include <utils/geometry/geometryhelpers.h>
 
-Entity ShipSpawner::spawnShip( Position _pos )
+Entity ShipSpawner::spawnShip( nina::Texture _texture, Position _pos )
 {
     EntityProvider* entityProvider = gEntities;
     ComponentProvider* componentProvider = gComponents;
@@ -43,6 +46,19 @@ Entity ShipSpawner::spawnShip( Position _pos )
 
     collisionComponent->addBody( bodyInfo );
     
+    //Render
+    auto renderComponent = componentProvider->addComponent<IRenderComponent>( shipEntity );
+
+    TextureInfo textureInfo;
+    textureInfo.texture = _texture;
+    textureInfo.renderLayer = RenderLayer(0);
+    textureInfo.renderSize = { 50.0f, 50.0f };
+    textureInfo.offset = { Position(), -PI / 2 };
+    textureInfo.textureSample = { {0.6883f, 0.6048f}, {0.355f, 0.366f} };
+    
+    renderComponent->addTextureInfo( textureInfo );
+    gSystems->getSystem<IRenderSystem>()->registerEntity( shipEntity );
+
     //Ship
     componentProvider->addComponent<ShipComponent>( shipEntity );
     gSystems->getSystem<ShipMovementSystem>()->setShipEntity(shipEntity);
