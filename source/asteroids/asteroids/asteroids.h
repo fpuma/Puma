@@ -21,4 +21,5 @@ private:
 
     Entity m_cameraEntity;
     Entity m_shipEntity;
+    Entity m_backgroundEntity;
 };

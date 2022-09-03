@@ -14,6 +14,7 @@
 #include <engine/ecs/systems/iinputsystem.h>
 #include <engine/ecs/systems/irendersystem.h>
 #include <utils/geometry/geometryhelpers.h>
+#include <asteroids/fakedata/ids/ids.h>
 
 Entity ShipSpawner::spawnShip( nina::Texture _texture, Position _pos )
 {
@@ -51,11 +52,12 @@ Entity ShipSpawner::spawnShip( nina::Texture _texture, Position _pos )
 
     TextureInfo textureInfo;
     textureInfo.texture = _texture;
-    textureInfo.renderLayer = RenderLayer(0);
+    textureInfo.renderLayer = RenderLayers::Foreground;
     textureInfo.renderSize = { 50.0f, 50.0f };
     textureInfo.offset = { Position(), -PI / 2 };
-    textureInfo.textureSample = { {0.6883f, 0.6048f}, {0.355f, 0.366f} };
-    
+    //textureInfo.textureSample = { {0.6883f, 0.6048f}, {0.355f, 0.366f} };
+    textureInfo.textureSample = { {0.6883f, 0.9400f}, {0.355f, 0.699f} };
+
     renderComponent->addTextureInfo( textureInfo );
     gSystems->getSystem<IRenderSystem>()->registerEntity( shipEntity );
 

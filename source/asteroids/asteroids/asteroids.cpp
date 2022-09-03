@@ -4,15 +4,47 @@
 
 #include <asteroids/components/shipcomponent.h>
 #include <asteroids/fakedata/spawners/shipspawner.h>
+#include <asteroids/fakedata/ids/ids.h>
 #include <asteroids/systems/shipmovementsystem.h>
 
 #include <engine/ecs/components/icameracomponent.h>
 #include <engine/ecs/components/ilocationcomponent.h>
+#include <engine/ecs/components/irendercomponent.h>
+#include <engine/ecs/systems/irendersystem.h>
 #include <engine/services/iengineapplicationservice.h>
 #include <engine/services/ecsservice.h>
 #include <engine/ecs/systems/icollisionsystem.h>
 
 using namespace puma;
+
+namespace
+{
+    Entity spawnBackground()
+    {
+        Entity result = gEntities->requestEntity();
+
+        gComponents->addComponent<ILocationComponent>( result );
+        auto renderComponent = gComponents->addComponent<IRenderComponent>( result );
+
+        TextureInfo textureInfo;
+        textureInfo.renderLayer = RenderLayers::Background;
+        textureInfo.renderSize = { 1000.0f,1000.0f };
+        textureInfo.texture = gEngineApplication->getTextureManager()->loadTexture( "../assets/asteroids/backgroundSpace_01.1.png" );
+        
+        renderComponent->addTextureInfo( textureInfo );
+
+        gSystems->getSystem<IRenderSystem>()->registerEntity( result );
+
+        return result;
+    }
+
+    void unspawnBackground( Entity _entity )
+    {
+        gComponents->removeComponent<IRenderComponent>( _entity );
+        gSystems->getSystem<IRenderSystem>()->unregisterEntity( _entity );
+        gEntities->disposeEntity( _entity );
+    }
+}
 
 void Asteroids::init()
 {
@@ -32,16 +64,20 @@ void Asteroids::init()
     initCamera();
     initPhysics();
     
+    gEngineApplication->getTextureManager()->loadTexture( "../assets/asteroids/backgroundSpace_01.1.png" );
     nina::Texture shipTexture = gEngineApplication->getTextureManager()->loadTexture( "../assets/asteroids/FighterPlaneV2.png" );
 
     //Spawn
     m_shipEntity = ShipSpawner::spawnShip( shipTexture, Position() );
 
     gSystems->getSystem<ICollisionSystem>()->disableDebugDraw();
+
+    m_backgroundEntity = spawnBackground();
 }
 
 void Asteroids::uninit()
 {
+    unspawnBackground( m_backgroundEntity );
     uninitCamera();
     ShipSpawner::unspawnShip( m_shipEntity );
 
