@@ -114,6 +114,8 @@ namespace puma
         
         gInternalEngineApplication->init( _windowExtent, _windowName );
 
+        gPhysics->setSimulationTimeStep( m_simulationMinStep );
+
         gInternalLogger->getLogger()->addOutput<ConsoleLogOutput>();
         gInternalLogger->info( "Puma engine initializing." );
 
@@ -138,14 +140,21 @@ namespace puma
     void Engine::simulationUpdate( IGame* _game )
     {
         m_deltaTime.update();
-
         float currentDeltaTime = static_cast<float>(m_deltaTime.get());
-        gSystems->update( *gEntities, *gComponents );
-        gSystems->prePhysicsUpdate( *gEntities, *gComponents );
-        gPhysics->update( currentDeltaTime );
-        gSystems->postPhysicsUpdate( *gEntities, *gComponents );
-        _game->update(currentDeltaTime);
-        m_engineRenderer.queueRenderables();
+
+        m_accumDeltaTime += currentDeltaTime;
+
+        if (m_accumDeltaTime > m_simulationMinStep)
+        {
+            gSystems->update( *gEntities, *gComponents );
+            gSystems->prePhysicsUpdate( *gEntities, *gComponents );
+            gPhysics->update( m_accumDeltaTime );
+            gSystems->postPhysicsUpdate( *gEntities, *gComponents );
+            _game->update( m_accumDeltaTime );
+            m_engineRenderer.queueRenderables();
+
+            m_accumDeltaTime = 0.0f;
+        }
     }
 
     void Engine::applicationUpdate()
@@ -167,7 +176,7 @@ namespace puma
         m_engineRenderer.render();
 
         gInternalEngineApplication->getWindowRenderer()->renderSolidPolygon( { {0,0}, {0,24}, {140,24}, {140,0} }, Color{ 0,0,0,255 } );
-        gInternalEngineApplication->getWindowRenderer()->renderText( ScreenPos{ 2, 2 },  {255,255,0,255}, formatString( "SIM: %.2f fps", 1.0f / m_deltaTime.getAverage() ).c_str() );
+        gInternalEngineApplication->getWindowRenderer()->renderText( ScreenPos{ 2, 2 },  {255,255,0,255}, formatString( "SIM: %.2f fps", 1.0f / m_accumDeltaTime ).c_str() );
         gInternalEngineApplication->getWindowRenderer()->renderText( ScreenPos{ 2, 14 }, {255,255,0,255}, formatString( "APP: %.2f fps", 1.0f / m_appDt.getAverage() ).c_str() );
 
         m_engineRenderer.endRender();

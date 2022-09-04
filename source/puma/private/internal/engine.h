@@ -33,6 +33,10 @@ namespace puma
         EngineRenderer m_engineRenderer;
         DeltaTime m_deltaTime;
         DeltaTime m_appDt;
+        
+        float m_simulationMinStep = 0.004f;
+        float m_accumDeltaTime = 0.0f;
+
         bool m_shouldQuit = false;
     };
 }
