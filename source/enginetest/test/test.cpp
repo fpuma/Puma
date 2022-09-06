@@ -139,6 +139,7 @@ namespace test
         sysProvider->subscribeSystemUpdate<StaticStuffSystem>( SystemUpdateId::QueueRenderables );
         sysProvider->subscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::QueueRenderables );
         sysProvider->subscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::Update );
+        sysProvider->subscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::CollisionStarted );
     }
 
     void Test::update( float _deltaTime )
@@ -204,7 +205,7 @@ namespace test
     void initPhysics()
     {
         auto collisitonSystemPtr = gSystems->getSystem<puma::ICollisionSystem>();
-        collisitonSystemPtr->init( { 0.0f, -10.0f } );
+        collisitonSystemPtr->setGravity( { 0.0f, -10.0f } );
         collisitonSystemPtr->setCollisionCompatibility( kCollisionCompatibility );
     }
 }

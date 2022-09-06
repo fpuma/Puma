@@ -81,6 +81,35 @@ namespace test
     {
         renderDebugSpawner( m_spawner0, _renderQueue );
         renderDebugSpawner( m_spawner1, _renderQueue );
+
+        auto itCurrent = m_contactPointList.begin();
+
+        while (itCurrent != m_contactPointList.end())
+        {
+            if (itCurrent->timer.isFinished())
+            {
+                itCurrent = m_contactPointList.erase( itCurrent );
+            }
+            else
+            {
+                Shape shape;
+                shape.setAsCircle( { { 0.0f, 0.0f }, 0.5f } );
+                RotationRadians rad = 0.0f;
+                _renderQueue.addDebugRenderableShape( shape, Color::Red(), true, itCurrent->pos, rad );
+                ++itCurrent;
+            }
+        }
+
+    }
+
+    void BallSpawnerSystem::onCollisionStarted( leo::FramePartID _framePartPtrA, leo::FramePartID _framePartPtrB, leo::ContactPoint _contactPoint )
+    {
+        ContactPointInfo contact;
+        contact.timer.setTimeLimit( 0.5f );
+        contact.timer.play();
+        contact.pos = Position( _contactPoint.x, _contactPoint.y );
+
+        m_contactPointList.push_back( contact );
     }
 
     void BallSpawnerSystem::updateSpawner( Entity _spawner )

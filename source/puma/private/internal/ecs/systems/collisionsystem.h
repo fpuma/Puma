@@ -25,6 +25,7 @@ namespace puma
         Vec2 getGravity() override;
 
         void setCollisionCompatibility( const leo::CollisionCompatibility& _collisionCompatibility ) override;
+        void setCollisionListener( std::unique_ptr<leo::ICollisionListener>&& _collisionListener ) override;
 
         void enableDebugDraw() { m_debugDraw = true; }
         void disableDebugDraw() { m_debugDraw = false; }

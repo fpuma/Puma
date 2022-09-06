@@ -19,6 +19,8 @@ namespace puma
 {
     void CollisionSystem::init( Vec2 _gravity )
     {
+        assert( !m_worldId.isValid() ); //Initializing CollisionSystem for the second time
+
         m_worldId = gPhysics->addWorld( _gravity );
 
 #ifdef PHYSICS_DEBUG_RENDER
@@ -161,6 +163,11 @@ namespace puma
     void CollisionSystem::setCollisionCompatibility( const leo::CollisionCompatibility& _collisionCompatibility )
     {
         gPhysics->getWorld( m_worldId )->setCollisionCompatibility( _collisionCompatibility );
+    }
+
+    void CollisionSystem::setCollisionListener( std::unique_ptr<leo::ICollisionListener>&& _collisionListener )
+    {
+        gPhysics->getWorld( m_worldId )->setCollisionListener( std::move( _collisionListener ) );
     }
 
 #ifdef _DEBUG

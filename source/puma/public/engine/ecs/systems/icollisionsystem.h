@@ -22,6 +22,7 @@ namespace puma
         virtual Vec2 getGravity() = 0;
 
         virtual void setCollisionCompatibility( const leo::CollisionCompatibility& _collisionCompatibility ) = 0;
+        virtual void setCollisionListener( std::unique_ptr<leo::ICollisionListener>&& _collisionListener ) = 0;
 
         virtual void enableDebugDraw() = 0;
         virtual void disableDebugDraw() = 0;

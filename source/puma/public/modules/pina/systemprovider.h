@@ -18,7 +18,9 @@ namespace puma
         Update,
         PrePhysics,
         PostPhysics,
-        QueueRenderables
+        QueueRenderables,
+        CollisionStarted,
+        CollisionStopped,
     };
 
     using SystemPriority = u32;
@@ -34,6 +36,8 @@ namespace puma
             m_systemUpdates.insert( { SystemUpdateId::PrePhysics,{} } );
             m_systemUpdates.insert( { SystemUpdateId::PostPhysics,{} } );
             m_systemUpdates.insert( { SystemUpdateId::QueueRenderables,{} } );
+            m_systemUpdates.insert( { SystemUpdateId::CollisionStarted,{} } );
+            m_systemUpdates.insert( { SystemUpdateId::CollisionStopped,{} } );
         }
 
         template<class T>
@@ -139,6 +143,30 @@ namespace puma
             for (SystemConfig& sysCfg : sysCfgList)
             {
                 static_cast<System*>(getSystem( sysCfg.classId ))->queueRenderables( _renderQueue );
+            }
+        }
+
+        void onCollisionStarted( leo::FramePartID _framePartPtrA, leo::FramePartID _framePartPtrB, leo::ContactPoint _contactPoint )
+        {
+            assert( m_systemUpdates.contains( SystemUpdateId::CollisionStarted ) ); // The update vector has not been initialized
+            
+            auto& sysCfgList = m_systemUpdates.at( SystemUpdateId::CollisionStarted );
+
+            for (SystemConfig& sysCfg : sysCfgList)
+            {
+                static_cast<System*>(getSystem( sysCfg.classId ))->onCollisionStarted( _framePartPtrA, _framePartPtrB, _contactPoint );
+            }
+        }
+
+        void onCollisionStopped( leo::FramePartID _framePartPtrA, leo::FramePartID _framePartPtrB )
+        {
+            assert( m_systemUpdates.contains( SystemUpdateId::CollisionStopped ) ); // The update vector has not been initialized
+
+            auto& sysCfgList = m_systemUpdates.at( SystemUpdateId::CollisionStopped );
+
+            for (SystemConfig& sysCfg : sysCfgList)
+            {
+                static_cast<System*>(getSystem( sysCfg.classId ))->onCllisionStopped( _framePartPtrA, _framePartPtrB );
             }
         }
 

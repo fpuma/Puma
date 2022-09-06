@@ -8,4 +8,5 @@
 #include <leo/simulation/frames/idynamicframe.h>
 #include <leo/simulation/frames/ikinematicframe.h>
 #include <leo/simulation/frames/istaticframe.h>
+#include <leo/collisions/collisionlistener.h>
 #include <leo/ids/ids.h>

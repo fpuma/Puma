@@ -1,6 +1,7 @@
 #pragma once
 
 #include <pina/system.h>
+#include <modules/leo/leodefinitions.h>
 
 namespace puma
 {
@@ -19,6 +20,9 @@ namespace puma
         virtual void postPhysicsUpdate( EntityProvider& _entityProvider, ComponentProvider& _componentProvider ) { assert( false ); /*Trying to call postPhysicsUpdate on a system that has not implemented it*/ };
 
         virtual void queueRenderables( IRenderQueue& _renderQueue ) { assert( false ); /*Trying to call queueRenderables on a system that has not implemented it*/ };
+
+        virtual void onCollisionStarted( leo::FramePartID _framePartPtrA, leo::FramePartID _framePartPtrB, leo::ContactPoint _contactPoint ) { assert( false ); /*Trying to call onCollisionDetected on a system that has not implemented it*/ }
+        virtual void onCllisionStopped( leo::FramePartID _framePartPtrA, leo::FramePartID _framePartPtrB ) { assert( false ); /*Trying to call onCollisionDetected on a system that has not implemented it*/ }
     };
 
 }

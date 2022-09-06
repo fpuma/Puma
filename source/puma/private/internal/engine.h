@@ -36,6 +36,8 @@ namespace puma
         
         float m_simulationMinStep = 0.004f;
         float m_accumDeltaTime = 0.0f;
+        u32 m_accumDtCount = 0;
+        float m_avgAccumDt = 0.0f;
 
         bool m_shouldQuit = false;
     };
