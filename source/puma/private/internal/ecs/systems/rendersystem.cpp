@@ -28,6 +28,9 @@ namespace puma
     void RenderSystem::onUninit()
     {
         gSystems->unsubscribeSystemUpdate<RenderSystem>( SystemUpdateId::QueueRenderables );
+
+        assert( m_entities.empty() ); //Warning not all entities have been unregistered.
+        m_entities.clear();
     }
 
     void RenderSystem::queueRenderables( IRenderQueue& _renderQueue )

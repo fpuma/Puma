@@ -184,9 +184,18 @@ namespace test
         unspawnFloor( Floor2 );
         unspawnFloor( Floor3 );
 
-        gSystems->getSystem<IInputSystem>()->unregisterEntity( FloorController );
+        SystemProvider* sysProvider = gSystems;
+
+        sysProvider->getSystem<IInputSystem>()->unregisterEntity( FloorController );
         gComponents->removeComponent<IInputComponent>( FloorController );
         gEntities->disposeEntity( FloorController );
+
+        sysProvider->removeSystem<BallSpawnerSystem>();
+        sysProvider->removeSystem<StaticStuffSystem>();
+        
+        sysProvider->removeSystem<IInputSystem>();
+        sysProvider->removeSystem<IRenderSystem>();
+        sysProvider->removeSystem<ICollisionSystem>();
     }
 
     void initPhysics()
