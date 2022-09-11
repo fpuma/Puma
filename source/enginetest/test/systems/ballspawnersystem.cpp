@@ -22,12 +22,7 @@
 
 namespace test
 {
-    BallSpawnerSystem::BallSpawnerSystem()
-    {
-        //m_systemProperties.updateBitMask = SystemUpdateFlag_Update | SystemUpdateFlag_QueueRenderables;
-    }
-
-    void BallSpawnerSystem::init()
+    void BallSpawnerSystem::onInit()
     {
         m_spawner0 = spawnBallSpawner( kSpawner0KeyboardInput, kSpawner0ControllerJoystickInput, kSpawner0ControllerButtonInput, { -5.0f, 5.0f, 0.0f } );
         m_spawner1 = spawnBallSpawner( kSpawner1KeyboardInput, kSpawner1ControllerJoystickInput, kSpawner1ControllerButtonInput, { 5.0f, 5.0f, 0.0f } );
@@ -46,9 +41,13 @@ namespace test
         inputComponent->addInputMap( TestInputActions::InvertGravity, controllerInput );
 
         gSystems->getSystem<IInputSystem>()->registerEntity( m_spawnerHandler );
+
+        gSystems->subscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::QueueRenderables );
+        gSystems->subscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::Update );
+        gSystems->subscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::CollisionStarted );
     }
 
-    void BallSpawnerSystem::uninit()
+    void BallSpawnerSystem::onUninit()
     {
         unspawnBallSpawner( m_spawner1 );
         unspawnBallSpawner( m_spawner0 );
@@ -61,6 +60,10 @@ namespace test
         gSystems->getSystem<IInputSystem>()->unregisterEntity( m_spawnerHandler );
         gComponents->removeComponent<IInputComponent>( m_spawnerHandler );
         gEntities->disposeEntity( m_spawnerHandler );
+
+        gSystems->unsubscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::QueueRenderables );
+        gSystems->unsubscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::Update );
+        gSystems->unsubscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::CollisionStarted );
     }
 
     void BallSpawnerSystem::update( EntityProvider& _entityProvider, ComponentProvider& _componentProvider )

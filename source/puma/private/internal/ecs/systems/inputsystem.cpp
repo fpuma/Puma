@@ -10,12 +10,18 @@
 
 namespace puma
 {
-
-    InputSystem::InputSystem()
-    {}
-
-    void InputSystem::uninit()
+    void InputSystem::onInit()
     {
+        registerInputListener();
+
+        gSystems->subscribeSystemUpdate<InputSystem>( SystemUpdateId::Update );
+    }
+
+    void InputSystem::onUninit()
+    {
+        unregisterInputListener();
+        gSystems->unsubscribeSystemUpdate<InputSystem>( SystemUpdateId::Update );
+
         assert( m_entities.empty() ); //Warning not all entities have been unregistered.
         m_entities.clear();
     }

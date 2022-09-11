@@ -14,7 +14,8 @@ namespace puma
     {
     public:
 
-        RenderSystem();
+        void onInit() override;
+        void onUninit() override;
 
         void queueRenderables( IRenderQueue& _renderQueue ) override;
 

@@ -9,9 +9,9 @@ namespace puma
     {
     public:
 
-        InputSystem();
+        void onInit() override;
+        void onUninit() override;
 
-        void uninit();
         void update( EntityProvider& _entityProvider, ComponentProvider& _componentProvider ) override;
 
         void registerEntity( Entity _entity ) override;
@@ -22,6 +22,7 @@ namespace puma
         void updateWriteBuffer() { m_inputQueue.updateWriteBuffer(); }
 
     private:
+
 #ifdef _DEBUG
         bool entityComponentCheck( Entity _entity );
 #endif

@@ -13,8 +13,6 @@ namespace puma
 
         virtual ~ICollisionSystem() {}
 
-        virtual void init( Vec2 _gravity ) = 0;
-
         virtual void registerEntity( Entity _entity, leo::FrameInfo _frameInfo, leo::FrameType _frameType ) = 0;
         virtual void unregisterEntity( Entity _entity ) = 0;
 
@@ -22,7 +20,6 @@ namespace puma
         virtual Vec2 getGravity() = 0;
 
         virtual void setCollisionCompatibility( const leo::CollisionCompatibility& _collisionCompatibility ) = 0;
-        virtual void setCollisionListener( std::unique_ptr<leo::ICollisionListener>&& _collisionListener ) = 0;
 
         virtual void enableDebugDraw() = 0;
         virtual void disableDebugDraw() = 0;

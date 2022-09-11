@@ -8,6 +8,8 @@
 #include <internal/ecs/components/collisioncomponent.h>
 #include <internal/ecs/components/locationcomponent.h>
 
+#include <internal/physics/collisionlistener.h>
+
 #include <internal/renderer/renderqueue.h>
 
 #include <leo/simulation/frames/iframe.h>
@@ -17,11 +19,15 @@
 
 namespace puma
 {
-    void CollisionSystem::init( Vec2 _gravity )
+    void CollisionSystem::onInit()
     {
         assert( !m_worldId.isValid() ); //Initializing CollisionSystem for the second time
 
-        m_worldId = gPhysics->addWorld( _gravity );
+        m_worldId = gPhysics->addWorld( { 0.0f,0.0f } );
+
+        setCollisionListener( std::make_unique<CollisionListener>() );
+        gSystems->subscribeSystemUpdate<CollisionSystem>( SystemUpdateId::PostPhysics );
+        gSystems->subscribeSystemUpdate<CollisionSystem>( SystemUpdateId::QueueRenderables );
 
 #ifdef PHYSICS_DEBUG_RENDER
         std::unique_ptr<PhysicsDebugDraw> physicsDebugDraw = std::make_unique<PhysicsDebugDraw>();
@@ -32,8 +38,11 @@ namespace puma
 #endif
     }
 
-    void CollisionSystem::uninit()
+    void CollisionSystem::onUninit()
     {
+        gSystems->unsubscribeSystemUpdate<CollisionSystem>( SystemUpdateId::PostPhysics );
+        gSystems->unsubscribeSystemUpdate<CollisionSystem>( SystemUpdateId::QueueRenderables );
+
         assert( m_entities.empty() ); //Warning not all entities have been unregistered.
         m_entities.clear();
         if ( m_worldId.isValid() )

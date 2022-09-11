@@ -87,10 +87,14 @@ namespace test
         gEngineApplication->setWindowSize( 500, 500 );
         gEngineApplication->setWindowPosition( 100, 100 );
 
+        SystemProvider* sysProvider = gSystems;
+
+        sysProvider->addSystem<IInputSystem>();
+        sysProvider->addSystem<IRenderSystem>();
+        sysProvider->addSystem<ICollisionSystem>();
+
         initPhysics();
         setCamera();
-
-        SystemProvider* sysProvider = gSystems;
 
         //Register components
         gComponents->registerComponent<MoveDirectionComponent>();
@@ -103,10 +107,6 @@ namespace test
         sysProvider->registerSystem<StaticStuffSystem>();
         auto staticStuffSystem = sysProvider->addSystem<StaticStuffSystem>();
         assert( nullptr != staticStuffSystem );
-
-        //Init systems
-        ballSpawnerSystem->init();
-        staticStuffSystem->init();
 
         //Spawn
         Floor0 = spawnFloor( gEngineApplication->getTextureManager(), { 15.0f, -15.0f, 0.0f }, GeometryHelpers::degreesToRadians( 45.0f ) );
@@ -136,10 +136,6 @@ namespace test
         textureManager->loadTexture( "../assets/bricks.jpg" );
         textureManager->loadTexture( "../assets/tennisball.png" );
 
-        sysProvider->subscribeSystemUpdate<StaticStuffSystem>( SystemUpdateId::QueueRenderables );
-        sysProvider->subscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::QueueRenderables );
-        sysProvider->subscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::Update );
-        sysProvider->subscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::CollisionStarted );
     }
 
     void Test::update( float _deltaTime )
@@ -187,15 +183,6 @@ namespace test
         unspawnFloor( Floor1 );
         unspawnFloor( Floor2 );
         unspawnFloor( Floor3 );
-
-        SystemProvider* sysProvider = gSystems;
-
-        sysProvider->unsubscribeSystemUpdate<StaticStuffSystem>( SystemUpdateId::QueueRenderables );
-        sysProvider->unsubscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::QueueRenderables );
-        sysProvider->unsubscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::Update );
-
-        gSystems->getSystem<StaticStuffSystem>()->uninit();
-        gSystems->getSystem <BallSpawnerSystem>()->uninit();
 
         gSystems->getSystem<IInputSystem>()->unregisterEntity( FloorController );
         gComponents->removeComponent<IInputComponent>( FloorController );

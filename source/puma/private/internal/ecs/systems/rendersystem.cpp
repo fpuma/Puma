@@ -20,9 +20,15 @@
 
 namespace puma
 {
+    void RenderSystem::onInit()
+    {
+        gSystems->subscribeSystemUpdate<RenderSystem>( SystemUpdateId::QueueRenderables );
+    }
 
-    RenderSystem::RenderSystem()
-    {}
+    void RenderSystem::onUninit()
+    {
+        gSystems->unsubscribeSystemUpdate<RenderSystem>( SystemUpdateId::QueueRenderables );
+    }
 
     void RenderSystem::queueRenderables( IRenderQueue& _renderQueue )
     {

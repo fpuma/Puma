@@ -12,8 +12,8 @@ namespace puma
     {
     public:
 
-        void init( Vec2 _gravity ) override;
-        void uninit();
+        void onInit() override;
+        void onUninit() override;
 
         void registerEntity( Entity _entity, leo::FrameInfo _frameInfo, leo::FrameType _frameType ) override;
         void unregisterEntity( Entity _entity ) override;
@@ -25,7 +25,7 @@ namespace puma
         Vec2 getGravity() override;
 
         void setCollisionCompatibility( const leo::CollisionCompatibility& _collisionCompatibility ) override;
-        void setCollisionListener( std::unique_ptr<leo::ICollisionListener>&& _collisionListener ) override;
+        void setCollisionListener( std::unique_ptr<leo::ICollisionListener>&& _collisionListener );
 
         void enableDebugDraw() { m_debugDraw = true; }
         void disableDebugDraw() { m_debugDraw = false; }

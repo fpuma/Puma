@@ -13,9 +13,9 @@ namespace test
 
         StaticStuffSystem();
 
-        void init();
+        void onInit() override;
 
-        void uninit();
+        void onUninit() override;
 
         void queueRenderables( IRenderQueue& _renderQueue ) override;
 

@@ -4,6 +4,7 @@
 #include <data/spawners/backgroundspawner.h>
 #include <engine/services/iengineapplicationservice.h>
 #include <engine/renderer/irenderqueue.h>
+#include <engine/services/ecsservice.h>
 
 namespace test
 {
@@ -11,13 +12,17 @@ namespace test
     {
     }
 
-    void StaticStuffSystem::init()
+    void StaticStuffSystem::onInit()
     {
+        gSystems->subscribeSystemUpdate<StaticStuffSystem>( SystemUpdateId::QueueRenderables );
+
         m_backgroundEntity = spawnBackground( gEngineApplication->getTextureManager(), { 0.0f, 0.0f, 0.0f } );
     }
 
-    void StaticStuffSystem::uninit()
+    void StaticStuffSystem::onUninit()
     {
+        gSystems->unsubscribeSystemUpdate<StaticStuffSystem>( SystemUpdateId::QueueRenderables );
+
         unspawnBackground( m_backgroundEntity );
     }
 

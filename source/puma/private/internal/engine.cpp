@@ -33,9 +33,11 @@ namespace puma
 
         void registerSystems()
         {
-            gSystems->registerSystem<IRenderSystem, RenderSystem>();
-            gSystems->registerSystem<ICollisionSystem, CollisionSystem>();
-            gSystems->registerSystem<IInputSystem, InputSystem>();
+            SystemProvider* systemProvider = gSystems;
+
+            systemProvider->registerSystem<IRenderSystem, RenderSystem>();
+            systemProvider->registerSystem<ICollisionSystem, CollisionSystem>();
+            systemProvider->registerSystem<IInputSystem, InputSystem>();
         }
 
         void registerComponents()
@@ -49,37 +51,6 @@ namespace puma
             componentProvider->registerComponent<IInputComponent, InputComponent>();
         }
 
-        void initSystems()
-        {
-            gSystems->addSystem<RenderSystem>();
-            
-            auto collisionSystem = gSystems->addSystem<CollisionSystem>();
-            collisionSystem->init( { 0.0f,0.0f } );
-            collisionSystem->setCollisionListener( std::make_unique<CollisionListener>() );
-            
-            auto inputSystem = gSystems->addSystem<InputSystem>();
-            inputSystem->registerInputListener();
-
-
-            gSystems->subscribeSystemUpdate<RenderSystem>( SystemUpdateId::QueueRenderables );
-            gSystems->subscribeSystemUpdate<InputSystem>( SystemUpdateId::Update );
-            gSystems->subscribeSystemUpdate<CollisionSystem>( SystemUpdateId::PostPhysics );
-            gSystems->subscribeSystemUpdate<CollisionSystem>( SystemUpdateId::QueueRenderables );
-        }
-
-        void uninitSystems()
-        {
-            gSystems->unsubscribeSystemUpdate<RenderSystem>( SystemUpdateId::QueueRenderables );
-            gSystems->unsubscribeSystemUpdate<InputSystem>( SystemUpdateId::Update );
-            gSystems->unsubscribeSystemUpdate<CollisionSystem>( SystemUpdateId::PostPhysics );
-            gSystems->unsubscribeSystemUpdate<CollisionSystem>( SystemUpdateId::QueueRenderables );
-
-            SystemProvider* systemProvider = gSystems;
-            InputSystem* inputSystem = systemProvider->getSystem<InputSystem>();
-            inputSystem->unregisterInputListener();
-            inputSystem->uninit();
-            systemProvider->getSystem<CollisionSystem>()->uninit();
-        }
     }
 
     void IEngine::run( std::unique_ptr<IGame>&& _game )
@@ -127,18 +98,12 @@ namespace puma
         registerSystems();
         registerComponents();
 
-        initSystems();
-
         gInternalLogger->info( "Puma engine initialized." );
     }
 
     void Engine::uninit()
     {
-        gInternalLogger->info( "Puma engine uninitializing." );
-
-        uninitSystems();
-        
-        gInternalLogger->info( "Puma engine uninitialized." );
+        gInternalLogger->info( "Puma engine uninitializing..." );
         m_services->uninit();
     }
 

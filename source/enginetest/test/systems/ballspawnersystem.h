@@ -24,11 +24,9 @@ namespace test
     {
     public:
         
-        BallSpawnerSystem();
+        void onInit() override;
+        void onUninit() override;
 
-        void init();
-
-        void uninit();
         void update( EntityProvider& _entityProvider, ComponentProvider& _componentProvider ) override;
 
         void queueRenderables( IRenderQueue& _renderQueue ) override;
