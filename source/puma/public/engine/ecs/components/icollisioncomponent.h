@@ -23,8 +23,8 @@ namespace puma
         virtual const leo::IStaticFrame* getStaticFrame() const = 0;
         virtual leo::IStaticFrame* getStaticFrame() = 0;
 
-        virtual void addBody( const leo::BodyInfo& _bodyInfo ) = 0;
-        virtual void addTrigger( const leo::TriggerInfo& _triggerInfo ) = 0;
+        virtual leo::FramePartID addBody( const leo::BodyInfo& _bodyInfo ) = 0;
+        virtual leo::FramePartID addTrigger( const leo::TriggerInfo& _triggerInfo ) = 0;
 
         virtual bool isValid() const = 0;
 

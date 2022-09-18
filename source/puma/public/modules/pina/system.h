@@ -21,6 +21,7 @@ namespace puma
 
         virtual void queueRenderables( IRenderQueue& _renderQueue ) { assert( false ); /*Trying to call queueRenderables on a system that has not implemented it*/ };
 
+        // If any of the frame parts is a trigger, the contact point will be invalid
         virtual void onCollisionStarted( leo::FramePartID _framePartPtrA, leo::FramePartID _framePartPtrB, leo::ContactPoint _contactPoint ) { assert( false ); /*Trying to call onCollisionDetected on a system that has not implemented it*/ }
         virtual void onCllisionStopped( leo::FramePartID _framePartPtrA, leo::FramePartID _framePartPtrB ) { assert( false ); /*Trying to call onCollisionDetected on a system that has not implemented it*/ }
     };

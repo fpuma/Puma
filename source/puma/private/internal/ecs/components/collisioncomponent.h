@@ -26,8 +26,8 @@ namespace puma
         const leo::IStaticFrame* getStaticFrame() const override;
         leo::IStaticFrame* getStaticFrame() override;
 
-        void addBody( const leo::BodyInfo& _bodyInfo ) override;
-        void addTrigger( const leo::TriggerInfo& _triggerInfo ) override;
+        leo::FramePartID addBody( const leo::BodyInfo& _bodyInfo ) override;
+        leo::FramePartID addTrigger( const leo::TriggerInfo& _triggerInfo ) override;
 
         bool isValid() const override { return (leo::FrameType::Invalid != m_frameType) && (m_frameId.value() != leo::kInvalidPhysicsID); }
 

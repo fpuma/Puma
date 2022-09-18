@@ -18,7 +18,7 @@ namespace puma
     struct RenderOffset
     {
         Position position;
-        RotationRadians radians;
+        RotationRadians radians = 0.0f;
     };
 
     struct TextureInfo

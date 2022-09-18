@@ -109,19 +109,23 @@ namespace puma
         return nullptr;
     }
 
-    void CollisionComponent::addBody( const leo::BodyInfo& _bodyInfo )
+    leo::FramePartID CollisionComponent::addBody( const leo::BodyInfo& _bodyInfo )
     {
         assert( isValid() );
 
         leo::IFrame* frame = gPhysics->getFrame( m_frameId );
-        m_bodyIds.emplace_back( frame->addBody( _bodyInfo ) );
+        leo::FramePartID result = frame->addBody( _bodyInfo );
+        m_bodyIds.emplace_back( result );
+        return result;
     }
 
-    void CollisionComponent::addTrigger( const leo::TriggerInfo& _triggerInfo )
+    leo::FramePartID CollisionComponent::addTrigger( const leo::TriggerInfo& _triggerInfo )
     {
         assert( isValid() );
 
         leo::IFrame* frame = gPhysics->getFrame( m_frameId );
-        m_bodyIds.emplace_back( frame->addTrigger( _triggerInfo ) );
+        leo::FramePartID result = frame->addTrigger( _triggerInfo );
+        m_bodyIds.emplace_back( result );
+        return result;
     }
 }
