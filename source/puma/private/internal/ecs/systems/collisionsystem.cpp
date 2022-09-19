@@ -179,6 +179,13 @@ namespace puma
         gPhysics->getWorld( m_worldId )->setCollisionListener( std::move( _collisionListener ) );
     }
 
+    const leo::UserCollisionData CollisionSystem::getUserCollisionData( leo::FramePartID _framePartId ) const
+    {
+        leo::IFramePart* framePart = gPhysics->getFramePart( _framePartId );
+        assert( nullptr != framePart );
+        return framePart->getUserData();
+    }
+
 #ifdef _DEBUG
     bool CollisionSystem::entityComponentCheck( Entity _entity )
     {

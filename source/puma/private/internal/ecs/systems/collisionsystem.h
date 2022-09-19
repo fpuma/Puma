@@ -26,9 +26,11 @@ namespace puma
 
         void setCollisionCompatibility( const leo::CollisionCompatibility& _collisionCompatibility ) override;
         void setCollisionListener( std::unique_ptr<leo::ICollisionListener>&& _collisionListener );
+        
+        void enableDebugDraw() override { m_debugDraw = true; }
+        void disableDebugDraw() override { m_debugDraw = false; }
 
-        void enableDebugDraw() { m_debugDraw = true; }
-        void disableDebugDraw() { m_debugDraw = false; }
+        const leo::UserCollisionData getUserCollisionData( leo::FramePartID _framePartId ) const override;
 
     private:
 

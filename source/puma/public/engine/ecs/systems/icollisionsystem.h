@@ -23,5 +23,7 @@ namespace puma
 
         virtual void enableDebugDraw() = 0;
         virtual void disableDebugDraw() = 0;
+
+        virtual const leo::UserCollisionData getUserCollisionData( leo::FramePartID _framePartId ) const = 0;
     };
 }
