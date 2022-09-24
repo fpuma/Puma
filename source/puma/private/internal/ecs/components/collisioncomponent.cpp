@@ -81,7 +81,6 @@ namespace puma
 
     leo::IKinematicFrame* CollisionComponent::getKinematicFrame()
     {
-        assert( leo::FrameType::Static == m_frameType );
         assert( leo::FrameType::Kinematic == m_frameType );
         if ( leo::FrameType::Kinematic == m_frameType )
         {

@@ -106,7 +106,11 @@ namespace puma
 
             for (SystemConfig& sysCfg : sysCfgList)
             {
-                static_cast<System*>(getSystem( sysCfg.classId ))->update( _entityProvider, _componentProvider );
+                System* system = static_cast<System*>(getSystem( sysCfg.classId ));
+                if (system->isEnabled())
+                {
+                    system->update( _entityProvider, _componentProvider );
+                }
             }
         }
 
@@ -118,7 +122,11 @@ namespace puma
 
             for (SystemConfig& sysCfg : sysCfgList)
             {
-                static_cast<System*>(getSystem( sysCfg.classId ))->prePhysicsUpdate( _entityProvider, _componentProvider );
+                System* system = static_cast<System*>(getSystem( sysCfg.classId ));
+                if (system->isEnabled())
+                {
+                    system->prePhysicsUpdate( _entityProvider, _componentProvider );
+                }
             }
         }
 
@@ -130,7 +138,11 @@ namespace puma
 
             for (SystemConfig& sysCfg : sysCfgList)
             {
-                static_cast<System*>(getSystem( sysCfg.classId ))->postPhysicsUpdate( _entityProvider, _componentProvider );
+                System* system = static_cast<System*>(getSystem( sysCfg.classId ));
+                if (system->isEnabled())
+                {
+                    system->postPhysicsUpdate( _entityProvider, _componentProvider );
+                }
             }
         }
         
@@ -142,7 +154,11 @@ namespace puma
 
             for (SystemConfig& sysCfg : sysCfgList)
             {
-                static_cast<System*>(getSystem( sysCfg.classId ))->queueRenderables( _renderQueue );
+                System* system = static_cast<System*>(getSystem( sysCfg.classId ));
+                if (system->isEnabled())
+                {
+                    system->queueRenderables( _renderQueue );
+                }
             }
         }
 
@@ -154,7 +170,11 @@ namespace puma
 
             for (SystemConfig& sysCfg : sysCfgList)
             {
-                static_cast<System*>(getSystem( sysCfg.classId ))->onCollisionStarted( _framePartPtrA, _framePartPtrB, _contactPoint );
+                System* system = static_cast<System*>(getSystem( sysCfg.classId ));
+                if (system->isEnabled())
+                {
+                    system->onCollisionStarted( _framePartPtrA, _framePartPtrB, _contactPoint );
+                }
             }
         }
 
@@ -166,7 +186,12 @@ namespace puma
 
             for (SystemConfig& sysCfg : sysCfgList)
             {
-                static_cast<System*>(getSystem( sysCfg.classId ))->onCllisionStopped( _framePartPtrA, _framePartPtrB );
+                System* system = static_cast<System*>(getSystem( sysCfg.classId ));
+                
+                if (system->isEnabled())
+                {
+                    system->onCllisionStopped( _framePartPtrA, _framePartPtrB );
+                }
             }
         }
 
