@@ -190,7 +190,7 @@ namespace puma
                 
                 if (system->isEnabled())
                 {
-                    system->onCllisionStopped( _framePartPtrA, _framePartPtrB );
+                    system->onCollisionStopped( _framePartPtrA, _framePartPtrB );
                 }
             }
         }
