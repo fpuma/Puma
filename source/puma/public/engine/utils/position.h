@@ -5,6 +5,6 @@
 
 namespace puma
 {
-    using Position = Vec3;
+    using Position = Vec2;
     using Direction = Vec2;
 }

@@ -64,11 +64,6 @@ namespace puma::erh
         return screenPosition;
     }
 
-    ScreenPos worldPointToScreen( const Position& _position, const Rectangle& _frustum, const float& _metersPerPixel )
-    {
-        return worldPointToScreen( Vec2{_position.x, _position.y}, _frustum, _metersPerPixel );
-    }
-
     bool shouldRender( const ShapeVerticesList& _vertices, const Rectangle& _frustum )
     {
         const auto itMaxPointX = std::max_element( _vertices.begin(), _vertices.end(), [&]( const Vec2& point0, const Vec2& point1 ) 

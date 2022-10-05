@@ -108,7 +108,7 @@ namespace puma
                 leo::IFrame* physicsFrame = gPhysics->getFrame( collisionComponent->getFrameID() );
                 LocationComponent* locationComponent = _componentProvider.getComponent<LocationComponent>( entity );
 
-                Position pos = { physicsFrame->getPosition().x, physicsFrame->getPosition().y, 0.0f };
+                Position pos = { physicsFrame->getPosition().x, physicsFrame->getPosition().y };
                 locationComponent->setPosition( pos );
                 locationComponent->setRadiansRotation( physicsFrame->getAngle() );
             }
@@ -132,7 +132,7 @@ namespace puma
         {
             for ( const PhysicsDebugShape& dbgShape : m_debugShapes )
             {
-                _renderQueue.addDebugRenderableShape( dbgShape.shape, dbgShape.color, dbgShape.solid, { 0.0f, 0.0f, 0.0f }, 0.0f );
+                _renderQueue.addDebugRenderableShape( dbgShape.shape, dbgShape.color, dbgShape.solid, { 0.0f, 0.0f }, 0.0f );
             }
 
             ComponentProvider* componentProvider = gComponents;

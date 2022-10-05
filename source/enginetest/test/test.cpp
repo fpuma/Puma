@@ -109,11 +109,11 @@ namespace test
         assert( nullptr != staticStuffSystem );
 
         //Spawn
-        Floor0 = spawnFloor( gEngineApplication->getTextureManager(), { 15.0f, -15.0f, 0.0f }, GeometryHelpers::degreesToRadians( 45.0f ) );
-        Floor1 = spawnFloor( gEngineApplication->getTextureManager(), { -15.0f, -15.0f, 0.0f }, GeometryHelpers::degreesToRadians( -45.0f ) );
+        Floor0 = spawnFloor( gEngineApplication->getTextureManager(), { 15.0f, -15.0f }, GeometryHelpers::degreesToRadians( 45.0f ) );
+        Floor1 = spawnFloor( gEngineApplication->getTextureManager(), { -15.0f, -15.0f }, GeometryHelpers::degreesToRadians( -45.0f ) );
 
-        Floor2 = spawnFloor( gEngineApplication->getTextureManager(), { 15.0f, 15.0f, 0.0f }, GeometryHelpers::degreesToRadians( -45.0f ) );
-        Floor3 = spawnFloor( gEngineApplication->getTextureManager(), { -15.0f, 15.0f, 0.0f }, GeometryHelpers::degreesToRadians( 45.0f ) );
+        Floor2 = spawnFloor( gEngineApplication->getTextureManager(), { 15.0f, 15.0f }, GeometryHelpers::degreesToRadians( -45.0f ) );
+        Floor3 = spawnFloor( gEngineApplication->getTextureManager(), { -15.0f, 15.0f }, GeometryHelpers::degreesToRadians( 45.0f ) );
 
         FloorList.push_back( Floor0 );
         FloorList.push_back( Floor1 );

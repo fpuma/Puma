@@ -16,7 +16,7 @@ namespace test
     {
         gSystems->subscribeSystemUpdate<StaticStuffSystem>( SystemUpdateId::QueueRenderables );
 
-        m_backgroundEntity = spawnBackground( gEngineApplication->getTextureManager(), { 0.0f, 0.0f, 0.0f } );
+        m_backgroundEntity = spawnBackground( gEngineApplication->getTextureManager(), { 0.0f, 0.0f } );
     }
 
     void StaticStuffSystem::onUninit()
