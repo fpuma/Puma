@@ -4,6 +4,7 @@
 
 #include <nina/application/iwindow.h>
 #include <engine/services/ecsservice.h>
+#include <engine/renderer/renderhelpers.h>
 #include <internal/ecs/components/cameracomponent.h>
 #include <internal/ecs/components/locationcomponent.h>
 #include <internal/services/engineapplicationservice.h>
@@ -14,8 +15,10 @@
 
 namespace puma::erh
 {
-    void getCameraInfo( Rectangle& _outFrustum, float& _outMetersPerPixel )
+    CameraInfo getCameraInfo()
     {
+        CameraInfo result;
+
         Entity cameraEntity = gInternalEngineApplication->getCameraEntity();
         ComponentProvider* componentProvider = gComponents;
 
@@ -26,19 +29,21 @@ namespace puma::erh
 
         Extent windowExtent = gInternalEngineApplication->getWindowExtent();
 
-        _outMetersPerPixel = cameraComponent->getMetersPerPixel();
+        result.metersPerPixel = cameraComponent->getMetersPerPixel();
 
         Position cameraPos = locationComponent->getPosition();
-        float screenMetersWidth = (float)windowExtent.width * _outMetersPerPixel;
-        float screenMetersHeight = (float)windowExtent.height * _outMetersPerPixel;
+        float screenMetersWidth = (float)windowExtent.width * result.metersPerPixel;
+        float screenMetersHeight = (float)windowExtent.height * result.metersPerPixel;
 
         float upperX = cameraPos.x + (screenMetersWidth / 2.0f);
         float lowerX = cameraPos.x - (screenMetersWidth / 2.0f);
         float upperY = cameraPos.y + (screenMetersHeight / 2.0f);
         float lowerY = cameraPos.y - (screenMetersHeight / 2.0f);
 
-        _outFrustum.upperBoundary = { upperX, upperY };
-        _outFrustum.lowerBoundary = { lowerX, lowerY };
+        result.frustum.upperBoundary = { upperX, upperY };
+        result.frustum.lowerBoundary = { lowerX, lowerY };
+
+        return result;
     }
 
     Rectangle getAABB( Position _position, RenderSize _renderSize )
@@ -55,13 +60,29 @@ namespace puma::erh
         return result;
     }
 
-    ScreenPos worldPointToScreen( const Vec2& _position, const Rectangle& _frustum, const float& _metersPerPixel )
+    ScreenPos worldPointToScreen( const Position& _position )
     {
+        CameraInfo camInfo = getCameraInfo();
+
         ScreenPos screenPosition;
-        screenPosition.xCoord = (s32)((_position.x - _frustum.lowerBoundary.x) / _metersPerPixel);
-        screenPosition.yCoord = (s32)((_frustum.upperBoundary.y - _position.y) / _metersPerPixel);
+        screenPosition.xCoord = static_cast<s32>((_position.x - camInfo.frustum.lowerBoundary.x) / camInfo.metersPerPixel);
+        screenPosition.yCoord = static_cast<s32>((camInfo.frustum.upperBoundary.y - _position.y) / camInfo.metersPerPixel);
 
         return screenPosition;
+    }
+
+    Position screenPointToWorld( const ScreenPos& _position )
+    {
+        CameraInfo camInfo = getCameraInfo();
+
+        Position result;
+        result.x = static_cast<float>(_position.xCoord) * camInfo.metersPerPixel;
+        result.y = static_cast<float>(_position.yCoord) * camInfo.metersPerPixel;
+
+        result.x += camInfo.frustum.lowerBoundary.x;
+        result.y = camInfo.frustum.upperBoundary.y - result.y;
+
+        return result;
     }
 
     bool shouldRender( const ShapeVerticesList& _vertices, const Rectangle& _frustum )

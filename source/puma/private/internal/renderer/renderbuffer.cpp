@@ -2,6 +2,7 @@
 
 #include "renderbuffer.h"
 #include "enginerendererhelpers.h"
+#include <engine/renderer/renderhelpers.h>
 
 namespace puma
 {
@@ -13,9 +14,9 @@ namespace puma
 
     void RenderBuffer::addRenderableTexture( const nina::Texture& _texture, const nina::TextureSample& _textureSample, const RenderSize& _renderSize, const Position& _position, const RotationRadians& _rotation, RenderLayer _renderLayer, bool _debug )
     {
-        Rectangle frustum;
-        float metersPerPixel;
-        erh::getCameraInfo( frustum, metersPerPixel );
+        erh::CameraInfo camInfo = erh::getCameraInfo();
+        Rectangle frustum = camInfo.frustum;
+        float metersPerPixel = camInfo.metersPerPixel;
 
         Rectangle boundingBox = erh::getAABB( _position, _renderSize );
 
@@ -34,16 +35,14 @@ namespace puma
 
     void RenderBuffer::addRenderableText( const std::string& _textToRender, const Color& _color, const Position& _position, RenderLayer _renderLayer, bool _debug )
     {
-        Rectangle frustum;
-        float metersPerPixel;
-        erh::getCameraInfo( frustum, metersPerPixel );
+        erh::CameraInfo camInfo = erh::getCameraInfo();
 
-        bool isInFrustum =  frustum.upperBoundary.x > _position.x &&
-                            frustum.upperBoundary.y > _position.y &&
-                            frustum.lowerBoundary.x < _position.x &&
-                            frustum.lowerBoundary.y < _position.y;
+        bool isInFrustum =  camInfo.frustum.upperBoundary.x > _position.x &&
+                            camInfo.frustum.upperBoundary.y > _position.y &&
+                            camInfo.frustum.lowerBoundary.x < _position.x &&
+                            camInfo.frustum.lowerBoundary.y < _position.y;
         
-        ScreenPos screenPosition = erh::worldPointToScreen(_position, frustum, metersPerPixel);
+        ScreenPos screenPosition = erh::worldPointToScreen( _position );
 
         if ( isInFrustum )
         {
@@ -53,9 +52,8 @@ namespace puma
     
     void RenderBuffer::addRenderableShape( const Shape& _shape, const Color& _color, bool _solid, const Position& _position, const RotationRadians& _rotation, RenderLayer _renderLayer, bool _debug )
     {
-        Rectangle frustum;
-        float metersPerPixel;
-        erh::getCameraInfo( frustum, metersPerPixel );
+        erh::CameraInfo camInfo = erh::getCameraInfo();
+        Rectangle frustum = camInfo.frustum;
         Vec2 flattenedPos = { _position.x, _position.y };
 
         RenderableShape renderableShape;

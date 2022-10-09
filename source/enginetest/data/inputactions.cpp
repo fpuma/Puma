@@ -19,4 +19,6 @@ namespace test
 
     const puma::InputAction TestInputActions::ToggleFloorEntity = puma::InputAction( 11 );
     const puma::InputAction TestInputActions::ToggleFloorPhysics = puma::InputAction( 12 );
+
+    const puma::InputAction TestInputActions::MouseMove = puma::InputAction( 13 );
 }

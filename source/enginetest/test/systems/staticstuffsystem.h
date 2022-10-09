@@ -3,6 +3,8 @@
 #include <modules/pina/system.h>
 #include <modules/pina/entity.h>
 
+#include <engine/utils/position.h>
+
 using namespace puma;
 
 namespace test
@@ -20,6 +22,9 @@ namespace test
         void queueRenderables( IRenderQueue& _renderQueue ) override;
 
     private:
+
+        ScreenPos m_screenPos;
+        Position m_worldPosition;
 
         Entity m_backgroundEntity;
     };

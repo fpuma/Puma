@@ -21,5 +21,7 @@ namespace test
 
         static const puma::InputAction ToggleFloorEntity;
         static const puma::InputAction ToggleFloorPhysics;
+
+        static const puma::InputAction MouseMove;
     }; 
 }

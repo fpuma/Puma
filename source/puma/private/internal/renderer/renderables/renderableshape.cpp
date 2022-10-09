@@ -6,15 +6,17 @@
 #include <internal/services/engineapplicationservice.h>
 #include <utils/geometry/geometryhelpers.h>
 
+#include <engine/renderer/renderhelpers.h>
+
 namespace puma
 {
 
     void RenderableShape::fromWorldShape( const Shape& _shape, const Color& _color, bool _solid, const Position& _position, const RotationRadians& _rotation )
     {
         Vec2 flattenedPos = { _position.x, _position.y };
-        Rectangle frustum; 
-        float metersPerPixel = 0.0f;
-        erh::getCameraInfo( frustum, metersPerPixel );
+        erh::CameraInfo camInfo = erh::getCameraInfo();
+        Rectangle frustum = camInfo.frustum; 
+        float metersPerPixel = camInfo.metersPerPixel;
 
         switch ( _shape.getShapeType() )
         {
@@ -37,7 +39,7 @@ namespace puma
 
                 std::transform( newChain.points.begin(), newChain.points.end(), std::back_inserter( screenChain ), [&]( const Vec2& chainPoint )
                 {
-                    return erh::worldPointToScreen( chainPoint, frustum, metersPerPixel );
+                    return erh::worldPointToScreen( chainPoint );
                 } );
 
                 setAsChain( screenChain, _color );
@@ -58,7 +60,7 @@ namespace puma
 
             if ( erh::shouldRender( circleAABB, frustum ) )
             {
-                ScreenPos centerScreenPos = erh::worldPointToScreen( circleWorldPosition, frustum, metersPerPixel );
+                ScreenPos centerScreenPos = erh::worldPointToScreen( circleWorldPosition );
                 s32 radiusInPixels = (s32)(circle.radius / metersPerPixel);
 
                 setAsCircle( radiusInPixels, centerScreenPos, _color, _solid );
@@ -86,7 +88,7 @@ namespace puma
 
                 std::transform( newPolygon.vertices.begin(), newPolygon.vertices.end(), std::back_inserter( screenPolygon ), [&]( const Vec2& polygonPoint )
                 {
-                    return erh::worldPointToScreen( polygonPoint, frustum, metersPerPixel );
+                    return erh::worldPointToScreen( polygonPoint );
                 } );
 
                 setAsPolygon( screenPolygon, _color, _solid );
