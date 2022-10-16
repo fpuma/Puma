@@ -40,6 +40,16 @@ namespace puma
             m_systemUpdates.insert( { SystemUpdateId::CollisionStopped,{} } );
         }
 
+        ~SystemProvider()
+        {
+#ifdef _DEBUG
+            for (const auto& sysCfg : m_systemUpdates)
+            {
+                assert( sysCfg.second.empty() ); //Some systems have not unregistered all their updates
+            }
+#endif
+        }
+
         template<class T>
         void subscribeSystemUpdate( SystemUpdateId _id, SystemPriority _priority = 5 )
         {
