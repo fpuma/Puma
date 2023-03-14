@@ -5,9 +5,13 @@
 
 namespace puma
 {
+    class TextureId;
+}
 
-    DECLARE_GENERIC_ID(TextureId, size_t, (size_t)-1 )
+DECLARE_GENERIC_ID(puma::TextureId, size_t, (size_t)-1 )
 
+namespace puma
+{
     class IEngineApplication
     {
     public:

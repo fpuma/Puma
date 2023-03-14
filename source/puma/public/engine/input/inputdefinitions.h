@@ -3,11 +3,16 @@
 #include <modules/nina/ninadefinitions.h>
 #include <utils/genericid.h>
 
+
 namespace puma
 {
+    class InputAction;
+}
 
-    DECLARE_GENERIC_ID( InputAction, s32, kMaxS32 )
+DECLARE_GENERIC_ID( puma::InputAction, puma::s32, puma::kMaxS32)
 
+namespace puma
+{
     enum InputModifier : size_t
     {
         InputModifier_NONE    = 0x00,
