@@ -1,7 +1,7 @@
 #pragma once
 
-#include <modules/pina/system.h>
-#include <modules/pina/entity.h>
+#include <engine/flow/system.h>
+#include <pina/entity.h>
 #include <time/timers/countdowntimer.h>
 #include <engine/utils/position.h>
 
@@ -27,7 +27,7 @@ namespace test
         void onInit() override;
         void onUninit() override;
 
-        void update( EntityProvider& _entityProvider, ComponentProvider& _componentProvider ) override;
+        void update( pina::EntityProvider& _entityProvider, pina::ComponentProvider& _componentProvider ) override;
 
         void queueRenderables( IRenderQueue& _renderQueue ) override;
 
@@ -35,16 +35,16 @@ namespace test
 
     private:
 
-        void updateSpawner( Entity _spawner );
-        void renderDebugSpawner( Entity _spawner, IRenderQueue& _renderQueue );
+        void updateSpawner( pina::Entity _spawner );
+        void renderDebugSpawner( pina::Entity _spawner, IRenderQueue& _renderQueue );
 
-        Entity m_spawner0;
-        Entity m_spawner1;
-        Entity m_spawnerHandler;
+        pina::Entity m_spawner0;
+        pina::Entity m_spawner1;
+        pina::Entity m_spawnerHandler;
 
         float m_spawnerSpeed = 10.0f;
 
-        std::vector<Entity> m_balls;
+        std::vector<pina::Entity> m_balls;
 
         std::vector<ContactPointInfo> m_contactPointList;
     };

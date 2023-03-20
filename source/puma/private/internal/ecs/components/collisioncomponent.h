@@ -33,8 +33,8 @@ namespace puma
 
     private:
 
-        friend void CollisionSystem::registerEntity( Entity _entity, leo::FrameInfo _frameInfo, leo::FrameType _frameType );
-        friend void CollisionSystem::unregisterEntity( Entity _entity );
+        friend void CollisionSystem::registerEntity( pina::Entity _entity, leo::FrameInfo _frameInfo, leo::FrameType _frameType );
+        friend void CollisionSystem::unregisterEntity( pina::Entity _entity );
 
         void init( leo::FrameType _frameType, leo::FrameID _frameId );
         void uninit();

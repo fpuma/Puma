@@ -5,7 +5,8 @@
 #include <nina/application/irenderer.h>
 #include <nina/application/iwindow.h>
 
-#include <modules/pina/entity.h>
+#include <pina/entity.h>
+#include <pina/entityprovider.h>
 #include <engine/renderer/irenderqueue.h>
 #include <engine/services/ecsservice.h>
 
@@ -35,17 +36,17 @@ namespace puma
 
     void RenderSystem::queueRenderables( IRenderQueue& _renderQueue )
     {
-        ComponentProvider* componentProvider = gComponents;
+        pina::ComponentProvider* componentProvider = gComponents;
 
-        for ( const Entity& entity : m_entities )
+        for ( const pina::Entity& entity : m_entities )
         {
             if (!gEntities->isEntityEnabled( entity )) continue;
 
-            RenderComponent* renderComponent = componentProvider->getComponent<RenderComponent>( entity );
+            RenderComponent* renderComponent = componentProvider->get<RenderComponent>( entity );
 
             if (!renderComponent->isEnabled()) continue;
 
-            LocationComponent* locationComponent = componentProvider->getComponent<LocationComponent>( entity );
+            LocationComponent* locationComponent = componentProvider->get<LocationComponent>( entity );
 
             for ( const TextureInfo& textureInfo : renderComponent->getTextureInfoContainer() )
             {
@@ -68,7 +69,7 @@ namespace puma
         }
     }
 
-    void RenderSystem::registerEntity( Entity _entity )
+    void RenderSystem::registerEntity( pina::Entity _entity )
     {
         assert( entityComponentCheck( _entity ) );
         assert( m_entities.find( _entity ) == m_entities.end() ); //This entity has already been registered
@@ -76,7 +77,7 @@ namespace puma
         m_entities.emplace( _entity );
     }
 
-    void RenderSystem::unregisterEntity( Entity _entity )
+    void RenderSystem::unregisterEntity( pina::Entity _entity )
     {
         if ( m_entities.find( _entity ) != m_entities.end() )
         {
@@ -85,11 +86,11 @@ namespace puma
     }
 
 #ifdef _DEBUG
-    bool RenderSystem::entityComponentCheck( Entity _entity )
+    bool RenderSystem::entityComponentCheck( pina::Entity _entity )
     {
-        ComponentProvider* componentProvider = gComponents;
-        bool hasRenderComponent = componentProvider->containsComponent<RenderComponent>( _entity );
-        bool hasLocationComponent = componentProvider->containsComponent<LocationComponent>( _entity );
+        pina::ComponentProvider* componentProvider = gComponents;
+        bool hasRenderComponent = componentProvider->contains<RenderComponent>( _entity );
+        bool hasLocationComponent = componentProvider->contains<LocationComponent>( _entity );
         return (hasRenderComponent && hasLocationComponent);
     }
 #endif

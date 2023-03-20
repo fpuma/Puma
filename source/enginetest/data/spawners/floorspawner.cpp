@@ -17,14 +17,14 @@
 
 namespace test
 {
-    puma::Entity spawnFloor( puma::nina::ITextureManager* _textureManager, const puma::Position& _pos, float _angle )
+    puma::pina::Entity spawnFloor( puma::nina::ITextureManager* _textureManager, const puma::Position& _pos, float _angle )
     {
-        puma::Entity result = gEntities->requestEntity();
-        puma::ComponentProvider* componentProvider = gComponents;
+        puma::pina::Entity result = gEntities->requestEntity();
+        puma::pina::ComponentProvider* componentProvider = gComponents;
 
-        auto locationComponent = componentProvider->addComponent<puma::ILocationComponent>( result );
-        auto renderComponent = componentProvider->addComponent<puma::IRenderComponent>( result );
-        auto collisionComponent = componentProvider->addComponent<puma::ICollisionComponent>( result );
+        auto locationComponent = componentProvider->add<puma::ILocationComponent>( result );
+        auto renderComponent = componentProvider->add<puma::IRenderComponent>( result );
+        auto collisionComponent = componentProvider->add<puma::ICollisionComponent>( result );
 
         locationComponent->setPosition( _pos );
 
@@ -58,16 +58,16 @@ namespace test
         return result;
     }
 
-    void unspawnFloor( puma::Entity _floorEntity )
+    void unspawnFloor( puma::pina::Entity _floorEntity )
     {
         gSystems->getSystem<puma::IRenderSystem>()->unregisterEntity( _floorEntity );
         gSystems->getSystem<puma::ICollisionSystem>()->unregisterEntity( _floorEntity );
 
-        puma::ComponentProvider* componentProvider = gComponents;
+        puma::pina::ComponentProvider* componentProvider = gComponents;
 
-        componentProvider->removeComponent<puma::ILocationComponent>( _floorEntity );
-        componentProvider->removeComponent<puma::IRenderComponent>( _floorEntity );
-        componentProvider->removeComponent<puma::ICollisionComponent>( _floorEntity );
+        componentProvider->remove<puma::ILocationComponent>( _floorEntity );
+        componentProvider->remove<puma::IRenderComponent>( _floorEntity );
+        componentProvider->remove<puma::ICollisionComponent>( _floorEntity );
 
         gEntities->disposeEntity( _floorEntity );
 

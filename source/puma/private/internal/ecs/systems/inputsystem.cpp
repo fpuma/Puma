@@ -6,6 +6,8 @@
 #include <engine/services/ecsservice.h>
 #include <internal/ecs/components/inputcomponent.h>
 #include <internal/services/loggerservice.h>
+#include <pina/componentprovider.h>
+#include <pina/entityprovider.h>
 #include <utils/formatstring.h>
 
 namespace puma
@@ -26,14 +28,14 @@ namespace puma
         m_entities.clear();
     }
 
-    void InputSystem::update( EntityProvider& _entityProvider, ComponentProvider& _componentProvider )
+    void InputSystem::update( pina::EntityProvider& _entityProvider, pina::ComponentProvider& _componentProvider )
     {
         bool readBufferUpdated = m_inputQueue.updateReadBuffer();
         
         //m_inputQueue.printInputs();
-        for ( Entity entity : m_entities )
+        for (pina::Entity entity : m_entities )
         {
-            InputComponent* inputComponent = _componentProvider.getComponent<InputComponent>( entity );
+            InputComponent* inputComponent = _componentProvider.get<InputComponent>( entity );
             
             if (!_entityProvider.isEntityEnabled( entity ) ||
                 !inputComponent->isEnabled())
@@ -53,7 +55,7 @@ namespace puma
         }
     }
 
-    void InputSystem::registerEntity( Entity _entity )
+    void InputSystem::registerEntity( pina::Entity _entity )
     {
         assert( entityComponentCheck( _entity ) ); //This entity does not have the necessary components to be registered into this system
         assert( m_entities.find( _entity ) == m_entities.end() ); //This entity has already been registered
@@ -61,7 +63,7 @@ namespace puma
         m_entities.emplace( _entity );
     }
     
-    void InputSystem::unregisterEntity( Entity _entity )
+    void InputSystem::unregisterEntity( pina::Entity _entity )
     {
         if ( m_entities.find( _entity ) != m_entities.end() )
         {
@@ -74,10 +76,10 @@ namespace puma
     }
 
 #ifdef _DEBUG
-    bool InputSystem::entityComponentCheck( Entity _entity )
+    bool InputSystem::entityComponentCheck( pina::Entity _entity )
     {
-        ComponentProvider* componentProvider = gComponents;
-        return  componentProvider->containsComponent<InputComponent>( _entity );
+        pina::ComponentProvider* componentProvider = gComponents;
+        return  componentProvider->contains<InputComponent>( _entity );
     }
 #endif
 

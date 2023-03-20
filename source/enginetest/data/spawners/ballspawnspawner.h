@@ -1,6 +1,6 @@
 #pragma once
 
-#include <modules/pina/entity.h>
+#include <pina/entity.h>
 #include <engine/input/inputdefinitions.h>
 #include <data/inputactions.h>
 #include <engine/utils/position.h>
@@ -11,11 +11,11 @@ namespace test
     using InputActionControllerPairList = std::initializer_list<std::pair<puma::InputAction, puma::ControllerJoystickInput>>;
     using InputActionControllerButtonPairList = std::initializer_list<std::pair<puma::InputAction, puma::ControllerButtonInput>>;
 
-    puma::Entity spawnBallSpawner(  const InputActionKeyboardPairList& _keyboardInputList, 
+    puma::pina::Entity spawnBallSpawner(  const InputActionKeyboardPairList& _keyboardInputList,
                                     const InputActionControllerPairList& _controllerInputList, 
                                     const InputActionControllerButtonPairList& _controllerButtonInputList,
                                     const puma::Position& _position );
-    void unspawnBallSpawner( puma::Entity _spawnerEntity );
+    void unspawnBallSpawner( puma::pina::Entity _spawnerEntity );
 
     static const InputActionKeyboardPairList kSpawner0KeyboardInput =
     {

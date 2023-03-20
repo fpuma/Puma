@@ -1,7 +1,7 @@
 #pragma once
 
-#include <modules/pina/entity.h>
-#include <modules/pina/system.h>
+#include <pina/entity.h>
+#include <engine/flow/system.h>
 
 #include <utils/graphics/dimensions.h>
 
@@ -18,7 +18,7 @@ namespace puma
 
         virtual ~IRenderSystem() {}
 
-        virtual void registerEntity( Entity _entity ) = 0;
-        virtual void unregisterEntity( Entity _entity ) = 0;
+        virtual void registerEntity( pina::Entity _entity ) = 0;
+        virtual void unregisterEntity( pina::Entity _entity ) = 0;
     };
 }

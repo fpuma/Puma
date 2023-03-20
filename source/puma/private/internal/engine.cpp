@@ -42,13 +42,13 @@ namespace puma
 
         void registerComponents()
         {
-            ComponentProvider* componentProvider = gComponents;
+            pina::ComponentProvider* componentProvider = gComponents;
 
-            componentProvider->registerComponent<ICameraComponent, CameraComponent>();
-            componentProvider->registerComponent<ICollisionComponent, CollisionComponent>();
-            componentProvider->registerComponent<ILocationComponent, LocationComponent>();
-            componentProvider->registerComponent<IRenderComponent, RenderComponent>();
-            componentProvider->registerComponent<IInputComponent, InputComponent>();
+            componentProvider->registerInterface<ICameraComponent, CameraComponent>();
+            componentProvider->registerInterface<ICollisionComponent, CollisionComponent>();
+            componentProvider->registerInterface<ILocationComponent, LocationComponent>();
+            componentProvider->registerInterface<IRenderComponent, RenderComponent>();
+            componentProvider->registerInterface<IInputComponent, InputComponent>();
         }
 
     }

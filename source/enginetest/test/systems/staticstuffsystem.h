@@ -1,7 +1,7 @@
 #pragma once
 
-#include <modules/pina/system.h>
-#include <modules/pina/entity.h>
+#include <engine/flow/system.h>
+#include <pina/entity.h>
 
 #include <engine/utils/position.h>
 
@@ -26,6 +26,6 @@ namespace test
         ScreenPos m_screenPos;
         Position m_worldPosition;
 
-        Entity m_backgroundEntity;
+        pina::Entity m_backgroundEntity;
     };
 }

@@ -33,7 +33,7 @@ namespace test
 
     void StaticStuffSystem::queueRenderables( IRenderQueue& _renderQueue )
     {
-        auto inputComponent = gComponents->getComponent<IInputComponent>( m_backgroundEntity );
+        auto inputComponent = gComponents->get<IInputComponent>( m_backgroundEntity );
 
         if (inputComponent->isActionActive( TestInputActions::MouseMove ))
         {

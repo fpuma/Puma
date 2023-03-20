@@ -16,15 +16,15 @@
 
 namespace test
 {
-    puma::Entity spawnBallSpawner( const InputActionKeyboardPairList& _keyboardInputList, const InputActionControllerPairList& _controllerInputList, const InputActionControllerButtonPairList& _controllerButtonInputList, const puma::Position& _position )
+    puma::pina::Entity spawnBallSpawner( const InputActionKeyboardPairList& _keyboardInputList, const InputActionControllerPairList& _controllerInputList, const InputActionControllerButtonPairList& _controllerButtonInputList, const puma::Position& _position )
     {
-        puma::Entity result = gEntities->requestEntity();
-        puma::ComponentProvider* componentProvider = gComponents;
+        puma::pina::Entity result = gEntities->requestEntity();
+        puma::pina::ComponentProvider* componentProvider = gComponents;
 
-        auto locationComponent = componentProvider->addComponent<puma::ILocationComponent>( result );
-        auto inputComponent = componentProvider->addComponent<puma::IInputComponent>( result );
-        auto collisionComponent = componentProvider->addComponent<puma::ICollisionComponent>( result );
-        componentProvider->addComponent<test::MoveDirectionComponent>( result );
+        auto locationComponent = componentProvider->add<puma::ILocationComponent>( result );
+        auto inputComponent = componentProvider->add<puma::IInputComponent>( result );
+        auto collisionComponent = componentProvider->add<puma::ICollisionComponent>( result );
+        componentProvider->add<test::MoveDirectionComponent>( result );
 
         locationComponent->setPosition( _position );
 
@@ -62,17 +62,17 @@ namespace test
         return result;
     }
 
-    void unspawnBallSpawner( puma::Entity _spawnerEntity )
+    void unspawnBallSpawner( puma::pina::Entity _spawnerEntity )
     {
         gSystems->getSystem<puma::IInputSystem>()->unregisterEntity( _spawnerEntity );
         gSystems->getSystem<puma::ICollisionSystem>()->unregisterEntity( _spawnerEntity );
 
-        puma::ComponentProvider* componentProvider = gComponents;
+        puma::pina::ComponentProvider* componentProvider = gComponents;
 
-        componentProvider->removeComponent<puma::ILocationComponent>( _spawnerEntity );
-        componentProvider->removeComponent<puma::IInputComponent>( _spawnerEntity );
-        componentProvider->removeComponent<puma::ICollisionComponent>( _spawnerEntity );
-        componentProvider->removeComponent<test::MoveDirectionComponent>( _spawnerEntity );
+        componentProvider->remove<puma::ILocationComponent>( _spawnerEntity );
+        componentProvider->remove<puma::IInputComponent>( _spawnerEntity );
+        componentProvider->remove<puma::ICollisionComponent>( _spawnerEntity );
+        componentProvider->remove<test::MoveDirectionComponent>( _spawnerEntity );
 
         gEntities->disposeEntity( _spawnerEntity );
     }

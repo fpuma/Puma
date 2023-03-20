@@ -2,13 +2,12 @@
 
 #include <engine/iengine.h>
 
-#include <modules/pina/entity.h>
-#include <modules/pina/component.h>
-#include <modules/pina/system.h>
-#include <modules/pina/ecs.h>
-#include <modules/pina/entityprovider.h>
-#include <modules/pina/componentprovider.h>
-#include <modules/pina/systemprovider.h>
+#include <pina/entity.h>
+#include <pina/component.h>
+#include <engine/flow/system.h>
+#include <pina/ecs.h>
+#include <pina/entityprovider.h>
+#include <pina/componentprovider.h>
 
 #include <engine/ecs/components/icameracomponent.h>
 #include <engine/ecs/components/icollisioncomponent.h>

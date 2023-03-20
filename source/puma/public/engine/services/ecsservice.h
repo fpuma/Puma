@@ -1,7 +1,8 @@
 #pragma once
 
 #include <engine/services/base/iservice.h>
-#include <modules/pina/ecs.h>
+//#include <pina/ecs.h>
+#include <pina.h>
 
 namespace puma
 {
@@ -9,17 +10,15 @@ namespace puma
     {
     public:
 
-        EcsService() 
-            :m_ecs( std::make_unique<ECS>() )
-        {}
+        EcsService() {}
 
-        virtual ~EcsService() { m_ecs.reset(); }
+        virtual ~EcsService() {}
 
-        ECS* get() { return m_ecs.get(); };
+        pina::ECS* get() { return &m_ecs; };
 
     private:
 
-        std::unique_ptr<ECS> m_ecs;
+        pina::ECS m_ecs;
 
     };
 }
@@ -28,4 +27,4 @@ namespace puma
 
 #define gEntities puma::DefaultServices::getInstance()->get<puma::EcsService>()->get()->getEntityProvider()
 #define gComponents puma::DefaultServices::getInstance()->get<puma::EcsService>()->get()->getComponentProvider()
-#define gSystems puma::DefaultServices::getInstance()->get<puma::EcsService>()->get()->getSystemProvider()
+//#define gSystems puma::DefaultServices::getInstance()->get<puma::EcsService>()->get()->getSystemProvider()

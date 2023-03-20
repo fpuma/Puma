@@ -34,8 +34,8 @@ namespace puma
         const nina::IInput* getInput() const { return m_input.get(); }
         nina::IInput* getInput() { return m_input.get(); }
 
-        void setCameraEntity( Entity _cameraEntity ) override;
-        Entity getCameraEntity() const { return m_cameraEntity; }
+        void setCameraEntity( pina::Entity _cameraEntity ) override;
+        pina::Entity getCameraEntity() const { return m_cameraEntity; }
 
         bool shouldQuit() const { return m_application->shouldQuit(); }
 
@@ -47,6 +47,6 @@ namespace puma
         nina::IWindow* m_window = nullptr;
         nina::ITextureManager* m_textureManager = nullptr;
         nina::IRenderer* m_renderer = nullptr;
-        Entity m_cameraEntity;
+        pina::Entity m_cameraEntity;
     };
 }

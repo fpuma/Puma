@@ -54,12 +54,12 @@ namespace puma
         m_application->uninit();
     }
   
-    void EngineApplication::setCameraEntity( Entity _cameraEntity )
+    void EngineApplication::setCameraEntity( pina::Entity _cameraEntity )
     {
 #ifdef _DEBUG
-        ComponentProvider* componentProvider = gComponents;
-        CameraComponent* cameraComponent = componentProvider->getComponent<CameraComponent>( _cameraEntity );
-        LocationComponent* locationComponent = componentProvider->getComponent<LocationComponent>( _cameraEntity );
+        pina::ComponentProvider* componentProvider = gComponents;
+        CameraComponent* cameraComponent = componentProvider->get<CameraComponent>( _cameraEntity );
+        LocationComponent* locationComponent = componentProvider->get<LocationComponent>( _cameraEntity );
         assert( (nullptr != cameraComponent) && (nullptr != locationComponent) );
 #endif
         m_cameraEntity = _cameraEntity;

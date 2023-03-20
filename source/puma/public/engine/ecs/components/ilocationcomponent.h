@@ -1,10 +1,10 @@
 #pragma once
-#include <modules/pina/component.h>
+#include <pina/component.h>
 #include <engine/utils/position.h>
 
 namespace puma
 {
-    class ILocationComponent : public Component
+    class ILocationComponent : public pina::Component
     {
     public:
 

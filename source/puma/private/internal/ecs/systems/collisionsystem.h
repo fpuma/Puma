@@ -15,10 +15,10 @@ namespace puma
         void onInit() override;
         void onUninit() override;
 
-        void registerEntity( Entity _entity, leo::FrameInfo _frameInfo, leo::FrameType _frameType ) override;
-        void unregisterEntity( Entity _entity ) override;
+        void registerEntity( pina::Entity _entity, leo::FrameInfo _frameInfo, leo::FrameType _frameType ) override;
+        void unregisterEntity( pina::Entity _entity ) override;
 
-        void postPhysicsUpdate( EntityProvider& _entityProvider, ComponentProvider& _componentProvider ) override;
+        void postPhysicsUpdate( pina::EntityProvider& _entityProvider, pina::ComponentProvider& _componentProvider ) override;
         void queueRenderables( IRenderQueue& _renderQueue ) override;
 
         void setGravity( Vec2 _gravity ) override;
@@ -35,9 +35,9 @@ namespace puma
     private:
 
 #ifdef _DEBUG
-        bool entityComponentCheck( Entity _entity );
+        bool entityComponentCheck( pina::Entity _entity );
 #endif
-        std::set<Entity> m_entities;
+        std::set<pina::Entity> m_entities;
         leo::WorldID m_worldId;
 
         struct PhysicsDebugShape

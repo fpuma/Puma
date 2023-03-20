@@ -12,10 +12,10 @@ namespace puma
         void onInit() override;
         void onUninit() override;
 
-        void update( EntityProvider& _entityProvider, ComponentProvider& _componentProvider ) override;
+        void update( pina::EntityProvider& _entityProvider, pina::ComponentProvider& _componentProvider ) override;
 
-        void registerEntity( Entity _entity ) override;
-        void unregisterEntity( Entity _entity ) override;
+        void registerEntity( pina::Entity _entity ) override;
+        void unregisterEntity( pina::Entity _entity ) override;
 
         void registerInputListener() { m_inputQueue.registerInputListener(); }
         void unregisterInputListener() { m_inputQueue.unregisterInputListener(); }
@@ -24,10 +24,10 @@ namespace puma
     private:
 
 #ifdef _DEBUG
-        bool entityComponentCheck( Entity _entity );
+        bool entityComponentCheck( pina::Entity _entity );
 #endif
 
-        std::set<Entity> m_entities;
+        std::set<pina::Entity> m_entities;
 
         InputQueue m_inputQueue;
     };

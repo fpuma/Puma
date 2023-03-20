@@ -1,9 +1,12 @@
 #pragma once
 
-#include <modules/pina/system.h>
-#include <pina/private/systemprovider.h>
+#include <engine/flow/system.h>
+#include <utils/containers/uniquerealizationcontainer.h>
+#include <utils/numerictypes.h>
 
+#include <assert.h>
 #include <memory>
+#include <typeindex>
 #include <unordered_map>
 #include <vector>
 
@@ -25,12 +28,11 @@ namespace puma
 
     using SystemPriority = u32;
 
-    class SystemProvider : public pina::SystemProvider
+    class SystemProvider : public UniqueRealizationContainer<System>
     {
     public:
 
-        SystemProvider( pina::EcsData& _data )
-            : pina::SystemProvider( _data )
+        SystemProvider()
         {
             m_systemUpdates.insert( { SystemUpdateId::Update,{} } );
             m_systemUpdates.insert( { SystemUpdateId::PrePhysics,{} } );
@@ -116,7 +118,7 @@ namespace puma
 
             for (SystemConfig& sysCfg : sysCfgList)
             {
-                System* system = static_cast<System*>(getSystem( sysCfg.classId ));
+                System* system = static_cast<System*>(get( sysCfg.classId ));
                 if (system->isEnabled())
                 {
                     system->update( _entityProvider, _componentProvider );
@@ -132,7 +134,7 @@ namespace puma
 
             for (SystemConfig& sysCfg : sysCfgList)
             {
-                System* system = static_cast<System*>(getSystem( sysCfg.classId ));
+                System* system = static_cast<System*>(get( sysCfg.classId ));
                 if (system->isEnabled())
                 {
                     system->prePhysicsUpdate( _entityProvider, _componentProvider );
@@ -148,7 +150,7 @@ namespace puma
 
             for (SystemConfig& sysCfg : sysCfgList)
             {
-                System* system = static_cast<System*>(getSystem( sysCfg.classId ));
+                System* system = static_cast<System*>(get( sysCfg.classId ));
                 if (system->isEnabled())
                 {
                     system->postPhysicsUpdate( _entityProvider, _componentProvider );
@@ -164,7 +166,7 @@ namespace puma
 
             for (SystemConfig& sysCfg : sysCfgList)
             {
-                System* system = static_cast<System*>(getSystem( sysCfg.classId ));
+                System* system = static_cast<System*>(get( sysCfg.classId ));
                 if (system->isEnabled())
                 {
                     system->queueRenderables( _renderQueue );
@@ -180,7 +182,7 @@ namespace puma
 
             for (SystemConfig& sysCfg : sysCfgList)
             {
-                System* system = static_cast<System*>(getSystem( sysCfg.classId ));
+                System* system = static_cast<System*>(get( sysCfg.classId ));
                 if (system->isEnabled())
                 {
                     system->onCollisionStarted( _framePartPtrA, _framePartPtrB, _contactPoint );
@@ -196,7 +198,7 @@ namespace puma
 
             for (SystemConfig& sysCfg : sysCfgList)
             {
-                System* system = static_cast<System*>(getSystem( sysCfg.classId ));
+                System* system = static_cast<System*>(get( sysCfg.classId ));
                 
                 if (system->isEnabled())
                 {
