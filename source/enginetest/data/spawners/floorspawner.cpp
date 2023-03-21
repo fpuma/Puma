@@ -37,8 +37,6 @@ namespace test
 
         renderComponent->addTextureInfo( textureInfo );
 
-        gSystems->get<puma::IRenderSystem>()->registerEntity( result );
-
         //Physics
         puma::leo::FrameInfo frameInfo;
         frameInfo.position = { _pos.x, _pos.y };
@@ -61,7 +59,6 @@ namespace test
 
     void unspawnFloor( puma::pina::Entity _floorEntity )
     {
-        gSystems->get<puma::IRenderSystem>()->unregisterEntity( _floorEntity );
         gSystems->get<puma::ICollisionSystem>()->unregisterEntity( _floorEntity );
 
         puma::pina::ComponentProvider* componentProvider = gComponents;

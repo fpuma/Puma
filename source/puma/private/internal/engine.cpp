@@ -100,6 +100,10 @@ namespace puma
         registerComponents();
 
         gInternalLogger->info( "Puma engine initialized." );
+
+        m_appDt.reset();
+        m_innerDt.reset();
+        m_outterDt.reset();
     }
 
     void Engine::uninit()
@@ -110,8 +114,8 @@ namespace puma
 
     void Engine::simulationUpdate( IGame* _game )
     {
-        m_deltaTime.update();
-        float currentDeltaTime = static_cast<float>(m_deltaTime.get());
+        m_outterDt.update();
+        float currentDeltaTime = static_cast<float>(m_outterDt.get());
 
         m_accumDeltaTime += currentDeltaTime;
 
@@ -124,8 +128,7 @@ namespace puma
             _game->update( m_accumDeltaTime );
             m_engineRenderer.queueRenderables();
 
-            ++m_accumDtCount;
-            m_avgAccumDt += (m_accumDeltaTime - m_avgAccumDt) / m_accumDtCount;
+            m_innerDt.update();
 
             m_accumDeltaTime = 0.0f;
         }
@@ -150,7 +153,7 @@ namespace puma
         m_engineRenderer.render();
 
         gInternalEngineApplication->getWindowRenderer()->renderSolidPolygon( { {0,0}, {0,24}, {140,24}, {140,0} }, Color{ 0,0,0,255 } );
-        gInternalEngineApplication->getWindowRenderer()->renderText( ScreenPos{ 2, 2 },  {255,255,0,255}, formatString( "SIM: %.2f fps", 1.0f / m_avgAccumDt ).c_str() );
+        gInternalEngineApplication->getWindowRenderer()->renderText( ScreenPos{ 2, 2 }, { 255,255,0,255 }, formatString( "SIM: %.2f fps", 1.0f / m_innerDt.getAverage() ).c_str() );
         gInternalEngineApplication->getWindowRenderer()->renderText( ScreenPos{ 2, 14 }, {255,255,0,255}, formatString( "APP: %.2f fps", 1.0f / m_appDt.getAverage() ).c_str() );
 
         m_engineRenderer.endRender();

@@ -29,16 +29,15 @@ namespace puma
     void RenderSystem::onUninit()
     {
         gSystems->unsubscribeSystemUpdate<RenderSystem>( SystemUpdateId::QueueRenderables );
-
-        assert( m_entities.empty() ); //Warning not all entities have been unregistered.
-        m_entities.clear();
     }
 
     void RenderSystem::queueRenderables( IRenderQueue& _renderQueue )
     {
         pina::ComponentProvider* componentProvider = gComponents;
 
-        for ( const pina::Entity& entity : m_entities )
+        auto entities = gECS->getEntitesByComponents<IRenderComponent, ILocationComponent>();
+
+        for ( const pina::Entity& entity : entities )
         {
             if (!gEntities->isEntityEnabled( entity )) continue;
 
@@ -68,30 +67,4 @@ namespace puma
             }
         }
     }
-
-    void RenderSystem::registerEntity( pina::Entity _entity )
-    {
-        assert( entityComponentCheck( _entity ) );
-        assert( m_entities.find( _entity ) == m_entities.end() ); //This entity has already been registered
-
-        m_entities.emplace( _entity );
-    }
-
-    void RenderSystem::unregisterEntity( pina::Entity _entity )
-    {
-        if ( m_entities.find( _entity ) != m_entities.end() )
-        {
-            m_entities.erase( _entity );
-        }
-    }
-
-#ifdef _DEBUG
-    bool RenderSystem::entityComponentCheck( pina::Entity _entity )
-    {
-        pina::ComponentProvider* componentProvider = gComponents;
-        bool hasRenderComponent = componentProvider->contains<RenderComponent>( _entity );
-        bool hasLocationComponent = componentProvider->contains<LocationComponent>( _entity );
-        return (hasRenderComponent && hasLocationComponent);
-    }
-#endif
 }

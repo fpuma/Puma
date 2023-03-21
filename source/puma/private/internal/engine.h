@@ -31,13 +31,12 @@ namespace puma
         std::unique_ptr<IGame> m_game = nullptr;
         std::unique_ptr<ServiceContainer> m_services = nullptr;
         EngineRenderer m_engineRenderer;
-        DeltaTime m_deltaTime;
+        DeltaTime m_innerDt;
+        DeltaTime m_outterDt;
         DeltaTime m_appDt;
         
         float m_simulationMinStep = 0.004f;
         float m_accumDeltaTime = 0.0f;
-        u32 m_accumDtCount = 0;
-        float m_avgAccumDt = 0.0f;
 
         bool m_shouldQuit = false;
     };

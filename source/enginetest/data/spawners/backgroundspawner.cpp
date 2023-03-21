@@ -29,8 +29,6 @@ namespace test
         auto renderComponent = componentProvider->add<puma::IRenderComponent>( result );
         auto inputComponent = componentProvider->add<puma::IInputComponent>( result );
 
-        puma::IRenderSystem* renderSystem = gSystems->get<puma::IRenderSystem>();
-
         locationComponent->setPosition( _pos );
 
         //Render
@@ -42,7 +40,6 @@ namespace test
         textureInfo.renderLayer = puma::RenderLayer( 0 );
 
         renderComponent->addTextureInfo( textureInfo );
-        renderSystem->registerEntity( result );
 
         //Input
         inputComponent->addInputMap( TestInputActions::MouseMove, { puma::InputModifier_IGNORE } );
@@ -54,7 +51,6 @@ namespace test
 
     void unspawnBackground( puma::pina::Entity _ballEntity )
     {
-        gSystems->get<puma::IRenderSystem>()->unregisterEntity( _ballEntity );
         gSystems->get<puma::IInputSystem>()->unregisterEntity( _ballEntity );
 
         puma::pina::ComponentProvider* componentProvider = gComponents;

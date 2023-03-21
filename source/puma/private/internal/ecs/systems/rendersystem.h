@@ -18,16 +18,5 @@ namespace puma
         void onUninit() override;
 
         void queueRenderables( IRenderQueue& _renderQueue ) override;
-
-        void registerEntity( pina::Entity _entity ) override;
-        void unregisterEntity( pina::Entity _entity ) override;
-
-    private:
-
-#ifdef _DEBUG
-        bool entityComponentCheck( pina::Entity _entity );
-#endif
-
-        std::set<pina::Entity> m_entities;
     };
 }

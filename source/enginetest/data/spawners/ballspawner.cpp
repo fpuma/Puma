@@ -30,8 +30,6 @@ namespace test
         auto renderComponent = componentProvider->add<puma::IRenderComponent>( result );
         auto collisionComponent = componentProvider->add<puma::ICollisionComponent>( result );
 
-        puma::IRenderSystem* renderSystem = gSystems->get<puma::IRenderSystem>();
-
         locationComponent->setPosition( _pos );
 
         //Render
@@ -43,8 +41,6 @@ namespace test
         textureInfo.renderLayer = puma::RenderLayer( 5 );
 
         renderComponent->addTextureInfo( textureInfo );
-        renderSystem->registerEntity( result );
-
 
         //Physics
         puma::leo::FrameInfo frameInfo;
@@ -67,7 +63,6 @@ namespace test
 
     void unspawnBall( puma::pina::Entity _ballEntity )
     {
-        gSystems->get<puma::IRenderSystem>()->unregisterEntity( _ballEntity );
         gSystems->get<puma::ICollisionSystem>()->unregisterEntity( _ballEntity );
 
         puma::pina::ComponentProvider* componentProvider = gComponents;
