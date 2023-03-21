@@ -3,8 +3,7 @@
 #include "collisionsystem.h"
 
 #include <engine/services/ecsservice.h>
-#include <pina/componentprovider.h>
-#include <pina/entityprovider.h>
+#include <engine/services/systemsservice.h>
 #include <internal/services/physicsservice.h>
 
 #include <internal/ecs/components/collisioncomponent.h>

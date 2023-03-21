@@ -1,11 +1,10 @@
 #pragma once
 
-#include <engine/flow/system.h>
+#include <engine/layers/isystem.h>
 #include <utils/containers/uniquerealizationcontainer.h>
 #include <utils/numerictypes.h>
 
 #include <assert.h>
-#include <memory>
 #include <typeindex>
 #include <unordered_map>
 #include <vector>
@@ -13,8 +12,11 @@
 
 namespace puma
 {
-    class ComponentProvider;
-    class EntityProvider;
+    namespace pina
+    {
+        class ComponentProvider;
+        class EntityProvider;
+    }
     
     enum class SystemUpdateId
     {
@@ -28,7 +30,7 @@ namespace puma
 
     using SystemPriority = u32;
 
-    class SystemProvider : public UniqueRealizationContainer<System>
+    class SystemProvider final : public UniqueRealizationContainer<ISystem>
     {
     public:
 
@@ -55,10 +57,10 @@ namespace puma
         template<class T>
         void subscribeSystemUpdate( SystemUpdateId _id, SystemPriority _priority = 5 )
         {
-            assert( containsSystem<T>() ); // The given system has not been registered
+            assert( contains<T>() ); // The given system has not been registered
             assert( m_systemUpdates.contains( _id ) ); // The given system update ID has not been initialized
 
-            if (!containsSystem<T>()) return;
+            if (!contains<T>()) return;
             if (!m_systemUpdates.contains( _id )) return;
 
             SystemClassId sysClassId = SystemClassId( typeid(T) );
@@ -88,10 +90,10 @@ namespace puma
         template<class T>
         void unsubscribeSystemUpdate( SystemUpdateId _id )
         {
-            assert( containsSystem<T>() ); // The given system has not been registered
+            assert( contains<T>() ); // The given system has not been registered
             assert( m_systemUpdates.contains( _id ) ); // The given system update ID has not been initialized
 
-            if (!containsSystem<T>()) return;
+            if (!contains<T>()) return;
             if (!m_systemUpdates.contains( _id )) return;
 
             SystemClassId sysClassId = SystemClassId( typeid(T) );
@@ -110,7 +112,7 @@ namespace puma
             }
         }
 
-        void update( EntityProvider& _entityProvider, ComponentProvider& _componentProvider )
+        void update( pina::EntityProvider& _entityProvider, pina::ComponentProvider& _componentProvider )
         {
             assert( m_systemUpdates.contains( SystemUpdateId::Update ) ); // The update vector has not been initialized
 
@@ -118,7 +120,7 @@ namespace puma
 
             for (SystemConfig& sysCfg : sysCfgList)
             {
-                System* system = static_cast<System*>(get( sysCfg.classId ));
+                ISystem* system = static_cast<ISystem*>(get( sysCfg.classId ));
                 if (system->isEnabled())
                 {
                     system->update( _entityProvider, _componentProvider );
@@ -126,7 +128,7 @@ namespace puma
             }
         }
 
-        void prePhysicsUpdate( EntityProvider& _entityProvider, ComponentProvider& _componentProvider )
+        void prePhysicsUpdate( pina::EntityProvider& _entityProvider, pina::ComponentProvider& _componentProvider )
         {
             assert( m_systemUpdates.contains( SystemUpdateId::PrePhysics ) ); // The update vector has not been initialized
 
@@ -134,7 +136,7 @@ namespace puma
 
             for (SystemConfig& sysCfg : sysCfgList)
             {
-                System* system = static_cast<System*>(get( sysCfg.classId ));
+                ISystem* system = static_cast<ISystem*>(get( sysCfg.classId ));
                 if (system->isEnabled())
                 {
                     system->prePhysicsUpdate( _entityProvider, _componentProvider );
@@ -142,7 +144,7 @@ namespace puma
             }
         }
 
-        void postPhysicsUpdate( EntityProvider& _entityProvider, ComponentProvider& _componentProvider )
+        void postPhysicsUpdate( pina::EntityProvider& _entityProvider, pina::ComponentProvider& _componentProvider )
         {
             assert( m_systemUpdates.contains( SystemUpdateId::PostPhysics ) ); // The update vector has not been initialized
 
@@ -150,7 +152,7 @@ namespace puma
 
             for (SystemConfig& sysCfg : sysCfgList)
             {
-                System* system = static_cast<System*>(get( sysCfg.classId ));
+                ISystem* system = static_cast<ISystem*>(get( sysCfg.classId ));
                 if (system->isEnabled())
                 {
                     system->postPhysicsUpdate( _entityProvider, _componentProvider );
@@ -166,7 +168,7 @@ namespace puma
 
             for (SystemConfig& sysCfg : sysCfgList)
             {
-                System* system = static_cast<System*>(get( sysCfg.classId ));
+                ISystem* system = static_cast<ISystem*>(get( sysCfg.classId ));
                 if (system->isEnabled())
                 {
                     system->queueRenderables( _renderQueue );
@@ -182,7 +184,7 @@ namespace puma
 
             for (SystemConfig& sysCfg : sysCfgList)
             {
-                System* system = static_cast<System*>(get( sysCfg.classId ));
+                ISystem* system = static_cast<ISystem*>(get( sysCfg.classId ));
                 if (system->isEnabled())
                 {
                     system->onCollisionStarted( _framePartPtrA, _framePartPtrB, _contactPoint );
@@ -198,13 +200,25 @@ namespace puma
 
             for (SystemConfig& sysCfg : sysCfgList)
             {
-                System* system = static_cast<System*>(get( sysCfg.classId ));
+                ISystem* system = static_cast<ISystem*>(get( sysCfg.classId ));
                 
                 if (system->isEnabled())
                 {
                     system->onCollisionStopped( _framePartPtrA, _framePartPtrB );
                 }
             }
+        }
+
+    protected:
+
+        void onAdded( std::shared_ptr<ISystem> _system, std::type_index _typeIndex ) override 
+        {
+            _system->onInit();
+        }
+        
+        void onRemoved( std::shared_ptr<ISystem> _system, std::type_index _typeIndex ) override 
+        {
+            _system->onUninit();
         }
 
     private:

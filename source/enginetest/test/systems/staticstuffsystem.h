@@ -1,6 +1,6 @@
 #pragma once
 
-#include <engine/flow/system.h>
+#include <engine/layers/isystem.h>
 #include <pina/entity.h>
 
 #include <engine/utils/position.h>
@@ -9,7 +9,7 @@ using namespace puma;
 
 namespace test
 {
-    class StaticStuffSystem : public System
+    class StaticStuffSystem : public ISystem
     {
     public:
 

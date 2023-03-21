@@ -1,13 +1,13 @@
 #pragma once
 
 #include <pina/entity.h>
-#include <engine/flow/system.h>
+#include <engine/layers/isystem.h>
 
 #include <modules/leo/leodefinitions.h>
 
 namespace puma
 {
-    class ICollisionSystem : public System
+    class ICollisionSystem : public ISystem
     {
     public:
 

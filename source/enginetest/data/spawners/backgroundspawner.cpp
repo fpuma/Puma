@@ -5,6 +5,7 @@
 #include <data/collisionindexes.h>
 
 #include <engine/services/ecsservice.h>
+#include <engine/services/systemsservice.h>
 
 #include <engine/ecs/components/icollisioncomponent.h>
 #include <engine/ecs/components/irendercomponent.h>
@@ -28,7 +29,7 @@ namespace test
         auto renderComponent = componentProvider->add<puma::IRenderComponent>( result );
         auto inputComponent = componentProvider->add<puma::IInputComponent>( result );
 
-        puma::IRenderSystem* renderSystem = gSystems->getSystem<puma::IRenderSystem>();
+        puma::IRenderSystem* renderSystem = gSystems->get<puma::IRenderSystem>();
 
         locationComponent->setPosition( _pos );
 
@@ -46,15 +47,15 @@ namespace test
         //Input
         inputComponent->addInputMap( TestInputActions::MouseMove, { puma::InputModifier_IGNORE } );
 
-        gSystems->getSystem<puma::IInputSystem>()->registerEntity( result );
+        gSystems->get<puma::IInputSystem>()->registerEntity( result );
 
         return result;
     }
 
     void unspawnBackground( puma::pina::Entity _ballEntity )
     {
-        gSystems->getSystem<puma::IRenderSystem>()->unregisterEntity( _ballEntity );
-        gSystems->getSystem<puma::IInputSystem>()->unregisterEntity( _ballEntity );
+        gSystems->get<puma::IRenderSystem>()->unregisterEntity( _ballEntity );
+        gSystems->get<puma::IInputSystem>()->unregisterEntity( _ballEntity );
 
         puma::pina::ComponentProvider* componentProvider = gComponents;
 

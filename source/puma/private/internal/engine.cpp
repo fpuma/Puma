@@ -2,11 +2,12 @@
 #include <internal/engine.h>
 
 #include <nina/application/irenderer.h>
+#include <nina/input/iinput.h>
 #include <engine/utils/timerprovider.h>
 #include <engine/igame.h>
-#include <nina/input/iinput.h>
 
 #include <engine/services/ecsservice.h>
+#include <engine/services/systemsservice.h>
 #include <internal/ecs/components/cameracomponent.h>
 #include <internal/ecs/components/collisioncomponent.h>
 #include <internal/ecs/components/inputcomponent.h>
@@ -35,9 +36,9 @@ namespace puma
         {
             SystemProvider* systemProvider = gSystems;
 
-            systemProvider->registerSystem<IRenderSystem, RenderSystem>();
-            systemProvider->registerSystem<ICollisionSystem, CollisionSystem>();
-            systemProvider->registerSystem<IInputSystem, InputSystem>();
+            systemProvider->registerInterface<IRenderSystem, RenderSystem>();
+            systemProvider->registerInterface<ICollisionSystem, CollisionSystem>();
+            systemProvider->registerInterface<IInputSystem, InputSystem>();
         }
 
         void registerComponents()
@@ -134,7 +135,7 @@ namespace puma
     {
         m_appDt.update();
 
-        gSystems->getSystem<InputSystem>()->updateWriteBuffer();
+        gSystems->get<InputSystem>()->updateWriteBuffer();
         gInternalEngineApplication->getInput()->update();
 
         gInternalEngineApplication->update();

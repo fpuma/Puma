@@ -11,11 +11,11 @@ namespace puma
         class ComponentProvider;
     }
 
-    class System
+    class ISystem
     {
     public:
 
-        virtual ~System() {}
+        virtual ~ISystem() {}
 
         virtual void onInit() = 0;
         virtual void onUninit() = 0;

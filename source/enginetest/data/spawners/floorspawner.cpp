@@ -7,6 +7,7 @@
 #include <engine/ecs/components/ilocationcomponent.h>
 #include <engine/ecs/components/irendercomponent.h>
 #include <engine/services/ecsservice.h>
+#include <engine/services/systemsservice.h>
 
 #include <engine/ecs/systems/icollisionsystem.h>
 #include <engine/ecs/systems/irendersystem.h>
@@ -36,14 +37,14 @@ namespace test
 
         renderComponent->addTextureInfo( textureInfo );
 
-        gSystems->getSystem<puma::IRenderSystem>()->registerEntity( result );
+        gSystems->get<puma::IRenderSystem>()->registerEntity( result );
 
         //Physics
         puma::leo::FrameInfo frameInfo;
         frameInfo.position = { _pos.x, _pos.y };
         frameInfo.angle = _angle;
 
-        gSystems->getSystem<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::leo::FrameType::Static );
+        gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::leo::FrameType::Static );
 
         puma::Rectangle floorShape;
         floorShape.lowerBoundary = { -20.0f, -4.0f };
@@ -60,8 +61,8 @@ namespace test
 
     void unspawnFloor( puma::pina::Entity _floorEntity )
     {
-        gSystems->getSystem<puma::IRenderSystem>()->unregisterEntity( _floorEntity );
-        gSystems->getSystem<puma::ICollisionSystem>()->unregisterEntity( _floorEntity );
+        gSystems->get<puma::IRenderSystem>()->unregisterEntity( _floorEntity );
+        gSystems->get<puma::ICollisionSystem>()->unregisterEntity( _floorEntity );
 
         puma::pina::ComponentProvider* componentProvider = gComponents;
 

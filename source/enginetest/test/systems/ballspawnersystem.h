@@ -1,6 +1,6 @@
 #pragma once
 
-#include <engine/flow/system.h>
+#include <engine/layers/isystem.h>
 #include <pina/entity.h>
 #include <time/timers/countdowntimer.h>
 #include <engine/utils/position.h>
@@ -20,7 +20,7 @@ namespace test
         CountdownTimer timer;
     };
 
-    class BallSpawnerSystem : public System
+    class BallSpawnerSystem : public ISystem
     {
     public:
         

@@ -1,3 +1,5 @@
+#include <precompiledengine.h>
+
 #include "layermanager.h"
 
 namespace puma

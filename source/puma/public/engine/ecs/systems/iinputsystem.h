@@ -1,11 +1,11 @@
 #pragma once
 
 #include <pina/entity.h>
-#include <engine/flow/system.h>
+#include <engine/layers/isystem.h>
 
 namespace puma
 {
-    class IInputSystem : public System
+    class IInputSystem : public ISystem
     {
     public:
 

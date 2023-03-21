@@ -6,6 +6,7 @@
 #include <engine/services/iengineapplicationservice.h>
 #include <engine/renderer/irenderqueue.h>
 #include <engine/services/ecsservice.h>
+#include <engine/services/systemsservice.h>
 #include <engine/ecs/components/iinputcomponent.h>
 #include <engine/renderer/renderhelpers.h>
 #include <utils/formatstring.h>

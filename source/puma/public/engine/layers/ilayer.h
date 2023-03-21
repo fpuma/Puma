@@ -31,23 +31,23 @@ namespace puma
 	private:
 
 		template<class... Args>
-		struct GetSystemTypeIndices();
+		struct GetSystemTypeIndices;
 
 		template<>
-		struct GetSystemTypeIndices<>()
+		struct GetSystemTypeIndices<>
 		{
 			static void get( std::set<std::type_index> _sysIndicesOut ) {}
-		}
+		};
 
 		template<class First, class...Rest>
-		struct GetSystemTypeIndices<First, Rest...>()
+		struct GetSystemTypeIndices<First, Rest...>
 		{
 			static void get( std::set<std::type_index> _sysIndicesOut )
 			{
 				_sysIndicesOut.insert( std::type_index( typeid(First) ) );
 				GetSystemTypeIndices<Rest...>::get( _sysIndicesOut );
 			}
-		}
+		};
 
 		std::set<std::type_index> m_sysTypeIndices;
 	};

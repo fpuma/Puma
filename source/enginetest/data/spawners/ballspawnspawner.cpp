@@ -11,6 +11,7 @@
 #include <engine/ecs/systems/icollisionsystem.h>
 #include <modules/leo/leodefinitions.h>
 #include <engine/services/ecsservice.h>
+#include <engine/services/systemsservice.h>
 
 #include <test/components/movedirectioncomponent.h>
 
@@ -47,7 +48,7 @@ namespace test
         frameInfo.position = { locationComponent->getPosition().x, locationComponent->getPosition().y };
         frameInfo.gravityScale = 0.0f;
         frameInfo.preventRotation = true;
-        gSystems->getSystem<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::leo::FrameType::Dynamic );
+        gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::leo::FrameType::Dynamic );
 
         puma::leo::BodyInfo bodyInfo;
         bodyInfo.collisionIndex = TestCollisionIndexes::BallSpawner;
@@ -57,15 +58,15 @@ namespace test
 
         collisionComponent->addBody( bodyInfo );
 
-        gSystems->getSystem<puma::IInputSystem>()->registerEntity( result );
+        gSystems->get<puma::IInputSystem>()->registerEntity( result );
 
         return result;
     }
 
     void unspawnBallSpawner( puma::pina::Entity _spawnerEntity )
     {
-        gSystems->getSystem<puma::IInputSystem>()->unregisterEntity( _spawnerEntity );
-        gSystems->getSystem<puma::ICollisionSystem>()->unregisterEntity( _spawnerEntity );
+        gSystems->get<puma::IInputSystem>()->unregisterEntity( _spawnerEntity );
+        gSystems->get<puma::ICollisionSystem>()->unregisterEntity( _spawnerEntity );
 
         puma::pina::ComponentProvider* componentProvider = gComponents;
 

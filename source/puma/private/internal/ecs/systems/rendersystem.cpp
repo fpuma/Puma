@@ -6,9 +6,9 @@
 #include <nina/application/iwindow.h>
 
 #include <pina/entity.h>
-#include <pina/entityprovider.h>
 #include <engine/renderer/irenderqueue.h>
 #include <engine/services/ecsservice.h>
+#include <engine/services/systemsservice.h>
 
 #include <internal/ecs/components/cameracomponent.h>
 #include <internal/ecs/components/collisioncomponent.h>

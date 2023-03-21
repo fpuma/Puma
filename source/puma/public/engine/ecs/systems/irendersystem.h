@@ -1,9 +1,7 @@
 #pragma once
 
 #include <pina/entity.h>
-#include <engine/flow/system.h>
-
-#include <utils/graphics/dimensions.h>
+#include <engine/layers/isystem.h>
 
 namespace puma
 {
@@ -12,7 +10,7 @@ namespace puma
         class IRenderer;
     }
 
-    class IRenderSystem : public System
+    class IRenderSystem : public ISystem
     {
     public:
 

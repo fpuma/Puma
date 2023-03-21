@@ -4,7 +4,6 @@
 
 #include <pina/entity.h>
 #include <pina/component.h>
-#include <engine/flow/system.h>
 #include <pina/ecs.h>
 #include <pina/entityprovider.h>
 #include <pina/componentprovider.h>
@@ -15,6 +14,7 @@
 #include <engine/ecs/components/irendercomponent.h>
 
 #include <engine/ecs/systems/irendersystem.h>
+#include <engine/layers/isystem.h>
 
 #include <modules/leo/leodefinitions.h>
 

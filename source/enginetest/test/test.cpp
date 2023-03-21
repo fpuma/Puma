@@ -20,6 +20,7 @@
 #include <engine/services/iengineapplicationservice.h>
 #include <engine/services/iloggerservice.h>
 #include <engine/services/ecsservice.h>
+#include <engine/services/systemsservice.h>
 
 #include <utils/graphics/dimensions.h>
 #include <utils/formatstring.h>
@@ -89,9 +90,9 @@ namespace test
 
         SystemProvider* sysProvider = gSystems;
 
-        sysProvider->addSystem<IInputSystem>();
-        sysProvider->addSystem<IRenderSystem>();
-        sysProvider->addSystem<ICollisionSystem>();
+        sysProvider->add<IInputSystem>();
+        sysProvider->add<IRenderSystem>();
+        sysProvider->add<ICollisionSystem>();
 
         initPhysics();
         setCamera();
@@ -100,12 +101,12 @@ namespace test
         gComponents->registerClass<MoveDirectionComponent>();
 
         //Register systems
-        sysProvider->registerSystem<BallSpawnerSystem>();
-        auto ballSpawnerSystem = sysProvider->addSystem<BallSpawnerSystem>();
+        sysProvider->registerClass<BallSpawnerSystem>();
+        auto ballSpawnerSystem = sysProvider->add<BallSpawnerSystem>();
         assert( nullptr != ballSpawnerSystem );
 
-        sysProvider->registerSystem<StaticStuffSystem>();
-        auto staticStuffSystem = sysProvider->addSystem<StaticStuffSystem>();
+        sysProvider->registerClass<StaticStuffSystem>();
+        auto staticStuffSystem = sysProvider->add<StaticStuffSystem>();
         assert( nullptr != staticStuffSystem );
 
         //Spawn
@@ -127,7 +128,7 @@ namespace test
         ic->addInputMap( TestInputActions::ToggleFloorEntity, { puma::nina::KeyboardKey::KB_I, puma::InputModifier_IGNORE, puma::nina::InputButtonEvent::Pressed } );
         ic->addInputMap( TestInputActions::ToggleFloorPhysics, { puma::nina::KeyboardKey::KB_K, puma::InputModifier_IGNORE, puma::nina::InputButtonEvent::Pressed } );
 
-        gSystems->getSystem<IInputSystem>()->registerEntity( FloorController );
+        gSystems->get<IInputSystem>()->registerEntity( FloorController );
 
         //[fpuma] TODO Loading all assets now to prevent a race condition later.
         // I need to create a ResourceManager that supports multithreading
@@ -186,21 +187,21 @@ namespace test
 
         SystemProvider* sysProvider = gSystems;
 
-        sysProvider->getSystem<IInputSystem>()->unregisterEntity( FloorController );
+        sysProvider->get<IInputSystem>()->unregisterEntity( FloorController );
         gComponents->remove<IInputComponent>( FloorController );
         gEntities->disposeEntity( FloorController );
 
-        sysProvider->removeSystem<BallSpawnerSystem>();
-        sysProvider->removeSystem<StaticStuffSystem>();
-        
-        sysProvider->removeSystem<IInputSystem>();
-        sysProvider->removeSystem<IRenderSystem>();
-        sysProvider->removeSystem<ICollisionSystem>();
+        sysProvider->remove<BallSpawnerSystem>();
+        sysProvider->remove<StaticStuffSystem>();
+
+        sysProvider->remove<IInputSystem>();
+        sysProvider->remove<IRenderSystem>();
+        sysProvider->remove<ICollisionSystem>();
     }
 
     void initPhysics()
     {
-        auto collisitonSystemPtr = gSystems->getSystem<puma::ICollisionSystem>();
+        auto collisitonSystemPtr = gSystems->get<puma::ICollisionSystem>();
         collisitonSystemPtr->setGravity( { 0.0f, -10.0f } );
         collisitonSystemPtr->setCollisionCompatibility( kCollisionCompatibility );
     }

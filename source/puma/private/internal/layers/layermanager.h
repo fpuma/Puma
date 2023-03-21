@@ -1,6 +1,6 @@
 #pragma once
 
-#include <engine/flow/ilayermanager.h>
+#include <engine/layers/ilayermanager.h>
 
 namespace puma
 {
@@ -14,10 +14,6 @@ namespace puma
 
 		void onAdded( std::shared_ptr<ILayer> _system, std::type_index _typeIndex ) override;
 		void onRemoved( std::shared_ptr<ILayer> _system, std::type_index _typeIndex ) override;
-
-	private:
-
-
 
 	};
 }

@@ -5,6 +5,7 @@
 #include <data/collisionindexes.h>
 
 #include <engine/services/ecsservice.h>
+#include <engine/services/systemsservice.h>
 
 #include <engine/ecs/components/icollisioncomponent.h>
 #include <engine/ecs/components/irendercomponent.h>
@@ -29,7 +30,7 @@ namespace test
         auto renderComponent = componentProvider->add<puma::IRenderComponent>( result );
         auto collisionComponent = componentProvider->add<puma::ICollisionComponent>( result );
 
-        puma::IRenderSystem* renderSystem = gSystems->getSystem<puma::IRenderSystem>();
+        puma::IRenderSystem* renderSystem = gSystems->get<puma::IRenderSystem>();
 
         locationComponent->setPosition( _pos );
 
@@ -48,7 +49,7 @@ namespace test
         //Physics
         puma::leo::FrameInfo frameInfo;
         frameInfo.position = { _pos.x, _pos.y };
-        gSystems->getSystem<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::leo::FrameType::Dynamic );
+        gSystems->get<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::leo::FrameType::Dynamic );
 
         puma::Circle ballShape;
         ballShape.radius = kBallRadius;
@@ -66,8 +67,8 @@ namespace test
 
     void unspawnBall( puma::pina::Entity _ballEntity )
     {
-        gSystems->getSystem<puma::IRenderSystem>()->unregisterEntity( _ballEntity );
-        gSystems->getSystem<puma::ICollisionSystem>()->unregisterEntity( _ballEntity );
+        gSystems->get<puma::IRenderSystem>()->unregisterEntity( _ballEntity );
+        gSystems->get<puma::ICollisionSystem>()->unregisterEntity( _ballEntity );
 
         puma::pina::ComponentProvider* componentProvider = gComponents;
 

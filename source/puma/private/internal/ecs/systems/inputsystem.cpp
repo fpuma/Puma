@@ -4,10 +4,9 @@
 
 #include <engine/input/inputdefinitions.h>
 #include <engine/services/ecsservice.h>
+#include <engine/services/systemsservice.h>
 #include <internal/ecs/components/inputcomponent.h>
 #include <internal/services/loggerservice.h>
-#include <pina/componentprovider.h>
-#include <pina/entityprovider.h>
 #include <utils/formatstring.h>
 
 namespace puma

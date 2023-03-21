@@ -7,6 +7,7 @@
 #include <data/spawners/ballspawnspawner.h>
 
 #include <engine/services/ecsservice.h>
+#include <engine/services/systemsservice.h>
 #include <engine/ecs/components/icollisioncomponent.h>
 #include <engine/ecs/components/iinputcomponent.h>
 #include <engine/ecs/components/ilocationcomponent.h>
@@ -40,7 +41,7 @@ namespace test
         controllerInput.controllerId = 0;
         inputComponent->addInputMap( TestInputActions::InvertGravity, controllerInput );
 
-        gSystems->getSystem<IInputSystem>()->registerEntity( m_spawnerHandler );
+        gSystems->get<IInputSystem>()->registerEntity( m_spawnerHandler );
 
         gSystems->subscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::QueueRenderables );
         gSystems->subscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::Update );
@@ -57,7 +58,7 @@ namespace test
             unspawnBall( entity );
         }
 
-        gSystems->getSystem<IInputSystem>()->unregisterEntity( m_spawnerHandler );
+        gSystems->get<IInputSystem>()->unregisterEntity( m_spawnerHandler );
         gComponents->remove<IInputComponent>( m_spawnerHandler );
         gEntities->disposeEntity( m_spawnerHandler );
 
@@ -74,7 +75,7 @@ namespace test
         IInputComponent* inputComponent = _componentProvider.get<IInputComponent>(m_spawnerHandler);
         if ( inputComponent->isActionActive( TestInputActions::InvertGravity ) )
         {
-            ICollisionSystem* collisionSystem = gSystems->getSystem<ICollisionSystem>();
+            ICollisionSystem* collisionSystem = gSystems->get<ICollisionSystem>();
             Vec2 currentGravity = collisionSystem->getGravity();
             collisionSystem->setGravity( currentGravity * -1.0f );
         }
