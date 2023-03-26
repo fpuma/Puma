@@ -35,7 +35,7 @@ namespace puma
     {
         pina::ComponentProvider* componentProvider = gComponents;
 
-        auto entities = gECS->getEntitesByComponents<IRenderComponent, ILocationComponent>();
+        auto entities = gECS->getEntitesByComponents<RenderComponent, LocationComponent>();
 
         for ( const pina::Entity& entity : entities )
         {
