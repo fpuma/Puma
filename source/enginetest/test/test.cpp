@@ -90,9 +90,9 @@ namespace test
 
         SystemProvider* sysProvider = gSystems;
 
-        sysProvider->add<IInputSystem>();
-        sysProvider->add<IRenderSystem>();
-        sysProvider->add<ICollisionSystem>();
+        sysProvider->requestSystem<IInputSystem>();
+        sysProvider->requestSystem<IRenderSystem>();
+        sysProvider->requestSystem<ICollisionSystem>();
 
         initPhysics();
         setCamera();
@@ -101,13 +101,11 @@ namespace test
         gComponents->registerClass<MoveDirectionComponent>();
 
         //Register systems
-        sysProvider->registerClass<BallSpawnerSystem>();
-        auto ballSpawnerSystem = sysProvider->add<BallSpawnerSystem>();
-        assert( nullptr != ballSpawnerSystem );
-
-        sysProvider->registerClass<StaticStuffSystem>();
-        auto staticStuffSystem = sysProvider->add<StaticStuffSystem>();
-        assert( nullptr != staticStuffSystem );
+        sysProvider->registerSystemClass<BallSpawnerSystem>();
+        sysProvider->requestSystem<BallSpawnerSystem>();
+       
+        sysProvider->registerSystemClass<StaticStuffSystem>();
+        sysProvider->requestSystem<StaticStuffSystem>();
 
         //Spawn
         Floor0 = spawnFloor( gEngineApplication->getTextureManager(), { 15.0f, -15.0f }, GeometryHelpers::degreesToRadians( 45.0f ) );
@@ -128,7 +126,7 @@ namespace test
         ic->addInputMap( TestInputActions::ToggleFloorEntity, { puma::nina::KeyboardKey::KB_I, puma::InputModifier_IGNORE, puma::nina::InputButtonEvent::Pressed } );
         ic->addInputMap( TestInputActions::ToggleFloorPhysics, { puma::nina::KeyboardKey::KB_K, puma::InputModifier_IGNORE, puma::nina::InputButtonEvent::Pressed } );
 
-        gSystems->get<IInputSystem>()->registerEntity( FloorController );
+        gSystems->getSystem<IInputSystem>()->registerEntity( FloorController );
 
         //[fpuma] TODO Loading all assets now to prevent a race condition later.
         // I need to create a ResourceManager that supports multithreading
@@ -187,21 +185,21 @@ namespace test
 
         SystemProvider* sysProvider = gSystems;
 
-        sysProvider->get<IInputSystem>()->unregisterEntity( FloorController );
+        sysProvider->getSystem<IInputSystem>()->unregisterEntity( FloorController );
         gComponents->remove<IInputComponent>( FloorController );
         gEntities->disposeEntity( FloorController );
 
-        sysProvider->remove<BallSpawnerSystem>();
-        sysProvider->remove<StaticStuffSystem>();
+        sysProvider->releaseSystem<BallSpawnerSystem>();
+        sysProvider->releaseSystem<StaticStuffSystem>();
 
-        sysProvider->remove<IInputSystem>();
-        sysProvider->remove<IRenderSystem>();
-        sysProvider->remove<ICollisionSystem>();
+        sysProvider->releaseSystem<IInputSystem>();
+        sysProvider->releaseSystem<IRenderSystem>();
+        sysProvider->releaseSystem<ICollisionSystem>();
     }
 
     void initPhysics()
     {
-        auto collisitonSystemPtr = gSystems->get<puma::ICollisionSystem>();
+        auto collisitonSystemPtr = gSystems->getSystem<puma::ICollisionSystem>();
         collisitonSystemPtr->setGravity( { 0.0f, -10.0f } );
         collisitonSystemPtr->setCollisionCompatibility( kCollisionCompatibility );
     }

@@ -44,14 +44,14 @@ namespace test
         //Input
         inputComponent->addInputMap( TestInputActions::MouseMove, { puma::InputModifier_IGNORE } );
 
-        gSystems->get<puma::IInputSystem>()->registerEntity( result );
+        gSystems->getSystem<puma::IInputSystem>()->registerEntity( result );
 
         return result;
     }
 
     void unspawnBackground( puma::pina::Entity _ballEntity )
     {
-        gSystems->get<puma::IInputSystem>()->unregisterEntity( _ballEntity );
+        gSystems->getSystem<puma::IInputSystem>()->unregisterEntity( _ballEntity );
 
         puma::pina::ComponentProvider* componentProvider = gComponents;
 

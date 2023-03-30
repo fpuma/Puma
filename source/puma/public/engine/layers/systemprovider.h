@@ -30,7 +30,7 @@ namespace puma
 
     using SystemPriority = u32;
 
-    class SystemProvider final : public UniqueRealizationContainer<ISystem>
+    class SystemProvider final : private UniqueRealizationContainer<ISystem>
     {
     public:
 
@@ -52,6 +52,56 @@ namespace puma
                 assert( sysCfg.second.empty() ); //Some systems have not unregistered all their updates
             }
 #endif
+        }
+
+        template<class Interface, class Class>
+        void registerSystemInterface() { registerInterface<Interface, Class>(); }
+
+        template<class Class>
+        void registerSystemClass() { registerClass<Class>(); }
+
+        template<class T>
+        std::shared_ptr<T> getSystemSafely() { return getSafely<T>(); }
+
+        template<class T>
+        std::shared_ptr<const T> getSystemSafely() const { return getSafely<T>(); }
+
+        template<class T>
+        T* getSystem() { return get<T>(); }
+        
+        template<class T>
+        const T* getSystem() const { return get<T>(); }
+
+        template<class T>
+        void requestSystem()
+        {
+            SystemClassId sysTypeIndex = std::type_index( typeid(T) );
+            if (contains<T>())
+            {
+                u32& count = m_systemRequestsCount.at( sysTypeIndex );
+                ++count;
+            }
+            else
+            {
+                m_systemRequestsCount.insert( { std::type_index( typeid(T)), 1 } );
+                add<T>();
+            }
+        }
+
+        template<class T>
+        void releaseSystem()
+        {
+            SystemClassId sysTypeIndex = std::type_index( typeid(T) );
+            if (contains<T>())
+            {
+                u32& count = m_systemRequestsCount.at( sysTypeIndex );
+                --count;
+                if (0 == count)
+                {
+                    m_systemRequestsCount.erase( sysTypeIndex );
+                    remove<T>();
+                }
+            }
         }
 
         template<class T>
@@ -235,5 +285,7 @@ namespace puma
         };
 
         std::unordered_map<SystemUpdateId, std::vector<SystemConfig>> m_systemUpdates;
+
+        std::unordered_map <SystemClassId, u32> m_systemRequestsCount;
     };
 }

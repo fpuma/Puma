@@ -41,7 +41,7 @@ namespace test
         controllerInput.controllerId = 0;
         inputComponent->addInputMap( TestInputActions::InvertGravity, controllerInput );
 
-        gSystems->get<IInputSystem>()->registerEntity( m_spawnerHandler );
+        gSystems->getSystem<IInputSystem>()->registerEntity( m_spawnerHandler );
 
         gSystems->subscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::QueueRenderables );
         gSystems->subscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::Update );
@@ -58,7 +58,7 @@ namespace test
             unspawnBall( entity );
         }
 
-        gSystems->get<IInputSystem>()->unregisterEntity( m_spawnerHandler );
+        gSystems->getSystem<IInputSystem>()->unregisterEntity( m_spawnerHandler );
         gComponents->remove<IInputComponent>( m_spawnerHandler );
         gEntities->disposeEntity( m_spawnerHandler );
 
@@ -75,7 +75,7 @@ namespace test
         IInputComponent* inputComponent = _componentProvider.get<IInputComponent>(m_spawnerHandler);
         if ( inputComponent->isActionActive( TestInputActions::InvertGravity ) )
         {
-            ICollisionSystem* collisionSystem = gSystems->get<ICollisionSystem>();
+            ICollisionSystem* collisionSystem = gSystems->getSystem<ICollisionSystem>();
             Vec2 currentGravity = collisionSystem->getGravity();
             collisionSystem->setGravity( currentGravity * -1.0f );
         }

@@ -36,9 +36,9 @@ namespace puma
         {
             SystemProvider* systemProvider = gSystems;
 
-            systemProvider->registerInterface<IRenderSystem, RenderSystem>();
-            systemProvider->registerInterface<ICollisionSystem, CollisionSystem>();
-            systemProvider->registerInterface<IInputSystem, InputSystem>();
+            systemProvider->registerSystemInterface<IRenderSystem, RenderSystem>();
+            systemProvider->registerSystemInterface<ICollisionSystem, CollisionSystem>();
+            systemProvider->registerSystemInterface<IInputSystem, InputSystem>();
         }
 
         void registerComponents()
@@ -138,7 +138,7 @@ namespace puma
     {
         m_appDt.update();
 
-        gSystems->get<InputSystem>()->updateWriteBuffer();
+        gSystems->getSystem<InputSystem>()->updateWriteBuffer();
         gInternalEngineApplication->getInput()->update();
 
         gInternalEngineApplication->update();
