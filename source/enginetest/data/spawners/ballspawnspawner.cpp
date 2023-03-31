@@ -48,7 +48,8 @@ namespace test
         frameInfo.position = { locationComponent->getPosition().x, locationComponent->getPosition().y };
         frameInfo.gravityScale = 0.0f;
         frameInfo.preventRotation = true;
-        gSystems->getSystem<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::leo::FrameType::Dynamic );
+        
+        collisionComponent->init( puma::leo::FrameType::Dynamic, frameInfo );
 
         puma::leo::BodyInfo bodyInfo;
         bodyInfo.collisionIndex = TestCollisionIndexes::BallSpawner;
@@ -66,7 +67,6 @@ namespace test
     void unspawnBallSpawner( puma::pina::Entity _spawnerEntity )
     {
         gSystems->getSystem<puma::IInputSystem>()->unregisterEntity( _spawnerEntity );
-        gSystems->getSystem<puma::ICollisionSystem>()->unregisterEntity( _spawnerEntity );
 
         puma::pina::ComponentProvider* componentProvider = gComponents;
 

@@ -12,6 +12,9 @@ namespace puma
 
         virtual ~ICollisionComponent(){}
 
+        virtual void init( leo::FrameType _frameType, leo::FrameInfo _frameInfo ) = 0;
+        virtual void uninit() = 0;
+
         virtual leo::FrameType getFrameType() const = 0;
 
         virtual const leo::IDynamicFrame* getDynamicFrame() const = 0;

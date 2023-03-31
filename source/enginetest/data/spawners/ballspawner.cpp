@@ -45,7 +45,7 @@ namespace test
         //Physics
         puma::leo::FrameInfo frameInfo;
         frameInfo.position = { _pos.x, _pos.y };
-        gSystems->getSystem<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::leo::FrameType::Dynamic );
+        collisionComponent->init( puma::leo::FrameType::Dynamic, frameInfo );
 
         puma::Circle ballShape;
         ballShape.radius = kBallRadius;
@@ -63,8 +63,6 @@ namespace test
 
     void unspawnBall( puma::pina::Entity _ballEntity )
     {
-        gSystems->getSystem<puma::ICollisionSystem>()->unregisterEntity( _ballEntity );
-
         puma::pina::ComponentProvider* componentProvider = gComponents;
 
         componentProvider->remove<puma::ILocationComponent>( _ballEntity );

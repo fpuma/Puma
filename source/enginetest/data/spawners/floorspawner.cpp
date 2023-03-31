@@ -42,7 +42,7 @@ namespace test
         frameInfo.position = { _pos.x, _pos.y };
         frameInfo.angle = _angle;
 
-        gSystems->getSystem<puma::ICollisionSystem>()->registerEntity( result, frameInfo, puma::leo::FrameType::Static );
+        collisionComponent->init( puma::leo::FrameType::Static, frameInfo );
 
         puma::Rectangle floorShape;
         floorShape.lowerBoundary = { -20.0f, -4.0f };
@@ -59,8 +59,6 @@ namespace test
 
     void unspawnFloor( puma::pina::Entity _floorEntity )
     {
-        gSystems->getSystem<puma::ICollisionSystem>()->unregisterEntity( _floorEntity );
-
         puma::pina::ComponentProvider* componentProvider = gComponents;
 
         componentProvider->remove<puma::ILocationComponent>( _floorEntity );

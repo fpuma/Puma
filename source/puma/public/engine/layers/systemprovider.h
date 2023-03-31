@@ -73,6 +73,9 @@ namespace puma
         const T* getSystem() const { return get<T>(); }
 
         template<class T>
+        bool containsSystem() const { return contains<T>(); }
+
+        template<class T>
         void requestSystem()
         {
             SystemClassId sysTypeIndex = std::type_index( typeid(T) );
