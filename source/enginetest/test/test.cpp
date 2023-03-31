@@ -126,8 +126,6 @@ namespace test
         ic->addInputMap( TestInputActions::ToggleFloorEntity, { puma::nina::KeyboardKey::KB_I, puma::InputModifier_IGNORE, puma::nina::InputButtonEvent::Pressed } );
         ic->addInputMap( TestInputActions::ToggleFloorPhysics, { puma::nina::KeyboardKey::KB_K, puma::InputModifier_IGNORE, puma::nina::InputButtonEvent::Pressed } );
 
-        gSystems->getSystem<IInputSystem>()->registerEntity( FloorController );
-
         //[fpuma] TODO Loading all assets now to prevent a race condition later.
         // I need to create a ResourceManager that supports multithreading
         auto textureManager = gEngineApplication->getTextureManager();
@@ -185,7 +183,6 @@ namespace test
 
         SystemProvider* sysProvider = gSystems;
 
-        sysProvider->getSystem<IInputSystem>()->unregisterEntity( FloorController );
         gComponents->remove<IInputComponent>( FloorController );
         gEntities->disposeEntity( FloorController );
 

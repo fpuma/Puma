@@ -41,8 +41,6 @@ namespace test
         controllerInput.controllerId = 0;
         inputComponent->addInputMap( TestInputActions::InvertGravity, controllerInput );
 
-        gSystems->getSystem<IInputSystem>()->registerEntity( m_spawnerHandler );
-
         gSystems->subscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::QueueRenderables );
         gSystems->subscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::Update );
         gSystems->subscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::CollisionStarted );
@@ -58,7 +56,6 @@ namespace test
             unspawnBall( entity );
         }
 
-        gSystems->getSystem<IInputSystem>()->unregisterEntity( m_spawnerHandler );
         gComponents->remove<IInputComponent>( m_spawnerHandler );
         gEntities->disposeEntity( m_spawnerHandler );
 

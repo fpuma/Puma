@@ -145,16 +145,6 @@ namespace puma
         return framePart->getUserData();
     }
 
-#ifdef _DEBUG
-    bool CollisionSystem::entityComponentCheck( pina::Entity _entity )
-    {
-        pina::ComponentProvider* componentProvider = gComponents;
-        bool hasCollisionComponent = componentProvider->contains<CollisionComponent>( _entity );
-        bool hasLocationComponent = componentProvider->contains<LocationComponent>( _entity );
-        return ( hasCollisionComponent && hasLocationComponent );
-    }
-#endif
-
     namespace
     {
         Color floatToIntColor( leo::RGBA _color )

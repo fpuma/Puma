@@ -33,10 +33,6 @@ namespace puma
 
     private:
 
-#ifdef _DEBUG
-        bool entityComponentCheck( pina::Entity _entity );
-#endif
-
         leo::WorldID m_worldId;
 
         struct PhysicsDebugShape

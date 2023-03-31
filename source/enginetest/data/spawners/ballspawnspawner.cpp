@@ -59,15 +59,11 @@ namespace test
 
         collisionComponent->addBody( bodyInfo );
 
-        gSystems->getSystem<puma::IInputSystem>()->registerEntity( result );
-
         return result;
     }
 
     void unspawnBallSpawner( puma::pina::Entity _spawnerEntity )
     {
-        gSystems->getSystem<puma::IInputSystem>()->unregisterEntity( _spawnerEntity );
-
         puma::pina::ComponentProvider* componentProvider = gComponents;
 
         componentProvider->remove<puma::ILocationComponent>( _spawnerEntity );
