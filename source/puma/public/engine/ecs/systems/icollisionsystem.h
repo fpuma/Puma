@@ -1,7 +1,7 @@
 #pragma once
 
 #include <pina/entity.h>
-#include <engine/layers/isystem.h>
+#include <engine/ecs/systems/base/isystem.h>
 
 #include <modules/leo/leodefinitions.h>
 

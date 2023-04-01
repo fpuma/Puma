@@ -1,7 +1,7 @@
 #pragma once
 
 #include <engine/services/base/iservice.h>
-#include <engine/layers/systemprovider.h>
+#include <engine/ecs/systems/base/systemprovider.h>
 
 namespace puma
 {
