@@ -9,17 +9,13 @@ namespace puma
     {
     public:
 
-        EngineApplicationService() { m_engineApplication = std::make_unique<EngineApplication>(); }
+        void uninit() { m_engineApplication.uninit(); };
 
-        ~EngineApplicationService() { m_engineApplication.reset(); }
-
-        void uninit() { m_engineApplication->uninit(); };
-
-        EngineApplication* get() override { return m_engineApplication.get(); }
+        EngineApplication* get() override { return &m_engineApplication; }
 
     private:
 
-        std::unique_ptr<EngineApplication> m_engineApplication;
+        EngineApplication m_engineApplication;
     };
 }
 

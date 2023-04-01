@@ -5,7 +5,14 @@
 
 namespace puma
 {
-    DECLARE_GENERIC_ID( RenderLayer, u32, kMaxU32 )
+    class RenderLayer;
+}
+
+DECLARE_GENERIC_ID( puma::RenderLayer, puma::u32, puma::kMaxU32 )
+
+namespace puma
+{
+    
 
     using RotationRadians = float;
     

@@ -19,11 +19,11 @@ namespace puma::erh
     {
         CameraInfo result;
 
-        Entity cameraEntity = gInternalEngineApplication->getCameraEntity();
-        ComponentProvider* componentProvider = gComponents;
+        pina::Entity cameraEntity = gInternalEngineApplication->getCameraEntity();
+        pina::ComponentProvider* componentProvider = gComponents;
 
-        const LocationComponent* locationComponent = componentProvider->getComponent<LocationComponent>( cameraEntity );
-        const CameraComponent* cameraComponent = componentProvider->getComponent<CameraComponent>( cameraEntity );
+        const LocationComponent* locationComponent = componentProvider->get<LocationComponent>( cameraEntity );
+        const CameraComponent* cameraComponent = componentProvider->get<CameraComponent>( cameraEntity );
 
         assert( (nullptr != locationComponent) && (nullptr != cameraComponent) );
 

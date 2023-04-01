@@ -1,24 +1,46 @@
 #include <precompiledengine.h>
 
 #include <internal/ecs/components/collisioncomponent.h>
+#include <internal/ecs/systems/collisionsystem.h>
 #include <internal/services/physicsservice.h>
 
 #include <leo/simulation/frames/iframe.h>
 #include <leo/simulation/world/iworld.h>
 
+#include <engine/services/systemsservice.h>
+
 namespace puma
 {
 
-    void CollisionComponent::init( leo::FrameType _frameType, leo::FrameID _frameId )
+    void CollisionComponent::init( leo::FrameType _frameType, leo::FrameInfo _frameInfo )
     {
         assert( !isValid() );
+        assert( gSystems->containsSystem<CollisionSystem>() ); //You can't initialize a collision component if there is no collision system
+
+        if (!gSystems->containsSystem<CollisionSystem>()) return; // Early return if the collision system does not exists
+
+        auto collisionSystem = gSystems->getSystem<CollisionSystem>();
+
+        leo::IWorld* world = gPhysics->getWorld( collisionSystem->getWorldId() );
+
+        leo::FrameID frameId;
+
+        switch (_frameType)
+        {
+        case leo::FrameType::Dynamic:    frameId = world->addDynamicFrame( _frameInfo ); break;
+        case leo::FrameType::Static:     frameId = world->addStaticFrame( _frameInfo ); break;
+        case leo::FrameType::Kinematic:  frameId = world->addKinematicFrame( _frameInfo ); break;
+        default: assert( false ); break;
+        }
 
         m_frameType = _frameType;
-        m_frameId = _frameId;
+        m_frameId = frameId;
     }
 
     void CollisionComponent::uninit()
     { 
+        assert( isValid() );
+        
         leo::IFrame* frame = gPhysics->getFrame( m_frameId );
         for ( const leo::FramePartID& framePartId : m_bodyIds )
         {

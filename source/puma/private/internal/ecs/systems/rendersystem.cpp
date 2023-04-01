@@ -5,9 +5,10 @@
 #include <nina/application/irenderer.h>
 #include <nina/application/iwindow.h>
 
-#include <modules/pina/entity.h>
+#include <pina/entity.h>
 #include <engine/renderer/irenderqueue.h>
 #include <engine/services/ecsservice.h>
+#include <engine/services/systemsservice.h>
 
 #include <internal/ecs/components/cameracomponent.h>
 #include <internal/ecs/components/collisioncomponent.h>
@@ -28,24 +29,23 @@ namespace puma
     void RenderSystem::onUninit()
     {
         gSystems->unsubscribeSystemUpdate<RenderSystem>( SystemUpdateId::QueueRenderables );
-
-        assert( m_entities.empty() ); //Warning not all entities have been unregistered.
-        m_entities.clear();
     }
 
     void RenderSystem::queueRenderables( IRenderQueue& _renderQueue )
     {
-        ComponentProvider* componentProvider = gComponents;
+        pina::ComponentProvider* componentProvider = gComponents;
 
-        for ( const Entity& entity : m_entities )
+        auto entities = gECS->getEntitesByComponents<RenderComponent, LocationComponent>();
+
+        for ( const pina::Entity& entity : entities )
         {
             if (!gEntities->isEntityEnabled( entity )) continue;
 
-            RenderComponent* renderComponent = componentProvider->getComponent<RenderComponent>( entity );
+            RenderComponent* renderComponent = componentProvider->get<RenderComponent>( entity );
 
             if (!renderComponent->isEnabled()) continue;
 
-            LocationComponent* locationComponent = componentProvider->getComponent<LocationComponent>( entity );
+            LocationComponent* locationComponent = componentProvider->get<LocationComponent>( entity );
 
             for ( const TextureInfo& textureInfo : renderComponent->getTextureInfoContainer() )
             {
@@ -67,30 +67,4 @@ namespace puma
             }
         }
     }
-
-    void RenderSystem::registerEntity( Entity _entity )
-    {
-        assert( entityComponentCheck( _entity ) );
-        assert( m_entities.find( _entity ) == m_entities.end() ); //This entity has already been registered
-
-        m_entities.emplace( _entity );
-    }
-
-    void RenderSystem::unregisterEntity( Entity _entity )
-    {
-        if ( m_entities.find( _entity ) != m_entities.end() )
-        {
-            m_entities.erase( _entity );
-        }
-    }
-
-#ifdef _DEBUG
-    bool RenderSystem::entityComponentCheck( Entity _entity )
-    {
-        ComponentProvider* componentProvider = gComponents;
-        bool hasRenderComponent = componentProvider->containsComponent<RenderComponent>( _entity );
-        bool hasLocationComponent = componentProvider->containsComponent<LocationComponent>( _entity );
-        return (hasRenderComponent && hasLocationComponent);
-    }
-#endif
 }

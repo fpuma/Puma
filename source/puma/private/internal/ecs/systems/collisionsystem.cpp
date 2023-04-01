@@ -3,6 +3,7 @@
 #include "collisionsystem.h"
 
 #include <engine/services/ecsservice.h>
+#include <engine/services/systemsservice.h>
 #include <internal/services/physicsservice.h>
 
 #include <internal/ecs/components/collisioncomponent.h>
@@ -43,70 +44,26 @@ namespace puma
         gSystems->unsubscribeSystemUpdate<CollisionSystem>( SystemUpdateId::PostPhysics );
         gSystems->unsubscribeSystemUpdate<CollisionSystem>( SystemUpdateId::QueueRenderables );
 
-        assert( m_entities.empty() ); //Warning not all entities have been unregistered.
-        m_entities.clear();
         if ( m_worldId.isValid() )
         {
             gPhysics->removeWorld( m_worldId );
         }
     }
 
-    void CollisionSystem::registerEntity( Entity _entity, leo::FrameInfo _frameInfo, leo::FrameType _frameType )
+    void CollisionSystem::postPhysicsUpdate( pina::EntityProvider& _entityProvider, pina::ComponentProvider& _componentProvider )
     {
-        assert( entityComponentCheck( _entity ) ); //This entity does not have the necessary components to be registered into this system
+        auto entities = gECS->getEntitesByComponents<CollisionComponent, LocationComponent>();
 
-        ComponentProvider* componentProvider = gComponents;
-
-        assert( nullptr != componentProvider );
-
-        leo::IWorld* world = gPhysics->getWorld( m_worldId );
-
-        leo::FrameID frameId;
-
-        switch ( _frameType )
-        {
-        case leo::FrameType::Dynamic:    frameId = world->addDynamicFrame( _frameInfo ); break;
-        case leo::FrameType::Static:     frameId = world->addStaticFrame( _frameInfo ); break;
-        case leo::FrameType::Kinematic:  frameId = world->addKinematicFrame( _frameInfo ); break;
-        default: assert( false ); break;
-        }
-
-        CollisionComponent* collisionComponent = componentProvider->getComponent<CollisionComponent>( _entity );
-        collisionComponent->init( _frameType, frameId );
-
-        m_entities.emplace( _entity );
-    }
-
-    void CollisionSystem::unregisterEntity( Entity _entity )
-    {
-        assert( m_entities.find( _entity ) != m_entities.end() ); //This entity is not registered to this system
-
-        leo::IWorld* world = gPhysics->getWorld( m_worldId );
-        ComponentProvider* componentProvider = gComponents;
-        CollisionComponent* collisionComponent = componentProvider->getComponent<CollisionComponent>( _entity );
-
-        leo::FrameID frameToRemove = collisionComponent->getFrameID();
-
-        assert( nullptr != collisionComponent );
-
-        collisionComponent->uninit();
-        world->removeFrame( frameToRemove );
-
-        m_entities.erase( _entity );
-    }
-
-    void CollisionSystem::postPhysicsUpdate( EntityProvider& _entityProvider, ComponentProvider& _componentProvider )
-    {
-        for ( Entity entity : m_entities )
+        for ( pina::Entity entity : entities)
         {
             bool shouldUpdate = _entityProvider.isEntityEnabled( entity );
-            CollisionComponent* collisionComponent = _componentProvider.getComponent<CollisionComponent>( entity );
+            CollisionComponent* collisionComponent = _componentProvider.get<CollisionComponent>( entity );
             shouldUpdate = shouldUpdate && collisionComponent->isEnabled();
 
             if ( shouldUpdate )
             {
                 leo::IFrame* physicsFrame = gPhysics->getFrame( collisionComponent->getFrameID() );
-                LocationComponent* locationComponent = _componentProvider.getComponent<LocationComponent>( entity );
+                LocationComponent* locationComponent = _componentProvider.get<LocationComponent>( entity );
 
                 Position pos = { physicsFrame->getPosition().x, physicsFrame->getPosition().y };
                 locationComponent->setPosition( pos );
@@ -135,11 +92,13 @@ namespace puma
                 _renderQueue.addDebugRenderableShape( dbgShape.shape, dbgShape.color, dbgShape.solid, { 0.0f, 0.0f }, 0.0f );
             }
 
-            ComponentProvider* componentProvider = gComponents;
-            for ( const Entity& entity : m_entities )
+            auto entities = gECS->getEntitesByComponents<CollisionComponent, LocationComponent>();
+
+            for ( const pina::Entity& entity : entities)
             {
-                CollisionComponent* collisionComponent = componentProvider->getComponent<CollisionComponent>( entity );
-                LocationComponent* locationComponent = componentProvider->getComponent<LocationComponent>( entity );
+                pina::ComponentProvider* componentProvider = gComponents;
+                CollisionComponent* collisionComponent = componentProvider->get<CollisionComponent>( entity );
+                LocationComponent* locationComponent = componentProvider->get<LocationComponent>( entity );
 
 
                 Vec2 lv;
@@ -185,16 +144,6 @@ namespace puma
         assert( nullptr != framePart );
         return framePart->getUserData();
     }
-
-#ifdef _DEBUG
-    bool CollisionSystem::entityComponentCheck( Entity _entity )
-    {
-        ComponentProvider* componentProvider = gComponents;
-        bool hasCollisionComponent = componentProvider->containsComponent<CollisionComponent>( _entity );
-        bool hasLocationComponent = componentProvider->containsComponent<LocationComponent>( _entity );
-        return ( hasCollisionComponent && hasLocationComponent );
-    }
-#endif
 
     namespace
     {

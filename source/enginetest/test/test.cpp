@@ -5,7 +5,7 @@
 
 #include <data/collisionindexes.h>
 
-#include <modules/pina/entity.h>
+#include <pina/entity.h>
 #include <engine/ecs/components/icameracomponent.h>
 #include <engine/ecs/components/icollisioncomponent.h>
 #include <engine/ecs/components/ilocationcomponent.h>
@@ -20,6 +20,7 @@
 #include <engine/services/iengineapplicationservice.h>
 #include <engine/services/iloggerservice.h>
 #include <engine/services/ecsservice.h>
+#include <engine/services/systemsservice.h>
 
 #include <utils/graphics/dimensions.h>
 #include <utils/formatstring.h>
@@ -36,23 +37,23 @@ namespace test
 
     namespace
     {
-        puma::Entity MyDefaultCamera;
-        puma::Entity Floor0;
-        puma::Entity Floor1;
-        puma::Entity Floor2;
-        puma::Entity Floor3;
-        puma::Entity FloorController;
+        puma::pina::Entity MyDefaultCamera;
+        puma::pina::Entity Floor0;
+        puma::pina::Entity Floor1;
+        puma::pina::Entity Floor2;
+        puma::pina::Entity Floor3;
+        puma::pina::Entity FloorController;
 
-        puma::ContainedVector<Entity, 4> FloorList;
+        puma::ContainedVector<pina::Entity, 4> FloorList;
 
-        puma::Entity buildDefaultCamera()
+        puma::pina::Entity buildDefaultCamera()
         {
-            puma::EntityProvider* entityProvider = gEntities;
-            puma::ComponentProvider* componentProvider = gComponents;
+            puma::pina::EntityProvider* entityProvider = gEntities;
+            puma::pina::ComponentProvider* componentProvider = gComponents;
 
-            puma::Entity result = entityProvider->requestEntity();
-            auto locationComponent = componentProvider->addComponent<puma::ILocationComponent>( result );
-            auto cameraComponent = componentProvider->addComponent<puma::ICameraComponent>( result );
+            puma::pina::Entity result = entityProvider->requestEntity();
+            auto locationComponent = componentProvider->add<puma::ILocationComponent>( result );
+            auto cameraComponent = componentProvider->add<puma::ICameraComponent>( result );
 
             locationComponent->setPosition( { 0.0f, 0.0f } );
             cameraComponent->setMetersPerPixel( 0.2f );
@@ -60,13 +61,13 @@ namespace test
             return result;
         }
 
-        void destroyDefaultCamera( puma::Entity _entity )
+        void destroyDefaultCamera( puma::pina::Entity _entity )
         {
-            puma::EntityProvider* entityProvider = gEntities;
-            puma::ComponentProvider* componentProvider = gComponents;
+            puma::pina::EntityProvider* entityProvider = gEntities;
+            puma::pina::ComponentProvider* componentProvider = gComponents;
 
-            componentProvider->removeComponent<puma::ICameraComponent>( _entity );
-            componentProvider->removeComponent<puma::ILocationComponent>( _entity );
+            componentProvider->remove<puma::ICameraComponent>( _entity );
+            componentProvider->remove<puma::ILocationComponent>( _entity );
 
             entityProvider->disposeEntity( _entity );
         }
@@ -89,24 +90,22 @@ namespace test
 
         SystemProvider* sysProvider = gSystems;
 
-        sysProvider->addSystem<IInputSystem>();
-        sysProvider->addSystem<IRenderSystem>();
-        sysProvider->addSystem<ICollisionSystem>();
+        sysProvider->requestSystem<IInputSystem>();
+        sysProvider->requestSystem<IRenderSystem>();
+        sysProvider->requestSystem<ICollisionSystem>();
 
         initPhysics();
         setCamera();
 
         //Register components
-        gComponents->registerComponent<MoveDirectionComponent>();
+        gComponents->registerClass<MoveDirectionComponent>();
 
         //Register systems
-        sysProvider->registerSystem<BallSpawnerSystem>();
-        auto ballSpawnerSystem = sysProvider->addSystem<BallSpawnerSystem>();
-        assert( nullptr != ballSpawnerSystem );
-
-        sysProvider->registerSystem<StaticStuffSystem>();
-        auto staticStuffSystem = sysProvider->addSystem<StaticStuffSystem>();
-        assert( nullptr != staticStuffSystem );
+        sysProvider->registerSystemClass<BallSpawnerSystem>();
+        sysProvider->requestSystem<BallSpawnerSystem>();
+       
+        sysProvider->registerSystemClass<StaticStuffSystem>();
+        sysProvider->requestSystem<StaticStuffSystem>();
 
         //Spawn
         Floor0 = spawnFloor( gEngineApplication->getTextureManager(), { 15.0f, -15.0f }, GeometryHelpers::degreesToRadians( 45.0f ) );
@@ -123,11 +122,9 @@ namespace test
         //Floor controller
         FloorController = gEntities->requestEntity();
 
-        puma::IInputComponent* ic = gComponents->addComponent<IInputComponent>( FloorController ).get();
+        puma::IInputComponent* ic = gComponents->add<IInputComponent>( FloorController ).get();
         ic->addInputMap( TestInputActions::ToggleFloorEntity, { puma::nina::KeyboardKey::KB_I, puma::InputModifier_IGNORE, puma::nina::InputButtonEvent::Pressed } );
         ic->addInputMap( TestInputActions::ToggleFloorPhysics, { puma::nina::KeyboardKey::KB_K, puma::InputModifier_IGNORE, puma::nina::InputButtonEvent::Pressed } );
-
-        gSystems->getSystem<IInputSystem>()->registerEntity( FloorController );
 
         //[fpuma] TODO Loading all assets now to prevent a race condition later.
         // I need to create a ResourceManager that supports multithreading
@@ -140,10 +137,10 @@ namespace test
 
     void Test::update( float _deltaTime )
     {
-        puma::ComponentProvider* cp = gComponents;
-        puma::EntityProvider* ep = gEntities;
+        puma::pina::ComponentProvider* cp = gComponents;
+        puma::pina::EntityProvider* ep = gEntities;
         
-        puma::IInputComponent* inputComp = cp->getComponent<IInputComponent>( FloorController );
+        puma::IInputComponent* inputComp = cp->get<IInputComponent>( FloorController );
         bool toggleFloorEntity = inputComp->isActionActive( TestInputActions::ToggleFloorEntity );
         bool toggleFloorPhysics = inputComp->isActionActive( TestInputActions::ToggleFloorPhysics );
 
@@ -162,7 +159,7 @@ namespace test
 
         if (toggleFloorPhysics)
         {
-            puma::ICollisionComponent* colComp = cp->getComponent<ICollisionComponent>( Floor2 );
+            puma::ICollisionComponent* colComp = cp->get<ICollisionComponent>( Floor2 );
 
             if (colComp->isEnabled())
             {
@@ -186,16 +183,15 @@ namespace test
 
         SystemProvider* sysProvider = gSystems;
 
-        sysProvider->getSystem<IInputSystem>()->unregisterEntity( FloorController );
-        gComponents->removeComponent<IInputComponent>( FloorController );
+        gComponents->remove<IInputComponent>( FloorController );
         gEntities->disposeEntity( FloorController );
 
-        sysProvider->removeSystem<BallSpawnerSystem>();
-        sysProvider->removeSystem<StaticStuffSystem>();
-        
-        sysProvider->removeSystem<IInputSystem>();
-        sysProvider->removeSystem<IRenderSystem>();
-        sysProvider->removeSystem<ICollisionSystem>();
+        sysProvider->releaseSystem<BallSpawnerSystem>();
+        sysProvider->releaseSystem<StaticStuffSystem>();
+
+        sysProvider->releaseSystem<IInputSystem>();
+        sysProvider->releaseSystem<IRenderSystem>();
+        sysProvider->releaseSystem<ICollisionSystem>();
     }
 
     void initPhysics()

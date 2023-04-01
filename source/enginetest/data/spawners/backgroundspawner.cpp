@@ -5,6 +5,7 @@
 #include <data/collisionindexes.h>
 
 #include <engine/services/ecsservice.h>
+#include <engine/services/systemsservice.h>
 
 #include <engine/ecs/components/icollisioncomponent.h>
 #include <engine/ecs/components/irendercomponent.h>
@@ -19,16 +20,14 @@
 
 namespace test
 {
-    puma::Entity spawnBackground( puma::nina::ITextureManager* _textureManager, const puma::Position& _pos )
+    puma::pina::Entity spawnBackground( puma::nina::ITextureManager* _textureManager, const puma::Position& _pos )
     {
-        puma::Entity result = gEntities->requestEntity();
-        puma::ComponentProvider* componentProvider = gComponents;
+        puma::pina::Entity result = gEntities->requestEntity();
+        puma::pina::ComponentProvider* componentProvider = gComponents;
 
-        auto locationComponent = componentProvider->addComponent<puma::ILocationComponent>( result );
-        auto renderComponent = componentProvider->addComponent<puma::IRenderComponent>( result );
-        auto inputComponent = componentProvider->addComponent<puma::IInputComponent>( result );
-
-        puma::IRenderSystem* renderSystem = gSystems->getSystem<puma::IRenderSystem>();
+        auto locationComponent = componentProvider->add<puma::ILocationComponent>( result );
+        auto renderComponent = componentProvider->add<puma::IRenderComponent>( result );
+        auto inputComponent = componentProvider->add<puma::IInputComponent>( result );
 
         locationComponent->setPosition( _pos );
 
@@ -41,26 +40,20 @@ namespace test
         textureInfo.renderLayer = puma::RenderLayer( 0 );
 
         renderComponent->addTextureInfo( textureInfo );
-        renderSystem->registerEntity( result );
 
         //Input
         inputComponent->addInputMap( TestInputActions::MouseMove, { puma::InputModifier_IGNORE } );
 
-        gSystems->getSystem<puma::IInputSystem>()->registerEntity( result );
-
         return result;
     }
 
-    void unspawnBackground( puma::Entity _ballEntity )
+    void unspawnBackground( puma::pina::Entity _ballEntity )
     {
-        gSystems->getSystem<puma::IRenderSystem>()->unregisterEntity( _ballEntity );
-        gSystems->getSystem<puma::IInputSystem>()->unregisterEntity( _ballEntity );
+        puma::pina::ComponentProvider* componentProvider = gComponents;
 
-        puma::ComponentProvider* componentProvider = gComponents;
-
-        componentProvider->removeComponent<puma::ILocationComponent>( _ballEntity );
-        componentProvider->removeComponent<puma::IRenderComponent>( _ballEntity );
-        componentProvider->removeComponent<puma::IInputComponent>( _ballEntity );
+        componentProvider->remove<puma::ILocationComponent>( _ballEntity );
+        componentProvider->remove<puma::IRenderComponent>( _ballEntity );
+        componentProvider->remove<puma::IInputComponent>( _ballEntity );
 
         gEntities->disposeEntity( _ballEntity );
     }

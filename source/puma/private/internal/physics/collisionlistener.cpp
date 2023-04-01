@@ -2,6 +2,7 @@
 
 #include <internal/physics/collisionlistener.h>
 #include <engine/services/ecsservice.h>
+#include <engine/services/systemsservice.h>
 
 namespace puma
 {

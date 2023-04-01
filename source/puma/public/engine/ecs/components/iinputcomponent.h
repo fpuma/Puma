@@ -1,11 +1,11 @@
 #pragma once
 
-#include <modules/pina/component.h>
+#include <pina/component.h>
 #include <engine/input/inputdefinitions.h>
 
 namespace puma
 {
-    class IInputComponent : public Component
+    class IInputComponent : public pina::Component
     {
     public:
 

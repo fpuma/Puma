@@ -1,17 +1,14 @@
 #pragma once
 
-#include <modules/pina/entity.h>
-#include <modules/pina/system.h>
+#include <pina/entity.h>
+#include <engine/ecs/systems/base/isystem.h>
 
 namespace puma
 {
-    class IInputSystem : public System
+    class IInputSystem : public ISystem
     {
     public:
 
         virtual ~IInputSystem() {}
-
-        virtual void registerEntity( Entity _entity ) = 0;
-        virtual void unregisterEntity( Entity _entity ) = 0;
     };
 }

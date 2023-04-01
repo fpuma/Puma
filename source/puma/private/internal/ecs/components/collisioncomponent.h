@@ -14,6 +14,9 @@ namespace puma
         void onEnabled() override;
         void onDisabled() override;
 
+        void init( leo::FrameType _frameType, leo::FrameInfo _frameInfo ) override;
+        void uninit() override;
+
         leo::FrameID getFrameID() const { return m_frameId; }
         leo::FrameType getFrameType() const override { return m_frameType; }
         
@@ -32,12 +35,6 @@ namespace puma
         bool isValid() const override { return (leo::FrameType::Invalid != m_frameType) && (m_frameId.value() != leo::kInvalidPhysicsID); }
 
     private:
-
-        friend void CollisionSystem::registerEntity( Entity _entity, leo::FrameInfo _frameInfo, leo::FrameType _frameType );
-        friend void CollisionSystem::unregisterEntity( Entity _entity );
-
-        void init( leo::FrameType _frameType, leo::FrameID _frameId );
-        void uninit();
 
         std::vector<leo::FramePartID> m_bodyIds;
         std::vector<leo::FramePartID> m_triggerIds;

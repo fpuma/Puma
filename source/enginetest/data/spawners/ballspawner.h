@@ -1,11 +1,11 @@
 #pragma once
 
-#include <modules/pina/entity.h>
+#include <pina/entity.h>
 #include <modules/nina/ninadefinitions.h>
 #include <engine/utils/position.h>
 
 namespace test
 {
-    puma::Entity spawnBall( puma::nina::ITextureManager* _textureManager, const puma::Position& _pos );
-    void unspawnBall( puma::Entity _ballEntity );
+    puma::pina::Entity spawnBall( puma::nina::ITextureManager* _textureManager, const puma::Position& _pos );
+    void unspawnBall( puma::pina::Entity _ballEntity );
 }

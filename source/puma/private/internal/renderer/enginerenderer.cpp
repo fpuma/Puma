@@ -3,9 +3,7 @@
 #include "enginerenderer.h"
 
 #include <nina/application/irenderer.h>
-
-#include <engine/services/ecsservice.h>
-
+#include <engine/services/systemsservice.h>
 #include <internal/ecs/components/cameracomponent.h>
 #include <internal/ecs/components/locationcomponent.h>
 #include <internal/services/engineapplicationservice.h>

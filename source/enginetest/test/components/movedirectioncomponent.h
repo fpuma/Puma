@@ -1,11 +1,11 @@
 #pragma once
 
-#include <modules/pina/component.h>
+#include <pina/component.h>
 #include <utils/geometry/vec2.h>
 
 namespace test
 {
-    class MoveDirectionComponent final : public puma::Component
+    class MoveDirectionComponent final : public puma::pina::Component
     {
     public:
 

@@ -2,6 +2,7 @@
 
 #include "engineapplication.h"
 
+#include <nina/application/iapplication.h>
 #include <nina/application/iwindow.h>
 #include <nina/application/irenderer.h>
 
@@ -21,10 +22,16 @@
 namespace puma
 {
     EngineApplication::EngineApplication()
+        : m_application( nina::IApplication::create() )
+        , m_input(nullptr)
+        , m_window(nullptr)
+        , m_textureManager(nullptr)
+        , m_renderer(nullptr)
     {
-        m_application = nina::IApplication::create();
         m_application->getLogger()->addOutput<ConsoleLogOutput>();
     }
+    
+    EngineApplication::~EngineApplication() {}
 
     void EngineApplication::init( Extent _windowExtent, const char* _windowName )
     {
@@ -54,12 +61,19 @@ namespace puma
         m_application->uninit();
     }
   
-    void EngineApplication::setCameraEntity( Entity _cameraEntity )
+    void EngineApplication::update() 
+    { 
+        m_application->update(); 
+    }
+
+    nina::ITextureManager* EngineApplication::getTextureManager() const { return m_textureManager; }
+
+    void EngineApplication::setCameraEntity( pina::Entity _cameraEntity )
     {
 #ifdef _DEBUG
-        ComponentProvider* componentProvider = gComponents;
-        CameraComponent* cameraComponent = componentProvider->getComponent<CameraComponent>( _cameraEntity );
-        LocationComponent* locationComponent = componentProvider->getComponent<LocationComponent>( _cameraEntity );
+        pina::ComponentProvider* componentProvider = gComponents;
+        CameraComponent* cameraComponent = componentProvider->get<CameraComponent>( _cameraEntity );
+        LocationComponent* locationComponent = componentProvider->get<LocationComponent>( _cameraEntity );
         assert( (nullptr != cameraComponent) && (nullptr != locationComponent) );
 #endif
         m_cameraEntity = _cameraEntity;
@@ -84,4 +98,13 @@ namespace puma
     {
         return m_window->getExtent();
     }
+
+    const nina::IRenderer* EngineApplication::getWindowRenderer() const { return m_renderer; }
+
+    const nina::IInput* EngineApplication::getInput() const { return m_input.get(); }
+    nina::IInput* EngineApplication::getInput() { return m_input.get(); }
+
+    pina::Entity EngineApplication::getCameraEntity() const { return m_cameraEntity; }
+
+    bool EngineApplication::shouldQuit() const { return m_application->shouldQuit(); }
 }

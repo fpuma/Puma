@@ -1,10 +1,10 @@
 #pragma once
 
-#include <modules/pina/component.h>
+#include <pina/component.h>
 
 namespace puma
 {
-    class ICameraComponent : public Component
+    class ICameraComponent : public pina::Component
     {
     public:
 

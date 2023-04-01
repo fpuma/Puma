@@ -1,17 +1,22 @@
 #pragma once
 
-#include <modules/pina/system.h>
-#include <pina/private/systemprovider.h>
+#include <engine/ecs/systems/base/isystem.h>
+#include <utils/containers/uniquerealizationcontainer.h>
+#include <utils/numerictypes.h>
 
-#include <memory>
+#include <assert.h>
+#include <typeindex>
 #include <unordered_map>
 #include <vector>
 
 
 namespace puma
 {
-    class ComponentProvider;
-    class EntityProvider;
+    namespace pina
+    {
+        class ComponentProvider;
+        class EntityProvider;
+    }
     
     enum class SystemUpdateId
     {
@@ -25,12 +30,11 @@ namespace puma
 
     using SystemPriority = u32;
 
-    class SystemProvider : public pina::SystemProvider
+    class SystemProvider final : private UniqueRealizationContainer<ISystem>
     {
     public:
 
-        SystemProvider( pina::EcsData& _data )
-            : pina::SystemProvider( _data )
+        SystemProvider()
         {
             m_systemUpdates.insert( { SystemUpdateId::Update,{} } );
             m_systemUpdates.insert( { SystemUpdateId::PrePhysics,{} } );
@@ -50,13 +54,66 @@ namespace puma
 #endif
         }
 
+        template<class Interface, class Class>
+        void registerSystemInterface() { registerInterface<Interface, Class>(); }
+
+        template<class Class>
+        void registerSystemClass() { registerClass<Class>(); }
+
+        template<class T>
+        std::shared_ptr<T> getSystemSafely() { return getSafely<T>(); }
+
+        template<class T>
+        std::shared_ptr<const T> getSystemSafely() const { return getSafely<T>(); }
+
+        template<class T>
+        T* getSystem() { return get<T>(); }
+        
+        template<class T>
+        const T* getSystem() const { return get<T>(); }
+
+        template<class T>
+        bool containsSystem() const { return contains<T>(); }
+
+        template<class T>
+        void requestSystem()
+        {
+            SystemClassId sysTypeIndex = std::type_index( typeid(T) );
+            if (contains<T>())
+            {
+                u32& count = m_systemRequestsCount.at( sysTypeIndex );
+                ++count;
+            }
+            else
+            {
+                m_systemRequestsCount.insert( { std::type_index( typeid(T)), 1 } );
+                add<T>();
+            }
+        }
+
+        template<class T>
+        void releaseSystem()
+        {
+            SystemClassId sysTypeIndex = std::type_index( typeid(T) );
+            if (contains<T>())
+            {
+                u32& count = m_systemRequestsCount.at( sysTypeIndex );
+                --count;
+                if (0 == count)
+                {
+                    m_systemRequestsCount.erase( sysTypeIndex );
+                    remove<T>();
+                }
+            }
+        }
+
         template<class T>
         void subscribeSystemUpdate( SystemUpdateId _id, SystemPriority _priority = 5 )
         {
-            assert( containsSystem<T>() ); // The given system has not been registered
+            assert( contains<T>() ); // The given system has not been registered
             assert( m_systemUpdates.contains( _id ) ); // The given system update ID has not been initialized
 
-            if (!containsSystem<T>()) return;
+            if (!contains<T>()) return;
             if (!m_systemUpdates.contains( _id )) return;
 
             SystemClassId sysClassId = SystemClassId( typeid(T) );
@@ -86,10 +143,10 @@ namespace puma
         template<class T>
         void unsubscribeSystemUpdate( SystemUpdateId _id )
         {
-            assert( containsSystem<T>() ); // The given system has not been registered
+            assert( contains<T>() ); // The given system has not been registered
             assert( m_systemUpdates.contains( _id ) ); // The given system update ID has not been initialized
 
-            if (!containsSystem<T>()) return;
+            if (!contains<T>()) return;
             if (!m_systemUpdates.contains( _id )) return;
 
             SystemClassId sysClassId = SystemClassId( typeid(T) );
@@ -108,7 +165,7 @@ namespace puma
             }
         }
 
-        void update( EntityProvider& _entityProvider, ComponentProvider& _componentProvider )
+        void update( pina::EntityProvider& _entityProvider, pina::ComponentProvider& _componentProvider )
         {
             assert( m_systemUpdates.contains( SystemUpdateId::Update ) ); // The update vector has not been initialized
 
@@ -116,7 +173,7 @@ namespace puma
 
             for (SystemConfig& sysCfg : sysCfgList)
             {
-                System* system = static_cast<System*>(getSystem( sysCfg.classId ));
+                ISystem* system = static_cast<ISystem*>(get( sysCfg.classId ));
                 if (system->isEnabled())
                 {
                     system->update( _entityProvider, _componentProvider );
@@ -124,7 +181,7 @@ namespace puma
             }
         }
 
-        void prePhysicsUpdate( EntityProvider& _entityProvider, ComponentProvider& _componentProvider )
+        void prePhysicsUpdate( pina::EntityProvider& _entityProvider, pina::ComponentProvider& _componentProvider )
         {
             assert( m_systemUpdates.contains( SystemUpdateId::PrePhysics ) ); // The update vector has not been initialized
 
@@ -132,7 +189,7 @@ namespace puma
 
             for (SystemConfig& sysCfg : sysCfgList)
             {
-                System* system = static_cast<System*>(getSystem( sysCfg.classId ));
+                ISystem* system = static_cast<ISystem*>(get( sysCfg.classId ));
                 if (system->isEnabled())
                 {
                     system->prePhysicsUpdate( _entityProvider, _componentProvider );
@@ -140,7 +197,7 @@ namespace puma
             }
         }
 
-        void postPhysicsUpdate( EntityProvider& _entityProvider, ComponentProvider& _componentProvider )
+        void postPhysicsUpdate( pina::EntityProvider& _entityProvider, pina::ComponentProvider& _componentProvider )
         {
             assert( m_systemUpdates.contains( SystemUpdateId::PostPhysics ) ); // The update vector has not been initialized
 
@@ -148,7 +205,7 @@ namespace puma
 
             for (SystemConfig& sysCfg : sysCfgList)
             {
-                System* system = static_cast<System*>(getSystem( sysCfg.classId ));
+                ISystem* system = static_cast<ISystem*>(get( sysCfg.classId ));
                 if (system->isEnabled())
                 {
                     system->postPhysicsUpdate( _entityProvider, _componentProvider );
@@ -164,7 +221,7 @@ namespace puma
 
             for (SystemConfig& sysCfg : sysCfgList)
             {
-                System* system = static_cast<System*>(getSystem( sysCfg.classId ));
+                ISystem* system = static_cast<ISystem*>(get( sysCfg.classId ));
                 if (system->isEnabled())
                 {
                     system->queueRenderables( _renderQueue );
@@ -180,7 +237,7 @@ namespace puma
 
             for (SystemConfig& sysCfg : sysCfgList)
             {
-                System* system = static_cast<System*>(getSystem( sysCfg.classId ));
+                ISystem* system = static_cast<ISystem*>(get( sysCfg.classId ));
                 if (system->isEnabled())
                 {
                     system->onCollisionStarted( _framePartPtrA, _framePartPtrB, _contactPoint );
@@ -196,13 +253,25 @@ namespace puma
 
             for (SystemConfig& sysCfg : sysCfgList)
             {
-                System* system = static_cast<System*>(getSystem( sysCfg.classId ));
+                ISystem* system = static_cast<ISystem*>(get( sysCfg.classId ));
                 
                 if (system->isEnabled())
                 {
                     system->onCollisionStopped( _framePartPtrA, _framePartPtrB );
                 }
             }
+        }
+
+    protected:
+
+        void onAdded( std::shared_ptr<ISystem> _system, std::type_index _typeIndex ) override 
+        {
+            _system->onInit();
+        }
+        
+        void onRemoved( std::shared_ptr<ISystem> _system, std::type_index _typeIndex ) override 
+        {
+            _system->onUninit();
         }
 
     private:
@@ -219,5 +288,7 @@ namespace puma
         };
 
         std::unordered_map<SystemUpdateId, std::vector<SystemConfig>> m_systemUpdates;
+
+        std::unordered_map <SystemClassId, u32> m_systemRequestsCount;
     };
 }

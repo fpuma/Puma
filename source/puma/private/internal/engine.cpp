@@ -2,11 +2,12 @@
 #include <internal/engine.h>
 
 #include <nina/application/irenderer.h>
+#include <nina/input/iinput.h>
 #include <engine/utils/timerprovider.h>
 #include <engine/igame.h>
-#include <nina/input/iinput.h>
 
 #include <engine/services/ecsservice.h>
+#include <engine/services/systemsservice.h>
 #include <internal/ecs/components/cameracomponent.h>
 #include <internal/ecs/components/collisioncomponent.h>
 #include <internal/ecs/components/inputcomponent.h>
@@ -35,20 +36,20 @@ namespace puma
         {
             SystemProvider* systemProvider = gSystems;
 
-            systemProvider->registerSystem<IRenderSystem, RenderSystem>();
-            systemProvider->registerSystem<ICollisionSystem, CollisionSystem>();
-            systemProvider->registerSystem<IInputSystem, InputSystem>();
+            systemProvider->registerSystemInterface<IRenderSystem, RenderSystem>();
+            systemProvider->registerSystemInterface<ICollisionSystem, CollisionSystem>();
+            systemProvider->registerSystemInterface<IInputSystem, InputSystem>();
         }
 
         void registerComponents()
         {
-            ComponentProvider* componentProvider = gComponents;
+            pina::ComponentProvider* componentProvider = gComponents;
 
-            componentProvider->registerComponent<ICameraComponent, CameraComponent>();
-            componentProvider->registerComponent<ICollisionComponent, CollisionComponent>();
-            componentProvider->registerComponent<ILocationComponent, LocationComponent>();
-            componentProvider->registerComponent<IRenderComponent, RenderComponent>();
-            componentProvider->registerComponent<IInputComponent, InputComponent>();
+            componentProvider->registerInterface<ICameraComponent, CameraComponent>();
+            componentProvider->registerInterface<ICollisionComponent, CollisionComponent>();
+            componentProvider->registerInterface<ILocationComponent, LocationComponent>();
+            componentProvider->registerInterface<IRenderComponent, RenderComponent>();
+            componentProvider->registerInterface<IInputComponent, InputComponent>();
         }
 
     }
@@ -99,6 +100,10 @@ namespace puma
         registerComponents();
 
         gInternalLogger->info( "Puma engine initialized." );
+
+        m_appDt.reset();
+        m_innerDt.reset();
+        m_outterDt.reset();
     }
 
     void Engine::uninit()
@@ -109,8 +114,8 @@ namespace puma
 
     void Engine::simulationUpdate( IGame* _game )
     {
-        m_deltaTime.update();
-        float currentDeltaTime = static_cast<float>(m_deltaTime.get());
+        m_outterDt.update();
+        float currentDeltaTime = static_cast<float>(m_outterDt.get());
 
         m_accumDeltaTime += currentDeltaTime;
 
@@ -123,8 +128,7 @@ namespace puma
             _game->update( m_accumDeltaTime );
             m_engineRenderer.queueRenderables();
 
-            ++m_accumDtCount;
-            m_avgAccumDt += (m_accumDeltaTime - m_avgAccumDt) / m_accumDtCount;
+            m_innerDt.update();
 
             m_accumDeltaTime = 0.0f;
         }
@@ -149,7 +153,7 @@ namespace puma
         m_engineRenderer.render();
 
         gInternalEngineApplication->getWindowRenderer()->renderSolidPolygon( { {0,0}, {0,24}, {140,24}, {140,0} }, Color{ 0,0,0,255 } );
-        gInternalEngineApplication->getWindowRenderer()->renderText( ScreenPos{ 2, 2 },  {255,255,0,255}, formatString( "SIM: %.2f fps", 1.0f / m_avgAccumDt ).c_str() );
+        gInternalEngineApplication->getWindowRenderer()->renderText( ScreenPos{ 2, 2 }, { 255,255,0,255 }, formatString( "SIM: %.2f fps", 1.0f / m_innerDt.getAverage() ).c_str() );
         gInternalEngineApplication->getWindowRenderer()->renderText( ScreenPos{ 2, 14 }, {255,255,0,255}, formatString( "APP: %.2f fps", 1.0f / m_appDt.getAverage() ).c_str() );
 
         m_engineRenderer.endRender();

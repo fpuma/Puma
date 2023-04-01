@@ -7,6 +7,7 @@
 #include <data/spawners/ballspawnspawner.h>
 
 #include <engine/services/ecsservice.h>
+#include <engine/services/systemsservice.h>
 #include <engine/ecs/components/icollisioncomponent.h>
 #include <engine/ecs/components/iinputcomponent.h>
 #include <engine/ecs/components/ilocationcomponent.h>
@@ -29,7 +30,7 @@ namespace test
 
         m_spawnerHandler = gEntities->requestEntity();
 
-        auto inputComponent = gComponents->addComponent<IInputComponent>( m_spawnerHandler );
+        auto inputComponent = gComponents->add<IInputComponent>( m_spawnerHandler );
 
         KeyboardInput keyboardInput;
         keyboardInput.keyboardKey = nina::KeyboardKey::KB_Y;
@@ -39,8 +40,6 @@ namespace test
         controllerInput.controllerButton = nina::ControllerButton::CB_Y;
         controllerInput.controllerId = 0;
         inputComponent->addInputMap( TestInputActions::InvertGravity, controllerInput );
-
-        gSystems->getSystem<IInputSystem>()->registerEntity( m_spawnerHandler );
 
         gSystems->subscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::QueueRenderables );
         gSystems->subscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::Update );
@@ -52,13 +51,12 @@ namespace test
         unspawnBallSpawner( m_spawner1 );
         unspawnBallSpawner( m_spawner0 );
 
-        for ( puma::Entity entity : m_balls )
+        for ( puma::pina::Entity entity : m_balls )
         {
             unspawnBall( entity );
         }
 
-        gSystems->getSystem<IInputSystem>()->unregisterEntity( m_spawnerHandler );
-        gComponents->removeComponent<IInputComponent>( m_spawnerHandler );
+        gComponents->remove<IInputComponent>( m_spawnerHandler );
         gEntities->disposeEntity( m_spawnerHandler );
 
         gSystems->unsubscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::QueueRenderables );
@@ -66,12 +64,12 @@ namespace test
         gSystems->unsubscribeSystemUpdate<BallSpawnerSystem>( SystemUpdateId::CollisionStarted );
     }
 
-    void BallSpawnerSystem::update( EntityProvider& _entityProvider, ComponentProvider& _componentProvider )
+    void BallSpawnerSystem::update( pina::EntityProvider& _entityProvider, pina::ComponentProvider& _componentProvider )
     {
         updateSpawner( m_spawner0 );
         updateSpawner( m_spawner1 );
 
-        IInputComponent* inputComponent = _componentProvider.getComponent<IInputComponent>(m_spawnerHandler);
+        IInputComponent* inputComponent = _componentProvider.get<IInputComponent>(m_spawnerHandler);
         if ( inputComponent->isActionActive( TestInputActions::InvertGravity ) )
         {
             ICollisionSystem* collisionSystem = gSystems->getSystem<ICollisionSystem>();
@@ -115,12 +113,12 @@ namespace test
         m_contactPointList.push_back( contact );
     }
 
-    void BallSpawnerSystem::updateSpawner( Entity _spawner )
+    void BallSpawnerSystem::updateSpawner( pina::Entity _spawner )
     {
-        puma::ComponentProvider* componentProvider = gComponents;
+        puma::pina::ComponentProvider* componentProvider = gComponents;
 
-        puma::ILocationComponent* locationComponent = componentProvider->getComponent<puma::ILocationComponent>( _spawner );
-        puma::IInputComponent* inputComponent = componentProvider->getComponent<puma::IInputComponent>( _spawner );
+        puma::ILocationComponent* locationComponent = componentProvider->get<puma::ILocationComponent>( _spawner );
+        puma::IInputComponent* inputComponent = componentProvider->get<puma::IInputComponent>( _spawner );
 
 
         if ( inputComponent->isActionActive( TestInputActions::SpawnBallAction ) )
@@ -129,7 +127,7 @@ namespace test
             gLogger->info( puma::formatString( "Ball %d spawned!", m_balls.size() ).c_str() );
         }
 
-        test::MoveDirectionComponent* moveDirectionComponent = componentProvider->getComponent<test::MoveDirectionComponent>( _spawner );
+        test::MoveDirectionComponent* moveDirectionComponent = componentProvider->get<test::MoveDirectionComponent>( _spawner );
         Vec2 currentDir = moveDirectionComponent->getDirection();
         Vec2 inputDir;
         if ( inputComponent->isActionActive( TestInputActions::MoveBallSpawnerStartUp ) ) inputDir = inputDir + Vec2( { 0.0f, 1.0f } );
@@ -155,16 +153,16 @@ namespace test
         currentDir = controllerInput ? inputDir : currentDir + inputDir;
 
         moveDirectionComponent->setDirection( currentDir );
-        puma::ICollisionComponent* collisionComponent = componentProvider->getComponent<puma::ICollisionComponent>( _spawner );
+        puma::ICollisionComponent* collisionComponent = componentProvider->get<puma::ICollisionComponent>( _spawner );
         leo::IDynamicFrame* dynamicFrame = collisionComponent->getDynamicFrame();
         dynamicFrame->setLinearVelocity( currentDir * m_spawnerSpeed );
     }
 
-    void BallSpawnerSystem::renderDebugSpawner( Entity _spawner, IRenderQueue& _renderQueue )
+    void BallSpawnerSystem::renderDebugSpawner( pina::Entity _spawner, IRenderQueue& _renderQueue )
     {
-        puma::ComponentProvider* componentProvider = gComponents;
+        puma::pina::ComponentProvider* componentProvider = gComponents;
 
-        puma::ILocationComponent* locationComponent = componentProvider->getComponent<puma::ILocationComponent>( _spawner );
+        puma::ILocationComponent* locationComponent = componentProvider->get<puma::ILocationComponent>( _spawner );
 
         Shape circleShape;
         circleShape.setAsCircle( { Vec2(), 1.0f } );

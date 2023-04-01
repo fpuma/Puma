@@ -1,24 +1,14 @@
 #pragma once
 
-#include <modules/pina/entity.h>
-#include <modules/pina/system.h>
-
-#include <utils/graphics/dimensions.h>
+#include <pina/entity.h>
+#include <engine/ecs/systems/base/isystem.h>
 
 namespace puma
 {
-    namespace app
-    {
-        class IRenderer;
-    }
-
-    class IRenderSystem : public System
+    class IRenderSystem : public ISystem
     {
     public:
 
         virtual ~IRenderSystem() {}
-
-        virtual void registerEntity( Entity _entity ) = 0;
-        virtual void unregisterEntity( Entity _entity ) = 0;
     };
 }
